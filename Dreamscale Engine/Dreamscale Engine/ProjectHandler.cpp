@@ -9,7 +9,8 @@
 			numData.push_back(floatData);
 
 			std::fstream saveFile;
-			saveFile.open("ProjectSave.txt", std::fstream::out);
+			saveFile.open("ProjectSave.txt", std::fstream::out | std::fstream::ate);
+			
 			saveFile << stringData.c_str();
 			saveFile << std::endl;
 			saveFile << floatData;
