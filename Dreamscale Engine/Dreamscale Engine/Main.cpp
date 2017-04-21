@@ -8,7 +8,7 @@ int main()
 	std::cout << "Dreamscale Engine" << std::endl;
 
 	GameEngine gameEngine;
-
+	gameEngine.~GameEngine();
 
 	std::string asdf1 = "jag är en super hydlarisk mekanism!";
 	float asdf2 = 1;
