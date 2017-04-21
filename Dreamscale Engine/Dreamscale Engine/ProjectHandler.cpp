@@ -1,34 +1,50 @@
 #include "ProjectHandler.h"
 
+//Note string.c_str() to make string write files
 
-		void ProjectHandler::save(std::string stringData, float floatData)
-		{
-			float hehej = 1.03f;
+bool ProjectHandler::FileExists(const std::string& fileName)
+{
+	struct stat buf;
+	if (stat(fileName.c_str(), &buf) != -1)
+	{
+		return true;
+	}
+	return false;
+}
 
-			textData.push_back(stringData);
-			numData.push_back(floatData);
+void ProjectHandler::SetFilename(const std::string fileName)
+{
+	_fileName = fileName;
+}
 
-			std::fstream saveFile;
-			saveFile.open("ProjectSave.txt", std::fstream::out | std::fstream::ate);
-			
-			saveFile << stringData.c_str();
-			saveFile << std::endl;
-			saveFile << floatData;
-			saveFile.close();
-		}
-		void ProjectHandler::load(std::vector<std::string> txtData, std::vector<float> numData)
-		{
-			
-		}
+std::string ProjectHandler::GetFilename()
+{
+	return _fileName;
+}
 
-		ProjectHandler::ProjectHandler()
-		{
+void ProjectHandler::SaveProject(const std::string fileText)
+{
+	_myFile.open(GetFilename(), std::fstream::out);
 
-		}
+	_myFile << fileText.c_str();
+
+	_myFile.close();
+}
+
+void ProjectHandler::LoadProject()
+{
+	//_myFile.open(GetFilename(), std::fstream::out);
+	//load?
+	//_myFile.close();
+}
+
+ProjectHandler::ProjectHandler()
+{
+	std::cout << "class : ProjectHandler : Constructed!" << std::endl;
+}
 
 
-		ProjectHandler::~ProjectHandler()
-		{
-		}
-	
- //namespace ProjectHandler
+ProjectHandler::~ProjectHandler()
+{
+	std::cout << "class : ProjectHandler : Destroyed!" << std::endl;
+}
