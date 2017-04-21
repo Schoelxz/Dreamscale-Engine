@@ -133,6 +133,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="ObjectHandler.cpp" />
+    <ClCompile Include="ProjectHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CollisionHandler.h" />
@@ -140,6 +141,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ObjectHandler.h" />
+    <ClInclude Include="ProjectHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
