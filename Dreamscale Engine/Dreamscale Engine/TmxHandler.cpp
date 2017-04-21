@@ -10,3 +10,5 @@ TmxHandler::TmxHandler()
 TmxHandler::~TmxHandler()
 {
 }
+
+//hemligt
