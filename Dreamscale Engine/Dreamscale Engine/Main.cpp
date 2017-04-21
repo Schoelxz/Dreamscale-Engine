@@ -17,6 +17,8 @@ int main()
 	if (gameEngine.project.FileExists("myFirstProject1.txt"))
 		std::cout << "File Exists!" << std::endl;
 
+	//Min Super FIna kommentar, jag gillar den så braaaaaaaaaa.
+
 	while (1); //dont use this. but use it anyway
 
 	return 0;
