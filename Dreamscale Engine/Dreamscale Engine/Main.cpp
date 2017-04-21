@@ -9,7 +9,7 @@ int main()
 	std::cout << "Dreamscale Engine" << std::endl;
 
 	GameEngine gameEngine;
-
+	gameEngine.~GameEngine();
 
 	gameEngine.project.SetFilename("myFirstProject1.txt");
 	gameEngine.project.SaveProject("This is my data in my project!!!");

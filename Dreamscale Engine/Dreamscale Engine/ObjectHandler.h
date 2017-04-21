@@ -10,5 +10,6 @@ public:
 
 	ObjectHandler();
 	~ObjectHandler();
+	void objCreator();
 };
 
