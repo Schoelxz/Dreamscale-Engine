@@ -3,6 +3,7 @@
 #include "GameEngine.h"
 
 
+
 int main()
 {
 	std::cout << "Dreamscale Engine" << std::endl;
@@ -10,12 +11,11 @@ int main()
 	GameEngine gameEngine;
 
 
-	std::string asdf1 = "jag är en super hydlarisk mekanism!";
-	float asdf2 = 1;
+	gameEngine.project.SetFilename("myFirstProject1.txt");
+	gameEngine.project.SaveProject("This is my data in my project!!!");
 
-	gameEngine.
-
-	project.save(asdf1, asdf2);
+	if (gameEngine.project.FileExists("myFirstProject1.txt"))
+		std::cout << "File Exists!" << std::endl;
 
 	while (1); //dont use this. but use it anyway
 
