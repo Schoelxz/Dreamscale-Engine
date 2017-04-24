@@ -134,6 +134,7 @@
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="ObjectHandler.cpp" />
     <ClCompile Include="ProjectHandler.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CollisionHandler.h" />
@@ -142,6 +143,7 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ObjectHandler.h" />
     <ClInclude Include="ProjectHandler.h" />
+    <ClInclude Include="SoundManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
