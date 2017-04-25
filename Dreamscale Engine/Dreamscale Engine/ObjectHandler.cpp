@@ -12,10 +12,10 @@ ObjectHandler::~ObjectHandler()
 	std::cout << "class:	ObjectHandler:	Destroyed!" << std::endl;
 }
 
-/*std::vector<GameObject*> ObjectHandler::getObject()
+std::vector<GameObject*> ObjectHandler::getObject()
 {
 	return gameObject;
-}*/
+}
 
 void ObjectHandler::createNewObject()
 {
@@ -29,10 +29,15 @@ void ObjectHandler::destroyObject(GameObject* object)
 		if (gameObject[i] == object)
 		{
 			delete gameObject[i]; // Delete the pointer
-			//gameObject.erase(gameObject.begin() + i);  // Erase from vector!
+			gameObject.erase(gameObject.begin() + i);  // Erase from vector!
 			return;
 		}
 	}
+}
+
+void dse::ObjectHandler::getObjects(std::vector<GameObject*> objects)
+{
+	std::cout << objects.size() << " objects left in the vector" << std::endl;
 }
 
 

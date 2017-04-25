@@ -9,15 +9,18 @@ namespace dse
 	{
 	public:
 
-		//std::vector<GameObject*> getObject();
+		std::vector<GameObject*> getObject();
 		void createNewObject();
 		void destroyObject(GameObject* object);
 
-		std::vector<GameObject*> gameObject;
+		void getObjects(std::vector<GameObject*> objects);
+
+		
 
 		ObjectHandler();
 		~ObjectHandler();
-
+	private:
+		std::vector<GameObject*> gameObject;
 		
 	};
 }

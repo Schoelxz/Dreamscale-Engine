@@ -15,7 +15,7 @@ GameEngine::~GameEngine()
 
 
 
-ObjectHandler GameEngine::getObjHand()
+ObjectHandler* GameEngine::getObjHand()
 {
-	return objHandler;
+	return &objHandler;
 }

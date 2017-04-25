@@ -11,7 +11,7 @@ using namespace dse;
 class GameEngine
 {
 public:
-	ObjectHandler getObjHand();
+	ObjectHandler* getObjHand();
 	//InputManager inpManager();
 	//CollisionHandler collision();
 	//ProjectHandler project();
