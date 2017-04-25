@@ -2,14 +2,22 @@
 #include "GameObject.h"
 #include <vector>
 
-class ObjectHandler
+namespace dse
 {
-public:
-	
-	std::vector<GameObject*> gameObject;
 
-	ObjectHandler();
-	~ObjectHandler();
-	void objCreator();
-};
+	static class ObjectHandler
+	{
+	public:
 
+		//std::vector<GameObject*> getObject();
+		void createNewObject();
+		void destroyObject(GameObject* object);
+
+		std::vector<GameObject*> gameObject;
+
+		ObjectHandler();
+		~ObjectHandler();
+
+		
+	};
+}

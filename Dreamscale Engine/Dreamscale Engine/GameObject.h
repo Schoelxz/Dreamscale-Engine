@@ -1,13 +1,22 @@
 #pragma once
 #include <iostream>
+#include "Components.h"
+#include <SFML\Graphics.hpp>
 
-class GameObject
+namespace dse
 {
-public:
+	class GameObject
+	{
+	public:
 
-	
+		GameObject();
+		~GameObject();
+	private:
 
-	GameObject();
-	~GameObject();
-};
+		Transform transform;
 
+		sf::Sprite sprite;
+
+	};
+
+}

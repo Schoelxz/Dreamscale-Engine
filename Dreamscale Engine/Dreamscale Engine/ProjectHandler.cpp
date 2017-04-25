@@ -40,11 +40,11 @@ void ProjectHandler::LoadProject()
 
 ProjectHandler::ProjectHandler()
 {
-	std::cout << "class : ProjectHandler : Constructed!" << std::endl;
+	std::cout << "class: ProjectHandler : Constructed!" << std::endl;
 }
 
 
 ProjectHandler::~ProjectHandler()
 {
-	std::cout << "class : ProjectHandler : Destroyed!" << std::endl;
+	std::cout << "class: ProjectHandler : Destroyed!" << std::endl;
 }
