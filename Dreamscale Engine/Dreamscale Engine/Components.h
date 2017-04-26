@@ -63,7 +63,11 @@ namespace dse
 		Rotation rotation;
 		Scale scale;
 	}Transform;
-
+	
+	typedef struct
+	{
+		Transform transform;
+	}Object;
 }
 
 #endif

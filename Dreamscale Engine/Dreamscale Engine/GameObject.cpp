@@ -12,4 +12,9 @@ GameObject::~GameObject()
 	std::cout << "class:	GameObject:	Destroyed!" << std::endl;
 }
 
+Object GameObject::getObjectInfo()
+{
+	return object;
+}
+
 

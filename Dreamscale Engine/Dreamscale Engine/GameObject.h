@@ -9,13 +9,14 @@ namespace dse
 	{
 	public:
 
+		Object getObjectInfo();
+
 		GameObject();
 		~GameObject();
 	private:
-
-		Transform transform;
-
-		sf::Sprite sprite;
+		//sf::Sprite sprite; //to be used when sprite is removed from components.
+		Object object;
+		
 
 	};
 
