@@ -6,27 +6,29 @@
 #include "ProjectHandler.h"
 #include <SFML\Graphics.hpp>
 
-using namespace dse;
-
-class GameEngine
+namespace dse
 {
-public:
-	ObjectHandler* getObjHand();
-	//InputManager inpManager();
-	//CollisionHandler collision();
-	//ProjectHandler project();
+
+	class GameEngine
+	{
+	public:
+		ObjectHandler* getObjHand();
+		//InputManager inpManager();
+		//CollisionHandler collision();
+		//ProjectHandler project();
 
 
-	GameEngine();
-	~GameEngine();
-	
-private:
+		GameEngine();
+		~GameEngine();
 
-	ObjectHandler objHandler;
-	InputManager inpManager;
-	CollisionHandler collision;
-	ProjectHandler project;
+	private:
 
+		ObjectHandler objHandler;
+		InputManager inpManager;
+		CollisionHandler collision;
+		ProjectHandler project;
+		
+	};
 
-};
+}
 

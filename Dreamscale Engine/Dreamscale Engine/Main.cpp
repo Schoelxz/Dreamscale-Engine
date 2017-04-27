@@ -2,6 +2,8 @@
 //x86
 #include "GameEngine.h"
 
+using namespace dse;
+
 int main()
 {
 	std::cout << "Dreamscale Engine" << std::endl;

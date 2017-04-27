@@ -1,6 +1,6 @@
 #include "GameEngine.h"
 
-
+using namespace dse;
 
 GameEngine::GameEngine()
 {
