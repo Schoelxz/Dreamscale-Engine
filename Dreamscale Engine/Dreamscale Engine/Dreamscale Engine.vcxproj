@@ -69,12 +69,18 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\SFML-2.4.2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\SFML-2.4.2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\SFML-2.4.2\include;..\LuaBridge\Source\LuaBridge;..\lua53\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\lua53;..\SFML-2.4.2\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\SFML-2.4.2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\SFML-2.4.2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\SFML-2.4.2\include;..\LuaBridge\Source\LuaBridge;..\lua53\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\lua53;..\SFML-2.4.2\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>D:\Dreamscale-Engine-master\Dreamscale Engine\LuaBridge\Source\LuaBridge;D:\Dreamscale-Engine-master\Dreamscale Engine\lua53\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>D:\Dreamscale-Engine-master\Dreamscale Engine\LuaBridge\Source\LuaBridge;D:\Dreamscale-Engine-master\Dreamscale Engine\lua53\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -127,21 +133,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="CollisionHandler.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="ObjectHandler.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="ProjectHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Character.h" />
     <ClInclude Include="CollisionHandler.h" />
     <ClInclude Include="Components.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ObjectHandler.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="ProjectHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

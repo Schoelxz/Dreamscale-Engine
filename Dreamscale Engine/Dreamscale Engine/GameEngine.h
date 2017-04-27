@@ -4,7 +4,11 @@
 #include "InputManager.h"
 #include "ObjectHandler.h"
 #include "ProjectHandler.h"
+#include <lua.hpp>
+#include <LuaBridge.h>
 #include <SFML\Graphics.hpp>
+
+using namespace luabridge;
 
 namespace dse
 {

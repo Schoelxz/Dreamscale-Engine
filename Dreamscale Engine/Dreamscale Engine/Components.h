@@ -1,6 +1,8 @@
 #ifndef DSE_COMPONENTS_H
 #define DSE_COMPONENTS_H
+
 #include <SFML\Graphics.hpp>
+
 namespace dse
 {
 	typedef struct
