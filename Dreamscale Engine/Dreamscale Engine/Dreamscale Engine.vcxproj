@@ -69,12 +69,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\SFML-2.4.2\include;..\LuaBridge\Source\LuaBridge;..\lua53\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\lua53;..\SFML-2.4.2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\SFML-2.4.2\include;..\LuaBridge\Source\LuaBridge;..\lua53\include;..\tmxparser\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\lua53;..\SFML-2.4.2\lib;..\tmxparser\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\SFML-2.4.2\include;..\LuaBridge\Source\LuaBridge;..\lua53\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\lua53;..\SFML-2.4.2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\SFML-2.4.2\include;..\LuaBridge\Source\LuaBridge;..\lua53\include;..\tmxparser\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\lua53;..\SFML-2.4.2\lib;..\tmxparser\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>D:\Dreamscale-Engine-master\Dreamscale Engine\LuaBridge\Source\LuaBridge;D:\Dreamscale-Engine-master\Dreamscale Engine\lua53\include;$(IncludePath)</IncludePath>
