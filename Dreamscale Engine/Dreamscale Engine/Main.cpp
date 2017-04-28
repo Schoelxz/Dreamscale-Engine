@@ -87,18 +87,7 @@ luaL_dostring(L, "print ('called B::print')");
 }
 
 protected:
-// Expose our class and memberfunctions to Lua
-static void DoBind(lua_State* L)
-{
-getGlobalNamespace(L)
-.beginNamespace("GameEngine")
-.deriveClass<B, A>("B")
-.addConstructor<void(*)(void)>()
-.addFunction("Print", &B::Print)
-.endClass()
-.endNamespace();
-}
-};
+
 
 
 int main()
