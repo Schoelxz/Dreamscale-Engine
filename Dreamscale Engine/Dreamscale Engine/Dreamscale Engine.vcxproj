@@ -143,6 +143,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ProjectHandler.cpp" />
     <ClCompile Include="SoundManager.cpp" />
+    <ClCompile Include="TmxHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="ProjectHandler.h" />
     <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="TmxHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
