@@ -8,11 +8,20 @@ enum FLIPPED
 	NONE,
 };
 
+TmxHandler::TmxHandler()
+{
+	
+}
+
 void TmxHandler::LoadMap()
 {
-	Tmx::Map map;
-
+	//Tmx::Map map;
 	map.ParseFile("orthogonal-outside.tmx");
+
+	const Tmx::ObjectGroup* objGroup = *map.GetObjectGroups().begin();
+	const Tmx::Tileset* tmxTileSet = *map.GetTilesets().begin();
+	const std::vector<Tmx::TileLayer*>& tileLayers = map.GetTileLayers(); //number of tilelayers
+	const std::vector<Tmx::ObjectGroup*>& objLayers = map.GetObjectGroups(); //number of object layers
 
 	FLIPPED flipped = NONE;
 
@@ -138,7 +147,7 @@ void TmxHandler::LoadMap()
 
 
 			unsigned int intId = real_id;
-			objId.push_back(intId);
+			//objId.push_back(intId);
 			if (real_id == -1)
 				continue;
 
@@ -182,31 +191,10 @@ void TmxHandler::LoadMap()
 
 
 
-			objs.push_back(object);
+			//objs.push_back(object);
 		}
 
 	}
-
-	// Create a window
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Tmx Example");
-	sf::Event event;
-	while (window.isOpen())
-	{
-		// Poll events for this window
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-			{
-				window.close();
-			}
-			else if (event.type == sf::Event::KeyPressed)
-			{
-				if (event.key.code == sf::Keyboard::Escape)
-				{
-					window.close();
-				}
-			}
-		}
 		//		std::cout << spriteVector[2]->getPosition << std::endl;
 		/*for (size_t i = 0; i <= objId.size() - 1; i++)
 		{
@@ -214,33 +202,21 @@ void TmxHandler::LoadMap()
 		}*/
 		//for (int i = objId.size()-1; i > 0; i--) {
 		//	std::cout << objId[i] << std::endl;
-		//}
+		//}	
+}
 
-		window.clear();
-
-
-
-		// Create a non-default renderstate, and bind our tileset texture to it
-		sf::RenderStates states;
-		states.texture = &tileSet;
-		for (auto i : vertexLayers)
-		{
-			// Render a vertexarray, with the custom renderstate
-			//window.draw(*i, states);
-		}
-		for (int i = 0; i < spriteVector.size() - 1; i++)
-		{
-			window.draw(*spriteVector[i]);
-		}
-
-		//sf::RenderStates objstates;
-		//
-		//for (auto i : sprObj)
-		//{
-		//	//objstates.texture = sprObj[i]->getFillColor();
-		//	window.draw(*i, objstates);
-		//}
-
-		window.display();
+void TmxHandler::Draw(sf::RenderWindow& window)
+{
+	// Create a non-default renderstate, and bind our tileset texture to it
+	sf::RenderStates states;
+	states.texture = &tileSet;
+	for (auto i : vertexLayers)
+	{
+		// Render a vertexarray, with the custom renderstate
+		window.draw(*i, states);
+	}
+	for (int i = 0; i < spriteVector.size() - 1; i++)
+	{
+		window.draw(*spriteVector[i]);
 	}
 }

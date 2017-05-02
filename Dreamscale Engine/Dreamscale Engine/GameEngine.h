@@ -7,6 +7,7 @@
 #include <lua.hpp>
 #include <LuaBridge.h>
 #include <SFML\Graphics.hpp>
+#include "TmxHandler.h"
 
 using namespace luabridge;
 
@@ -16,17 +17,19 @@ namespace dse
 	class GameEngine
 	{
 	public:
+		GameEngine();
+		~GameEngine();
+
 		ObjectHandler* getObjHand();
 		//InputManager inpManager();
 		//CollisionHandler collision();
 		//ProjectHandler project();
-
-
-		GameEngine();
-		~GameEngine();
+		
+		void Update();
 
 	private:
-
+		TmxHandler tmx;
+		sf::RenderWindow window;
 		ObjectHandler objHandler;
 		InputManager inpManager;
 		CollisionHandler collision;

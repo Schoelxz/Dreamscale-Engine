@@ -19,18 +19,17 @@
 class TmxHandler
 {
 public:
-	void LoadMap();
+	TmxHandler();
 
-private:
+	void LoadMap();
+	void Draw(sf::RenderWindow& window);
+
+//private:
 	Tmx::Map map;
-	const Tmx::Tileset* tmxTileSet = *map.GetTilesets().begin();
-	const Tmx::ObjectGroup* objGroup = *map.GetObjectGroups().begin();
-	const std::vector<Tmx::TileLayer*>& tileLayers = map.GetTileLayers(); //number of tilelayers
-	const std::vector<Tmx::ObjectGroup*>& objLayers = map.GetObjectGroups(); //number of object layers
+
 	std::vector<sf::VertexArray*> vertexLayers;
-	sf::Sprite sprObj;
-	std::vector<Tmx::Object*> objs;
-	std::vector<int> objId;
+	//std::vector<Tmx::Object*> objs;
+	//std::vector<int> objId;
 	std::vector<sf::Sprite*> spriteVector;
 
 	sf::Texture objTex;

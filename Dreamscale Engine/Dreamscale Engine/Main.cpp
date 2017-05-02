@@ -133,9 +133,13 @@ return 0;
 }*/
 
 #include "Player.h"
+#include "TmxHandler.h"
+
+dse::GameEngine engine;
 
 int main() {
-	lua_State* L = luaL_newstate();
+	engine.Update();
+	/*lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
 	getGlobalNamespace(L)
 		.beginClass<Character>("Character")
@@ -165,5 +169,5 @@ int main() {
 	std::cout << "|Back to the town... Let's talk to the witch again!" << std::endl;
 	witch.interact(&player);
 	int apa;
-	std::cin >> apa;
+	std::cin >> apa;*/
 }
