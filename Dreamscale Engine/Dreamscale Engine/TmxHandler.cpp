@@ -19,15 +19,21 @@ void TmxHandler::LoadMap()
 	map.ParseFile("orthogonal-outside.tmx");
 
 	const Tmx::ObjectGroup* objGroup = *map.GetObjectGroups().begin();
-	const Tmx::Tileset* tmxTileSet = *map.GetTilesets().begin();
+	const std::vector<Tmx::Tileset*> tmxTileSet = map.GetTilesets();
 	const std::vector<Tmx::TileLayer*>& tileLayers = map.GetTileLayers(); //number of tilelayers
 	const std::vector<Tmx::ObjectGroup*>& objLayers = map.GetObjectGroups(); //number of object layers
 
 	FLIPPED flipped = NONE;
 
-	if (!tileSet.loadFromFile(tmxTileSet->GetImage()->GetSource()))
+
+
+	for (size_t i = 0; i <= tmxTileSet.size()-1; i++)
 	{
-		assert(!"Couldn't load file!");
+		tileSet.push_back(new sf::Texture());
+		if (!tileSet[i]->loadFromFile(tmxTileSet[i]->GetImage()->GetSource()))
+		{
+			assert(!"Couldn't load file!");
+		}
 	}
 
 	// Get size for map and tiles
@@ -40,10 +46,14 @@ void TmxHandler::LoadMap()
 	const unsigned FLIPPED_VERTICALLY_FLAG = 0x40000000;
 	const unsigned FLIPPED_DIAGONALLY_FLAG = 0x20000000;
 
+	int currentTileset;
+
+	//for each tilelayer
 	for (auto tiles : tileLayers)
 	{
 		// Create a new vertexarray, acting as a list of quads
 		vertexLayers.push_back(new sf::VertexArray(sf::Quads, height * width * 4));
+
 		// For each tile in this layer...
 		for (size_t i = 0; i < height; ++i)
 		{
@@ -51,8 +61,25 @@ void TmxHandler::LoadMap()
 			{
 				// Get the tile, and check if it's part of a tileset
 				const Tmx::MapTile tile = tiles->GetTile(j, i);
+				
+
+				const int gid = tile.gid;
+				std::cout << tileSet.size() << tmxTileSet.size();
+
+				for (size_t i = tileSet.size() - 1; i > 0; i--)
+				{
+					if (tmxTileSet[i]->GetFirstGid() > gid)
+					{
+						currentTileset = i;
+						continue;
+					}
+					currentTileset = i;
+					break;
+				}
+				int real_id = gid - tmxTileSet[currentTileset]->GetFirstGid();
 				if (tile.tilesetId == -1)
 					continue;
+				std::cout << currentTileset << ": currenttileset" << std::endl;
 
 				// Get the currect vertexlayer
 				sf::VertexArray* vertexLayer = *(vertexLayers.end() - 1);
@@ -61,8 +88,8 @@ void TmxHandler::LoadMap()
 
 				// Calculate texture coordinates, based on the tilenumer
 				unsigned int tileNumber = tile.id;
-				int tu = tileNumber % (tileSet.getSize().x / tileWidth);
-				int tv = tileNumber / (tileSet.getSize().x / tileWidth);
+				int tu = tileNumber % (tileSet[currentTileset]->getSize().x / tileWidth);
+				int tv = tileNumber / (tileSet[currentTileset]->getSize().x / tileWidth);
 
 				/*
 				The form that we align the vertices in to build our quads
@@ -134,34 +161,34 @@ void TmxHandler::LoadMap()
 			currentTileSet = 1;
 			}*/
 			const int gid = object->GetGid();
+			//int currentTileset;
 
-			for (auto tileset : map.GetTilesets())
+			for (size_t i = tileSet.size() - 1; i > 0; i--)
 			{
-				if (tileset->GetFirstGid() < gid)
+				if (tmxTileSet[i]->GetFirstGid() > gid)
 				{
-					tmxTileSet = tileset;
-					break;
+					currentTileset = i;
+					continue;
 				}
+				currentTileset = i;
+				break;
+				//if (tileset->GetFirstGid() < gid)
+				//{
+				//	tmxTileSet = tileset;
+				//	break;
+				//}
 			}
-			int real_id = gid - tmxTileSet->GetFirstGid();
-
-
-			unsigned int intId = real_id;
-			//objId.push_back(intId);
+			int real_id = gid - tmxTileSet[currentTileset]->GetFirstGid();
 			if (real_id == -1)
 				continue;
-
-			//const Tmx::MapTile tile = objects->GetTile(j, i);
-			//if (tile.tilesetId == -1)
-			//	continue;
 
 			real_id &= ~(FLIPPED_HORIZONTALLY_FLAG |
 				FLIPPED_VERTICALLY_FLAG |
 				FLIPPED_DIAGONALLY_FLAG);
 
 
-			int tu2 = real_id % (tileSet.getSize().x / tileWidth);
-			int tv2 = real_id / (tileSet.getSize().x / tileWidth);
+			int tu2 = real_id % (tileSet[currentTileset]->getSize().x / tileWidth);
+			int tv2 = real_id / (tileSet[currentTileset]->getSize().x / tileWidth);
 
 
 
@@ -178,38 +205,25 @@ void TmxHandler::LoadMap()
 			sf::Vector2f botRight((tu2 + 1) * textureSource.width, (tv2 + 1) * textureSource.height); //width-height
 			sf::Vector2f botLeft(textureSource.left, (tv2 + 1) * textureSource.height); //left-height
 
-			sf::Texture* tempTex = new sf::Texture();
 			sf::Image* tempImg = new sf::Image();
-			tempImg->loadFromFile(tmxTileSet->GetImage()->GetSource());
+			sf::Texture* tempTex = new sf::Texture();
+					
+
+			//ERROR: tempImg here get a size value too big. This causes tempTex to load a texture that is too big, causing errors.
+			tempImg->loadFromFile(tmxTileSet[currentTileset]->GetImage()->GetSource());
 			tempTex->loadFromImage(*tempImg, textureSource);
 
-			//tempSprite->setTexture(tempTex);
-			//tempSprite->setTextureRect(textureSource);
-			spriteVector[spriteVector.size() - 1]->setPosition(object->GetX(), object->GetY());
-
+			spriteVector[spriteVector.size() - 1]->setPosition(object->GetX(), object->GetY() - object->GetHeight());
 			spriteVector[spriteVector.size() - 1]->setTexture(*tempTex);
-
-
-
-			//objs.push_back(object);
 		}
-
 	}
-		//		std::cout << spriteVector[2]->getPosition << std::endl;
-		/*for (size_t i = 0; i <= objId.size() - 1; i++)
-		{
-		std::cout << objId[i] << std::endl;
-		}*/
-		//for (int i = objId.size()-1; i > 0; i--) {
-		//	std::cout << objId[i] << std::endl;
-		//}	
 }
 
 void TmxHandler::Draw(sf::RenderWindow& window)
 {
 	// Create a non-default renderstate, and bind our tileset texture to it
 	sf::RenderStates states;
-	states.texture = &tileSet;
+	//states.texture = &tileSet;
 	for (auto i : vertexLayers)
 	{
 		// Render a vertexarray, with the custom renderstate

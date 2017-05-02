@@ -138,7 +138,7 @@ return 0;
 dse::GameEngine engine;
 
 int main() {
-	engine.Update();
+	
 	/*lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
 	getGlobalNamespace(L)
@@ -170,4 +170,6 @@ int main() {
 	witch.interact(&player);
 	int apa;
 	std::cin >> apa;*/
+
+	engine.Update();
 }

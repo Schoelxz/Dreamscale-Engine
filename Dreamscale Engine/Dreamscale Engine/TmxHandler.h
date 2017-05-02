@@ -34,7 +34,7 @@ public:
 
 	sf::Texture objTex;
 	// Load the texture specifying the tileset
-	sf::Texture tileSet;
+	std::vector<sf::Texture*> tileSet;
 
 
 };
