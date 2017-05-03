@@ -1,17 +1,23 @@
 #include "GameEngine.h"
 
+
+
+
 using namespace dse;
 
 GameEngine::GameEngine()
 {
-	window.create(sf::VideoMode(800, 600), "snek");
+	window.create(sf::VideoMode(1920, 1080), "DreamScale Engine");
 	tmx.LoadMap();
 	tmx.LoadObjects();
-	//std::cout << "class:	GameEngine:	Constructed!" << std::endl;
+	std::cout << "class:	GameEngine:	Constructed!" << std::endl;
 }
 
 void dse::GameEngine::Update()
 {
+	//Temp MR
+	rect.setFillColor(sf::Color::Green);
+	rect.setSize(vect);
 
 	while (window.isOpen())
 	{
@@ -32,29 +38,22 @@ void dse::GameEngine::Update()
 			}
 		}
 
+		//Temp MR
+		rect.setPosition(mouse.getPosition().x, mouse.getPosition().y);
+
 		window.clear();
 
-		tmx.Draw(window);
+		tmx.DrawMap(window);
+		tmx.DrawObjects(window);
+		window.draw(rect);//Temp MR
 
-		// Create a non-default renderstate, and bind our tileset texture to it
-		//sf::RenderStates states;
-		//states.texture = &tileSet;
-		//for (auto i : vertexLayers)
-		//{
-		//	// Render a vertexarray, with the custom renderstate
-		//	window.draw(*i, states);
-		//}
-		//for (int i = 0; i < spriteVector.size() - 1; i++)
-		//{
-		//	window.draw(*spriteVector[i]);
-		//}
 		window.display();
 	}
 }
 
 GameEngine::~GameEngine()
 {
-	//std::cout << "class:	GameEngine:	Destructed!" << std::endl;
+	std::cout << "class:	GameEngine:	Destructed!" << std::endl;
 }
 
 

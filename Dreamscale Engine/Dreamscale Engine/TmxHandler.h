@@ -23,15 +23,17 @@ public:
 
 	void LoadMap();
 	void LoadObjects();
-	void Draw(sf::RenderWindow& window);
+	void DrawMap(sf::RenderWindow& window);
+	void DrawObjects(sf::RenderWindow& window);
+
+	void CheckYPosition(sf::Sprite object);
 
 //private:
 	Tmx::Map map;
 
 	std::vector<sf::VertexArray*> vertexLayers;
-	//std::vector<Tmx::Object*> objs;
-	//std::vector<int> objId;
 	std::vector<sf::Sprite*> spriteVector;
+
 	// Load the texture specifying the tileset
 	std::vector<sf::Texture*> tileSetTexture;
 

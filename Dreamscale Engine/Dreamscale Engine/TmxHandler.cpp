@@ -15,17 +15,14 @@ TmxHandler::TmxHandler()
 
 void TmxHandler::LoadMap()
 {
-	//Tmx::Map map;
+	//Tmx map file loads.
 	map.ParseFile("orthogonal-outside.tmx");
 
-	
 	const std::vector<Tmx::Tileset*> tmxTileSet = map.GetTilesets();
 	const std::vector<Tmx::TileLayer*>& tileLayers = map.GetTileLayers(); //number of tilelayers
 	 //number of object layers
 
 	FLIPPED flipped = NONE;
-
-
 
 	for (size_t i = 0; i <= tmxTileSet.size() - 1; i++)
 	{
@@ -78,7 +75,7 @@ void TmxHandler::LoadMap()
 				int real_id = gid - tmxTileSet[currentTileset]->GetFirstGid();
 				if (tile.tilesetId == -1)
 					continue;
-				std::cout << currentTileset << ": currenttileset" << std::endl;
+				std::cout << currentTileset << ": currenttileset in vertex" << std::endl;
 
 				// Get the currect vertexlayer
 				sf::VertexArray* vertexLayer = *(vertexLayers.end() - 1);
@@ -146,10 +143,8 @@ void TmxHandler::LoadMap()
 
 void TmxHandler::LoadObjects()
 {
-	//Tmx::Map map;
-	map.ParseFile("orthogonal-outside.tmx");
+	//Parse tmx file into Map map
 
-	const Tmx::ObjectGroup* objGroup = *map.GetObjectGroups().begin();
 	const std::vector<Tmx::Tileset*> tmxTileSet = map.GetTilesets();
 	const std::vector<Tmx::ObjectGroup*>& objLayers = map.GetObjectGroups(); //number of object layers
 
@@ -205,6 +200,8 @@ void TmxHandler::LoadObjects()
 			if (real_id == -1)
 				continue;
 
+			std::cout << currentTileset << ": currenttileset in Objects" << std::endl;
+
 			real_id &=	~(FLIPPED_HORIZONTALLY_FLAG |
 							FLIPPED_VERTICALLY_FLAG |
 							FLIPPED_DIAGONALLY_FLAG);
@@ -233,18 +230,41 @@ void TmxHandler::LoadObjects()
 	}
 }
 
-void TmxHandler::Draw(sf::RenderWindow& window)
+/*
+Tänk ppå hur currentTile ändras mellan 0 och 1 (outdoor och indoor)
+?
+*/
+/*
+y-lager funktion? för draw i rätt ordning med bakom och framför objekt.
+
+placera tiles specifikt till hur det fungerar när man är bakom/framför tilesen.
+*/
+
+void TmxHandler::CheckYPosition(sf::Sprite object)
+{
+
+	//if(object.getPosition().y > )
+
+}
+
+void TmxHandler::DrawMap(sf::RenderWindow& window)
 {
 	// Create a non-default renderstate, and bind our tileset texture to it
 	sf::RenderStates states;
-	states.texture = tileSetTexture[0];
+	states.texture = tileSetTexture[currentTileset];
 	for (auto i : vertexLayers)
 	{
 		// Render a vertexarray, with the custom renderstate
 		window.draw(*i, states);
 	}
+}
+
+void TmxHandler::DrawObjects(sf::RenderWindow & window)
+{
+	//Draws all sprites inside the spriteVector
 	for (int i = 0; i < spriteVector.size() - 1; i++)
 	{
 		window.draw(*spriteVector[i]);
 	}
+
 }
