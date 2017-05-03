@@ -6,6 +6,7 @@ GameEngine::GameEngine()
 {
 	window.create(sf::VideoMode(800, 600), "snek");
 	tmx.LoadMap();
+	tmx.LoadObjects();
 	//std::cout << "class:	GameEngine:	Constructed!" << std::endl;
 }
 

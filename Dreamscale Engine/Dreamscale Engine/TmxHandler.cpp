@@ -18,16 +18,16 @@ void TmxHandler::LoadMap()
 	//Tmx::Map map;
 	map.ParseFile("orthogonal-outside.tmx");
 
-	const Tmx::ObjectGroup* objGroup = *map.GetObjectGroups().begin();
+	
 	const std::vector<Tmx::Tileset*> tmxTileSet = map.GetTilesets();
 	const std::vector<Tmx::TileLayer*>& tileLayers = map.GetTileLayers(); //number of tilelayers
-	const std::vector<Tmx::ObjectGroup*>& objLayers = map.GetObjectGroups(); //number of object layers
+	 //number of object layers
 
 	FLIPPED flipped = NONE;
 
 
 
-	for (size_t i = 0; i <= tmxTileSet.size()-1; i++)
+	for (size_t i = 0; i <= tmxTileSet.size() - 1; i++)
 	{
 		tileSetTexture.push_back(new sf::Texture());
 		if (!tileSetTexture[i]->loadFromFile(tmxTileSet[i]->GetImage()->GetSource()))
@@ -42,9 +42,7 @@ void TmxHandler::LoadMap()
 	const int tileHeight = map.GetTileHeight();
 	const int tileWidth = map.GetTileWidth();
 
-	const unsigned FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
-	const unsigned FLIPPED_VERTICALLY_FLAG = 0x40000000;
-	const unsigned FLIPPED_DIAGONALLY_FLAG = 0x20000000;
+	
 
 
 	//for each tilelayer
@@ -60,10 +58,10 @@ void TmxHandler::LoadMap()
 			{
 				// Get the tile, and check if it's part of a tileset
 				const Tmx::MapTile tile = tiles->GetTile(j, i);
-				
+
 
 				const int gid = tile.gid;
-				std::cout << tileSetTexture.size() << tmxTileSet.size();
+				//std::cout << tileSetTexture.size() << tmxTileSet.size();
 
 				for (int i = tileSetTexture.size() - 1; i >= 0; i--)
 				{
@@ -144,6 +142,35 @@ void TmxHandler::LoadMap()
 			}
 		}
 	}
+}
+
+void TmxHandler::LoadObjects()
+{
+	//Tmx::Map map;
+	map.ParseFile("orthogonal-outside.tmx");
+
+	const Tmx::ObjectGroup* objGroup = *map.GetObjectGroups().begin();
+	const std::vector<Tmx::Tileset*> tmxTileSet = map.GetTilesets();
+	const std::vector<Tmx::ObjectGroup*>& objLayers = map.GetObjectGroups(); //number of object layers
+
+	for (size_t i = 0; i <= tmxTileSet.size() - 1; i++)
+	{
+		tileSetTexture.push_back(new sf::Texture());
+		if (!tileSetTexture[i]->loadFromFile(tmxTileSet[i]->GetImage()->GetSource()))
+		{
+			assert(!"Couldn't load file!");
+		}
+	}
+
+	// Get size for map and tiles
+	const int height = map.GetHeight();
+	const int width = map.GetWidth();
+	const int tileHeight = map.GetTileHeight();
+	const int tileWidth = map.GetTileWidth();
+
+	const unsigned FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
+	const unsigned FLIPPED_VERTICALLY_FLAG = 0x40000000;
+	const unsigned FLIPPED_DIAGONALLY_FLAG = 0x20000000;
 
 	//for each object layer
 	for (auto objects : objLayers)
@@ -163,7 +190,7 @@ void TmxHandler::LoadMap()
 			}*/
 			const int gid = object->GetGid();
 
-			for (int i = tileSetTexture.size() - 1; i >= 0; i--)
+			for (int i = tmxTileSet.size() - 1; i >= 0; i--)
 			{
 				if (tmxTileSet[i]->GetFirstGid() > gid)
 				{
@@ -172,9 +199,7 @@ void TmxHandler::LoadMap()
 				}
 				currentTileset = i;
 				break;
-
 			}
-
 
 			int real_id = gid - tmxTileSet[currentTileset]->GetFirstGid();
 			if (real_id == -1)
@@ -184,10 +209,8 @@ void TmxHandler::LoadMap()
 							FLIPPED_VERTICALLY_FLAG |
 							FLIPPED_DIAGONALLY_FLAG);
 
-
 			int tu2 = real_id % (tileSetTexture[currentTileset]->getSize().x / tileWidth);
 			int tv2 = real_id / (tileSetTexture[currentTileset]->getSize().x / tileWidth);
-
 
 
 			sf::IntRect textureSource; //= Objectets 4 rektangel värden
@@ -214,7 +237,7 @@ void TmxHandler::Draw(sf::RenderWindow& window)
 {
 	// Create a non-default renderstate, and bind our tileset texture to it
 	sf::RenderStates states;
-	states.texture = tileSetTexture[currentTileset];
+	states.texture = tileSetTexture[0];
 	for (auto i : vertexLayers)
 	{
 		// Render a vertexarray, with the custom renderstate

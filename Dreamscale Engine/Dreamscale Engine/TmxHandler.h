@@ -22,6 +22,7 @@ public:
 	TmxHandler();
 
 	void LoadMap();
+	void LoadObjects();
 	void Draw(sf::RenderWindow& window);
 
 //private:
