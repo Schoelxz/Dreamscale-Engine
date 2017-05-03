@@ -31,11 +31,10 @@ public:
 	//std::vector<Tmx::Object*> objs;
 	//std::vector<int> objId;
 	std::vector<sf::Sprite*> spriteVector;
-
-	sf::Texture objTex;
 	// Load the texture specifying the tileset
-	std::vector<sf::Texture*> tileSet;
+	std::vector<sf::Texture*> tileSetTexture;
 
+	int currentTileset;
 
 };
 

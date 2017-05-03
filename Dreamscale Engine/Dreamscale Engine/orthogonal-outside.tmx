@@ -4,7 +4,7 @@
   <property name="enemyTint" type="color" value="#ffa33636"/>
  </properties>
  <tileset firstgid="1" name="outdoor" tilewidth="16" tileheight="16" tilecount="288" columns="24">
-  <image source="../../../Tiled/examples/buch-outdoor.png" width="384" height="192"/>
+  <image source="../../../../Tiled/examples/buch-outdoor.png" width="384" height="192"/>
   <terraintypes>
    <terrain name="Grass" tile="150"/>
    <terrain name="Dirt" tile="100"/>
@@ -198,7 +198,7 @@
   <tile id="276" terrain="3,1,1,1"/>
  </tileset>
  <tileset firstgid="289" name="indoor" tilewidth="16" tileheight="16" tilecount="156" columns="12">
-  <image source="../../../Tiled/examples/sewer_tileset.png" width="192" height="217"/>
+  <image source="../../../../Tiled/examples/sewer_tileset.png" width="192" height="217"/>
  </tileset>
  <layer name="Ground" width="45" height="31">
   <data encoding="csv">

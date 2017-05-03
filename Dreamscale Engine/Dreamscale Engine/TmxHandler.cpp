@@ -29,8 +29,8 @@ void TmxHandler::LoadMap()
 
 	for (size_t i = 0; i <= tmxTileSet.size()-1; i++)
 	{
-		tileSet.push_back(new sf::Texture());
-		if (!tileSet[i]->loadFromFile(tmxTileSet[i]->GetImage()->GetSource()))
+		tileSetTexture.push_back(new sf::Texture());
+		if (!tileSetTexture[i]->loadFromFile(tmxTileSet[i]->GetImage()->GetSource()))
 		{
 			assert(!"Couldn't load file!");
 		}
@@ -46,7 +46,6 @@ void TmxHandler::LoadMap()
 	const unsigned FLIPPED_VERTICALLY_FLAG = 0x40000000;
 	const unsigned FLIPPED_DIAGONALLY_FLAG = 0x20000000;
 
-	int currentTileset;
 
 	//for each tilelayer
 	for (auto tiles : tileLayers)
@@ -64,9 +63,9 @@ void TmxHandler::LoadMap()
 				
 
 				const int gid = tile.gid;
-				std::cout << tileSet.size() << tmxTileSet.size();
+				std::cout << tileSetTexture.size() << tmxTileSet.size();
 
-				for (size_t i = tileSet.size() - 1; i > 0; i--)
+				for (int i = tileSetTexture.size() - 1; i >= 0; i--)
 				{
 					if (tmxTileSet[i]->GetFirstGid() > gid)
 					{
@@ -76,6 +75,8 @@ void TmxHandler::LoadMap()
 					currentTileset = i;
 					break;
 				}
+
+
 				int real_id = gid - tmxTileSet[currentTileset]->GetFirstGid();
 				if (tile.tilesetId == -1)
 					continue;
@@ -88,8 +89,8 @@ void TmxHandler::LoadMap()
 
 				// Calculate texture coordinates, based on the tilenumer
 				unsigned int tileNumber = tile.id;
-				int tu = tileNumber % (tileSet[currentTileset]->getSize().x / tileWidth);
-				int tv = tileNumber / (tileSet[currentTileset]->getSize().x / tileWidth);
+				int tu = tileNumber % (tileSetTexture[currentTileset]->getSize().x / tileWidth);
+				int tv = tileNumber / (tileSetTexture[currentTileset]->getSize().x / tileWidth);
 
 				/*
 				The form that we align the vertices in to build our quads
@@ -161,9 +162,8 @@ void TmxHandler::LoadMap()
 			currentTileSet = 1;
 			}*/
 			const int gid = object->GetGid();
-			//int currentTileset;
 
-			for (size_t i = tileSet.size() - 1; i > 0; i--)
+			for (int i = tileSetTexture.size() - 1; i >= 0; i--)
 			{
 				if (tmxTileSet[i]->GetFirstGid() > gid)
 				{
@@ -172,23 +172,21 @@ void TmxHandler::LoadMap()
 				}
 				currentTileset = i;
 				break;
-				//if (tileset->GetFirstGid() < gid)
-				//{
-				//	tmxTileSet = tileset;
-				//	break;
-				//}
+
 			}
+
+
 			int real_id = gid - tmxTileSet[currentTileset]->GetFirstGid();
 			if (real_id == -1)
 				continue;
 
-			real_id &= ~(FLIPPED_HORIZONTALLY_FLAG |
-				FLIPPED_VERTICALLY_FLAG |
-				FLIPPED_DIAGONALLY_FLAG);
+			real_id &=	~(FLIPPED_HORIZONTALLY_FLAG |
+							FLIPPED_VERTICALLY_FLAG |
+							FLIPPED_DIAGONALLY_FLAG);
 
 
-			int tu2 = real_id % (tileSet[currentTileset]->getSize().x / tileWidth);
-			int tv2 = real_id / (tileSet[currentTileset]->getSize().x / tileWidth);
+			int tu2 = real_id % (tileSetTexture[currentTileset]->getSize().x / tileWidth);
+			int tv2 = real_id / (tileSetTexture[currentTileset]->getSize().x / tileWidth);
 
 
 
@@ -200,16 +198,9 @@ void TmxHandler::LoadMap()
 			textureSource.width = tileWidth;
 			textureSource.height = tileHeight;
 
-			sf::Vector2f topLeft(textureSource.left, textureSource.top); //left-top
-			sf::Vector2f topRight((tu2 + 1) * textureSource.width, textureSource.top); //width-top
-			sf::Vector2f botRight((tu2 + 1) * textureSource.width, (tv2 + 1) * textureSource.height); //width-height
-			sf::Vector2f botLeft(textureSource.left, (tv2 + 1) * textureSource.height); //left-height
-
 			sf::Image* tempImg = new sf::Image();
 			sf::Texture* tempTex = new sf::Texture();
 					
-
-			//ERROR: tempImg here get a size value too big. This causes tempTex to load a texture that is too big, causing errors.
 			tempImg->loadFromFile(tmxTileSet[currentTileset]->GetImage()->GetSource());
 			tempTex->loadFromImage(*tempImg, textureSource);
 
@@ -223,7 +214,7 @@ void TmxHandler::Draw(sf::RenderWindow& window)
 {
 	// Create a non-default renderstate, and bind our tileset texture to it
 	sf::RenderStates states;
-	//states.texture = &tileSet;
+	states.texture = tileSetTexture[currentTileset];
 	for (auto i : vertexLayers)
 	{
 		// Render a vertexarray, with the custom renderstate
