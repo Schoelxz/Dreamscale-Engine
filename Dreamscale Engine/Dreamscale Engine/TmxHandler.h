@@ -21,16 +21,19 @@ class TmxHandler
 public:
 	TmxHandler();
 
+	std::vector<sf::Sprite*> spriteVector;
 	void LoadMap();
 	void LoadObjects();
 	void DrawMap(sf::RenderWindow& window);
 	void DrawObjects(sf::RenderWindow& window);
+	const sf::Sprite& GetObjects(int index);
+	//void SetObjectType();
 
-//private:
+private:
 	Tmx::Map map;
 
 	std::vector<sf::VertexArray*> vertexLayers;
-	std::vector<sf::Sprite*> spriteVector;
+	
 
 	// Load the texture specifying the tileset
 	std::vector<sf::Texture*> tileSetTexture;

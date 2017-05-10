@@ -5,6 +5,14 @@ using namespace dse;
 ObjectHandler::ObjectHandler()
 {
 	std::cout << "class:	ObjectHandler:	Constructed!" << std::endl;
+	tmx.LoadMap();
+	tmx.LoadObjects();
+	for (int i = 0; i < tmx.spriteVector.size(); i++) {
+		gameObject.push_back(new sf::Sprite(tmx.GetObjects(i)));
+		std::cout << gameObject[i]->getPosition().x << " " << gameObject[i]->getPosition().y << std::endl;
+	}
+	std::cout << gameObject.size() << std::endl;
+	//SetObjectType();
 }
 
 ObjectHandler::~ObjectHandler()
@@ -12,33 +20,13 @@ ObjectHandler::~ObjectHandler()
 	std::cout << "class:	ObjectHandler:	Destroyed!" << std::endl;
 }
 
-std::vector<GameObject*> ObjectHandler::getObject()
+void dse::ObjectHandler::Update()
 {
-	return gameObject;
+	
 }
 
-void ObjectHandler::createNewObject()
+void dse::ObjectHandler::DrawObjects(sf::RenderWindow& win)
 {
-	gameObject.push_back(new GameObject);
+	tmx.DrawMap(win);
+	tmx.DrawObjects(win);
 }
-
-void ObjectHandler::destroyObject(GameObject* object)
-{
-	for (size_t i = 0; i < gameObject.size(); i++)
-	{
-		if (gameObject[i] == object)
-		{
-			delete gameObject[i]; // Delete the pointer
-			gameObject.erase(gameObject.begin() + i);  // Erase from vector!
-			return;
-		}
-	}
-}
-
-void dse::ObjectHandler::getObjects(std::vector<GameObject*> objects)
-{
-	std::cout << objects.size() << " objects left in the vector" << std::endl;
-}
-
-
-

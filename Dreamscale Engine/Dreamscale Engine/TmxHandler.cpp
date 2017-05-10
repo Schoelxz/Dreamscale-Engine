@@ -71,11 +71,11 @@ void TmxHandler::LoadMap()
 					currentTileset = i;
 					break;
 				}
-
-
 				int real_id = gid - tmxTileSet[currentTileset]->GetFirstGid();
+
 				if (tile.tilesetId == -1)
 					continue;
+
 				std::cout << currentTileset << ": currenttileset in vertex" << std::endl;
 
 				// Get the currect vertexlayer
@@ -177,9 +177,33 @@ void TmxHandler::LoadObjects()
 		//for each object IN object layer
 		for (auto object : objects->GetObjects())
 		{
+			if (object->GetType() == "rectangle")
+			{
+				std::cout << object->GetName() << " ";
+				std::cout << "rectangle!" << std::endl;
+			}
+			if (object->GetType() == "polygon")
+			{
+				std::cout << object->GetName() << " ";
+				std::cout << "polygon!" << std::endl;
+			}
+			if (object->GetType() == "polyline")
+			{
+				std::cout << object->GetName() << " ";
+				std::cout << "polyline!" << std::endl;
+			}
+			if (object->GetType() == "elipse")
+			{
+				std::cout << object->GetName() << " ";
+				std::cout << "elipse!" << std::endl;
+			}
+			else
+			{
+				std::cout << "tile object" << std::endl;
+			}
 
 			spriteVector.push_back(new sf::Sprite);
-			std::cout << spriteVector.size() << std::endl;
+			//std::cout << spriteVector.size() << std::endl;
 
 			const int gid = object->GetGid();
 
@@ -198,7 +222,7 @@ void TmxHandler::LoadObjects()
 			if (real_id == -1)
 				continue;
 
-			std::cout << tempCurrentTileset << ": currenttileset in Objects" << std::endl;
+			//std::cout << tempCurrentTileset << ": currenttileset in Objects" << std::endl;
 
 			real_id &=	~(FLIPPED_HORIZONTALLY_FLAG |
 							FLIPPED_VERTICALLY_FLAG |
@@ -247,5 +271,17 @@ void TmxHandler::DrawObjects(sf::RenderWindow & window)
 	{
 		window.draw(*spriteVector[i]);
 	}
-
 }
+
+const sf::Sprite & TmxHandler::GetObjects(int index)
+{
+	return *spriteVector[index];
+}
+
+//void TmxHandler::SetObjectType()
+//{
+//	for (int i = 0; i < spriteVector.size(); i++)
+//	{
+//
+//	}
+//}

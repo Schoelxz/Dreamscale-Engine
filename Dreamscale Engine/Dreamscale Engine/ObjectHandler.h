@@ -1,6 +1,8 @@
 #pragma once
-#include "GameObject.h"
 #include <vector>
+#include <SFML\Graphics.hpp>
+
+#include "TmxHandler.h"
 
 namespace dse
 {
@@ -8,19 +10,15 @@ namespace dse
 	static class ObjectHandler
 	{
 	public:
-
-		std::vector<GameObject*> getObject();
-		void createNewObject();
-		void destroyObject(GameObject* object);
-
-		void getObjects(std::vector<GameObject*> objects);
-
-		
-
 		ObjectHandler();
 		~ObjectHandler();
-	private:
-		std::vector<GameObject*> gameObject;
 		
+		void Update();
+		
+		void DrawObjects(sf::RenderWindow& win);
+
+	private:
+		std::vector<sf::Sprite*> gameObject;
+		TmxHandler tmx;
 	};
 }

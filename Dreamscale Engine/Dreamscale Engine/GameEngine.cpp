@@ -8,8 +8,7 @@ using namespace dse;
 GameEngine::GameEngine()
 {
 	window.create(sf::VideoMode(1920, 1080), "DreamScale Engine");
-	tmx.LoadMap();
-	tmx.LoadObjects();
+	
 	std::cout << "class:	GameEngine:	Constructed!" << std::endl;
 }
 
@@ -50,8 +49,10 @@ void dse::GameEngine::Update()
 
 		window.clear();
 
-		tmx.DrawMap(window);
-		tmx.DrawObjects(window);
+		objHandler.Update();
+		objHandler.DrawObjects(window);
+		//tmx.DrawMap(window);
+		//tmx.DrawObjects(window);
 		window.draw(rect);//Temp MR
 
 		window.display();
@@ -63,9 +64,3 @@ GameEngine::~GameEngine()
 	std::cout << "class:	GameEngine:	Destructed!" << std::endl;
 }
 
-
-
-ObjectHandler* GameEngine::getObjHand()
-{
-	return &objHandler;
-}
