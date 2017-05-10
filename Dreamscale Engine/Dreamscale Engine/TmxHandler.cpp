@@ -15,6 +15,7 @@ TmxHandler::TmxHandler()
 
 void TmxHandler::LoadMap()
 {
+	
 	//Tmx map file loads.
 	map.ParseFile("orthogonal-outside.tmx");
 	//map.ParseFile("EmanuelHolm-DesertDwellersPort.tmx");
