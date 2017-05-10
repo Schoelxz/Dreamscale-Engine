@@ -21,7 +21,7 @@ namespace dse
 		GameEngine();
 		~GameEngine();
 
-		ObjectHandler* getObjHand();
+		//ObjectHandler getObjHand();
 		//InputManager inpManager();
 		//CollisionHandler collision();
 		//ProjectHandler project();
@@ -34,7 +34,7 @@ namespace dse
 		sf::Vector2f vect{ 50,50 };
 
 	private:
-		TmxHandler tmx;
+		//TmxHandler tmx;
 		sf::RenderWindow window;
 		ObjectHandler objHandler;
 		InputManager inpManager;
