@@ -26,8 +26,6 @@ public:
 	void DrawMap(sf::RenderWindow& window);
 	void DrawObjects(sf::RenderWindow& window);
 
-	void CheckYPosition(sf::Sprite object);
-
 //private:
 	Tmx::Map map;
 
@@ -37,7 +35,7 @@ public:
 	// Load the texture specifying the tileset
 	std::vector<sf::Texture*> tileSetTexture;
 
-	int currentTileset;
+	int currentTileset; //For Loading Map
 
 };
 

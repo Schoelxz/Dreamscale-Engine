@@ -19,6 +19,8 @@ void dse::GameEngine::Update()
 	rect.setFillColor(sf::Color::Green);
 	rect.setSize(vect);
 
+	bool mouseInsideAWindow = false;
+
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -36,10 +38,15 @@ void dse::GameEngine::Update()
 					window.close();
 				}
 			}
+			if (event.type == sf::Event::MouseEntered)
+				mouseInsideAWindow = true;
+			if (event.type == sf::Event::MouseLeft)
+				mouseInsideAWindow = false;
 		}
 
 		//Temp MR
-		rect.setPosition(mouse.getPosition().x, mouse.getPosition().y);
+		if(mouseInsideAWindow)
+		rect.setPosition(mouse.getPosition(window).x, mouse.getPosition(window).y);
 
 		window.clear();
 

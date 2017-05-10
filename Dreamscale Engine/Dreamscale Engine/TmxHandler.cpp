@@ -17,6 +17,7 @@ void TmxHandler::LoadMap()
 {
 	//Tmx map file loads.
 	map.ParseFile("orthogonal-outside.tmx");
+	//map.ParseFile("EmanuelHolm-DesertDwellersPort.tmx");
 
 	const std::vector<Tmx::Tileset*> tmxTileSet = map.GetTilesets();
 	const std::vector<Tmx::TileLayer*>& tileLayers = map.GetTileLayers(); //number of tilelayers
@@ -144,6 +145,7 @@ void TmxHandler::LoadMap()
 void TmxHandler::LoadObjects()
 {
 	//Parse tmx file into Map map
+	int tempCurrentTileset;
 
 	const std::vector<Tmx::Tileset*> tmxTileSet = map.GetTilesets();
 	const std::vector<Tmx::ObjectGroup*>& objLayers = map.GetObjectGroups(); //number of object layers
@@ -179,35 +181,31 @@ void TmxHandler::LoadObjects()
 			spriteVector.push_back(new sf::Sprite);
 			std::cout << spriteVector.size() << std::endl;
 
-			/*if (tmxTileSet->GetFirstGid() == NULL)
-			{
-			currentTileSet = 1;
-			}*/
 			const int gid = object->GetGid();
 
 			for (int i = tmxTileSet.size() - 1; i >= 0; i--)
 			{
 				if (tmxTileSet[i]->GetFirstGid() > gid)
 				{
-					currentTileset = i;
+					tempCurrentTileset = i;
 					continue;
 				}
-				currentTileset = i;
+				tempCurrentTileset = i;
 				break;
 			}
 
-			int real_id = gid - tmxTileSet[currentTileset]->GetFirstGid();
+			int real_id = gid - tmxTileSet[tempCurrentTileset]->GetFirstGid();
 			if (real_id == -1)
 				continue;
 
-			std::cout << currentTileset << ": currenttileset in Objects" << std::endl;
+			std::cout << tempCurrentTileset << ": currenttileset in Objects" << std::endl;
 
 			real_id &=	~(FLIPPED_HORIZONTALLY_FLAG |
 							FLIPPED_VERTICALLY_FLAG |
 							FLIPPED_DIAGONALLY_FLAG);
 
-			int tu2 = real_id % (tileSetTexture[currentTileset]->getSize().x / tileWidth);
-			int tv2 = real_id / (tileSetTexture[currentTileset]->getSize().x / tileWidth);
+			int tu2 = real_id % (tileSetTexture[tempCurrentTileset]->getSize().x / tileWidth);
+			int tv2 = real_id / (tileSetTexture[tempCurrentTileset]->getSize().x / tileWidth);
 
 
 			sf::IntRect textureSource; //= Objectets 4 rektangel värden
@@ -221,30 +219,13 @@ void TmxHandler::LoadObjects()
 			sf::Image* tempImg = new sf::Image();
 			sf::Texture* tempTex = new sf::Texture();
 					
-			tempImg->loadFromFile(tmxTileSet[currentTileset]->GetImage()->GetSource());
+			tempImg->loadFromFile(tmxTileSet[tempCurrentTileset]->GetImage()->GetSource());
 			tempTex->loadFromImage(*tempImg, textureSource);
 
 			spriteVector[spriteVector.size() - 1]->setPosition(object->GetX(), object->GetY() - object->GetHeight());
 			spriteVector[spriteVector.size() - 1]->setTexture(*tempTex);
 		}
 	}
-}
-
-/*
-Tänk ppå hur currentTile ändras mellan 0 och 1 (outdoor och indoor)
-?
-*/
-/*
-y-lager funktion? för draw i rätt ordning med bakom och framför objekt.
-
-placera tiles specifikt till hur det fungerar när man är bakom/framför tilesen.
-*/
-
-void TmxHandler::CheckYPosition(sf::Sprite object)
-{
-
-	//if(object.getPosition().y > )
-
 }
 
 void TmxHandler::DrawMap(sf::RenderWindow& window)
