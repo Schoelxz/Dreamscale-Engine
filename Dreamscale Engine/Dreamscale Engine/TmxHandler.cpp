@@ -326,20 +326,19 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
 			std::cout << " polyline" << std::endl;
 			sf::ConvexShape *convex = new sf::ConvexShape();
 			int numPoints = obj.GetPolyline()->GetNumPoints();
-			convex->setPointCount(numPoints);
-			for (int i = 0; i < numPoints; i++)
+			convex->setPointCount(numPoints * 2);
+			sf::Vector2f pointPos;
+			for (int i = 0; i < convex->getPointCount() / 2; i++)
 			{
-				const sf::Vector2f pointPos = sf::Vector2f(obj.GetX() + obj.GetPolyline()->GetPoint(i).x, obj.GetY() + obj.GetPolyline()->GetPoint(i).y);
+				pointPos = sf::Vector2f(obj.GetX() + obj.GetPolyline()->GetPoint(i).x, obj.GetY() + obj.GetPolyline()->GetPoint(i).y);
 				convex->setPoint(i, pointPos);
 			}
-			//for (int i = numPoints / 2; i < numPoints; i++)
-			//{
-			//	for (int i = numPoints / 2 - 1; i > 0; i--)
-			//	{
-			//		const sf::Vector2f pointPos = sf::Vector2f(obj.GetX() + obj.GetPolyline()->GetPoint(i).x, obj.GetY() + obj.GetPolyline()->GetPoint(i).y);
-			//		convex->setPoint(i, pointPos);
-			//	}
-			//}
+			for (int j = convex->getPointCount()-1; j >= numPoints; j--)
+			{
+				pointPos = sf::Vector2f(convex->getPoint(convex->getPointCount() - j).x, convex->getPoint(convex->getPointCount() - j).y);
+				convex->setPoint(j, pointPos);
+				
+			}
 			convex->setFillColor(sf::Color(0, 0, 0, 128));
 			drawable.push_back(convex);
 		}
