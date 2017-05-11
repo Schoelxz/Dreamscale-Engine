@@ -13,6 +13,9 @@
 #include <iostream>
 #include <array>
 
+#include <string>
+#include <Windows.h>
+
 //For rendering every layer
 #include <SFML\Graphics.hpp>
 
@@ -21,26 +24,37 @@ class TmxHandler
 public:
 	TmxHandler();
 
+	//Does what it says
+	std::vector<std::string> get_all_files_names_within_folder(std::string folder);
+	//used for getting above function's values.
+	std::vector<std::string> allFileNames;
+
 	void LoadMap();
 	void LoadObjects();
 	void DrawMap(sf::RenderWindow& window);
 	void DrawObjects(sf::RenderWindow& window);
 
-//private:
+	void SetTile(
+		sf::Vertex* &quad,
+		Tmx::MapTile tile,
+		int i, int j,
+		const sf::Vector2i tileSize,
+		sf::Vector2i textCoord
+		); //Sets a tiles texture and flips it correct
+
+private:
+	//TODO: Skapa en vector av map för att kunna ladda in flera tmx filer
+	//Trouble to create map as a pointer, gave weird error to a another library class.
 	Tmx::Map map;
 
-	// Create a non-default renderstate, and bind our tileset texture to it
-	//std::vector<sf::RenderStates*> textureState;
-
-	//std::vector<int> currentVertexTile;
-	//std::vector<sf::VertexArray*> vertexTile;
 	std::vector<sf::VertexArray*> vertexLayers;
-	//std::vector<sf::Sprite*> spriteVector;
+	std::vector<sf::Sprite*> spriteVector;
 
 	// Load the texture specifying the tileset
 	std::vector<sf::Texture*> tileSetTexture;
 
 	int currentTileset; //For Loading Map
 
+	//TODO: Fast? Fråga om hjälp!
 };
 

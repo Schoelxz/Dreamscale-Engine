@@ -7,10 +7,10 @@ using namespace dse;
 
 GameEngine::GameEngine()
 {
-	window.create(sf::VideoMode(1920, 1080), "DreamScale Engine");
+	std::cout << "class:	GameEngine:	Constructed!" << std::endl;
+	window.create(sf::VideoMode(1024, 768), "DreamScale Engine");
 	tmx.LoadMap();
 	tmx.LoadObjects();
-	std::cout << "class:	GameEngine:	Constructed!" << std::endl;
 }
 
 void dse::GameEngine::Update()
@@ -20,6 +20,12 @@ void dse::GameEngine::Update()
 	rect.setSize(vect);
 
 	bool mouseInsideAWindow = false;
+
+	sf::View view2;
+	view2.setCenter(sf::Vector2f(350, 300));
+	view2.setSize(sf::Vector2f(200, 200));
+
+	view2.zoom(8);
 
 	while (window.isOpen())
 	{
@@ -43,13 +49,17 @@ void dse::GameEngine::Update()
 			if (event.type == sf::Event::MouseLeft)
 				mouseInsideAWindow = false;
 		}
+		
+		view2.setCenter(400, 400);
+		if (mouseInsideAWindow)
+		view2.move(mouse.getPosition(window).x, mouse.getPosition(window).y);
 
 		//Temp MR
 		if(mouseInsideAWindow)
 		rect.setPosition(mouse.getPosition(window).x, mouse.getPosition(window).y);
 
 		window.clear();
-
+		window.setView(view2);
 		tmx.DrawMap(window);
 		tmx.DrawObjects(window);
 		window.draw(rect);//Temp MR
@@ -62,8 +72,6 @@ GameEngine::~GameEngine()
 {
 	std::cout << "class:	GameEngine:	Destructed!" << std::endl;
 }
-
-
 
 ObjectHandler* GameEngine::getObjHand()
 {

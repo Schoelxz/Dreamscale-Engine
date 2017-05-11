@@ -33,6 +33,8 @@ namespace dse
 		sf::RectangleShape rect;
 		sf::Vector2f vect{ 50,50 };
 
+
+
 	private:
 		TmxHandler tmx;
 		sf::RenderWindow window;

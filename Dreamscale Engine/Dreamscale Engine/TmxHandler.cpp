@@ -13,18 +13,37 @@ TmxHandler::TmxHandler()
 	
 }
 
+std::vector<std::string> TmxHandler::get_all_files_names_within_folder(std::string folder)
+{
+	std::vector<std::string> names;
+	std::string search_path = folder + "/*.tmx*";
+	WIN32_FIND_DATA fd;
+	HANDLE hFind = ::FindFirstFile(search_path.c_str(), &fd);
+	if (hFind != INVALID_HANDLE_VALUE) {
+		do {
+			// read all (real) files in current folder
+			// , delete '!' read other 2 default folder . and ..
+			if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+				names.push_back(fd.cFileName);
+			}
+		} while (::FindNextFile(hFind, &fd));
+		::FindClose(hFind);
+	}
+	return names;
+}
+
 void TmxHandler::LoadMap()
 {
 	//Tmx map file loads.
 	//map.ParseFile("orthogonal-outside.tmx");
 	map.ParseFile("EmanuelHolm-DesertDwellersPort.tmx");
 
-	const std::vector<Tmx::Tileset*>& tmxTileSetMap = map.GetTilesets();
-	const std::vector<Tmx::TileLayer*>& tileLayers = map.GetTileLayers(); //number of tilelayers
-	 //number of object layers
+	const std::vector<Tmx::Tileset*>& tmxTileSetMap = map.GetTilesets();	//Number of tileset
+	const std::vector<Tmx::TileLayer*>& tileLayers = map.GetTileLayers();	//Number of tilelayers
 
 	FLIPPED flipped = NONE;
 
+	//push tilesets
 	for (size_t i = 0; i < tmxTileSetMap.size(); i++)
 	{
 		sf::Texture* tileset = new sf::Texture();
@@ -36,26 +55,27 @@ void TmxHandler::LoadMap()
 	}
 
 	// Get size for map and tiles
-	const int height = map.GetHeight();
-	const int width = map.GetWidth();
-	const int tileHeight = map.GetTileHeight();
-	const int tileWidth = map.GetTileWidth();
-
-	for (auto layer : map.GetLayers()) {
-		//for each tilelayer
+	const sf::Vector2i mapSize(map.GetWidth(), map.GetHeight());			//MapSize
+	const sf::Vector2i tileSize(map.GetTileWidth(), map.GetTileHeight());	//TileSize
+	//for each layers..
+	for (auto layer : map.GetLayers()) 
+	{
+		//for each tileset..
 		for (int t = 0; t < tileSetTexture.size(); t++)
 		{
 			// Create a new vertexarray, acting as a list of quads
-			sf::VertexArray* vertexArray = new sf::VertexArray(sf::Quads, height * width * 4);
+			sf::VertexArray* vertexArray = new sf::VertexArray(sf::Quads, mapSize.y * mapSize.x * 4);
+			//push the vertexArray into an VertexArray-Vector
 			vertexLayers.push_back(vertexArray);
 			// For each tile in this layer...
-			for (size_t i = 0; i < height; ++i)
+			for (size_t i = 0; i < mapSize.y; ++i)
 			{
-				for (size_t j = 0; j < width; ++j)
+				for (size_t j = 0; j < mapSize.x; ++j)
 				{
 					//vertexTile.push_back(new sf::VertexArray(sf::Quads, height * width * 4));
 					// Get the tile, and check if it's part of a tileset
-					if (layer->GetLayerType() == Tmx::LayerType::TMX_LAYERTYPE_TILE) {
+					if (layer->GetLayerType() == Tmx::LayerType::TMX_LAYERTYPE_TILE) 
+					{
 						Tmx::TileLayer* tLayer = static_cast<Tmx::TileLayer*>(layer);
 						const Tmx::MapTile tile = tLayer->GetTile(j, i);
 						if (tile.tilesetId == -1 || tile.tilesetId != t)
@@ -63,37 +83,15 @@ void TmxHandler::LoadMap()
 
 						const int gid = tile.gid;
 
-						/*std::cout << "tile.tilesetID: " << tile.tilesetId << std::endl;
-						std::cout << "gid: " << gid << std::endl;*/
-
-						//for (int i = tileSetTexture.size() - 1; i >= 0; i--)
-						//{
-						//	if (tmxTileSetMap[i]->GetFirstGid() > gid)
-						//	{
-						//		//currentVertexTile.push_back(i);
-						//		currentTileset = i;
-						//		continue;
-						//	}
-						//	//currentVertexTile.push_back(i);
-						//	currentTileset = i;
-						//	break;
-						//}
-
-						//std::cout << "currentTileset: " << currentTileset << std::endl;
-
 						int real_id = gid - tmxTileSetMap[t]->GetFirstGid();
-						
-						//std::cout << currentTileset << ": currenttileset in vertex" << std::endl;
 
-						// Get the current vertexlayer
-						//sf::VertexArray* vertexLayer = *(vertexArray);
-						// Get the current quad
-						sf::Vertex* quad = &(*vertexArray)[(i * width + j) * 4];
+						sf::Vertex* quad = &(*vertexArray)[(i * mapSize.x + j) * 4];
 
 						// Calculate texture coordinates, based on the tilenumer
 						unsigned int tileNumber = tile.id;
-						int tu = tileNumber % (tileSetTexture[t]->getSize().x / tileWidth);
-						int tv = tileNumber / (tileSetTexture[t]->getSize().x / tileWidth);
+						int tu = tileNumber % (tileSetTexture[t]->getSize().x / tileSize.x);
+						int tv = tileNumber / (tileSetTexture[t]->getSize().x / tileSize.x);
+						sf::Vector2i textureCoordinates(tu, tv);
 
 						/*
 						The form that we align the vertices in to build our quads
@@ -102,57 +100,14 @@ void TmxHandler::LoadMap()
 						|     |
 						3 --- 2
 						*/
-
-						// Position the vertices, as specified above
-						quad[0].position = sf::Vector2f(j * tileWidth, i * tileHeight);
-						quad[1].position = sf::Vector2f((j + 1) * tileWidth, i * tileHeight);
-						quad[2].position = sf::Vector2f((j + 1) * tileWidth, (i + 1) * tileHeight);
-						quad[3].position = sf::Vector2f(j * tileWidth, (i + 1) * tileHeight);
-
-						// The default order to specify texture coordinates by.
-						std::array<size_t, 4> texOrder = { 0, 1, 2, 3 };
-						// Different order if the tile is flipped horizontally
-						if (tile.flippedHorizontally && tile.flippedVertically)
-							flipped = DIAGONAL;
-						else if (tile.flippedHorizontally)
-							flipped = HORIZONTAL;
-						else if (tile.flippedVertically)
-							flipped = VERTICAL;
-						else
-							flipped = NONE;
-
-						switch (flipped)
-						{
-						case DIAGONAL:
-							texOrder = { 2, 3, 0, 1 };
-							break;
-						case HORIZONTAL:
-							texOrder = { 1, 0, 3, 2 };
-							break;
-						case VERTICAL:
-							texOrder = { 3, 2, 1, 0 };
-							break;
-						case NONE:
-							texOrder = { 0, 1, 2, 3 };
-							break;
-						default:
-							break;
-						}
-
-						// Position the texture coordinates. Coordinates is specified in pixels, not 0-1
-						quad[texOrder[0]].texCoords = sf::Vector2f(tu * tileWidth, tv * tileHeight);
-						quad[texOrder[1]].texCoords = sf::Vector2f((tu + 1) * tileWidth, tv * tileHeight);
-						quad[texOrder[2]].texCoords = sf::Vector2f((tu + 1) * tileWidth, (tv + 1) * tileHeight);
-						quad[texOrder[3]].texCoords = sf::Vector2f(tu * tileWidth, (tv + 1) * tileHeight);
+						SetTile(quad, tile, i, j, tileSize, textureCoordinates);
 					}
 				}
 			}
 		}
 	}
-	
-//	std::cout << vertexTile.size();
 }
-/*
+
 void TmxHandler::LoadObjects()
 {
 	//Parse tmx file into Map map
@@ -174,14 +129,11 @@ void TmxHandler::LoadObjects()
 	//for each object layer
 	for (auto objects : objLayers)
 	{
-		//int totalObjects = objLayers
-
 		//for each object IN object layer
 		for (auto object : objects->GetObjects())
 		{
-
-			//spriteVector.push_back(new sf::Sprite);
-			std::cout << spriteVector.size() << std::endl;
+			sf::Sprite* sprite = new sf::Sprite();
+			spriteVector.push_back(sprite);
 
 			const int gid = object->GetGid();
 
@@ -200,8 +152,6 @@ void TmxHandler::LoadObjects()
 			if (real_id == -1)
 				continue;
 
-			std::cout << tempCurrentTileset << ": currenttileset in Objects" << std::endl;
-
 			real_id &=	~(FLIPPED_HORIZONTALLY_FLAG |
 							FLIPPED_VERTICALLY_FLAG |
 							FLIPPED_DIAGONALLY_FLAG);
@@ -211,10 +161,8 @@ void TmxHandler::LoadObjects()
 
 
 			sf::IntRect textureSource; //= Objectets 4 rektangel värden
-
 			textureSource.left = tu2 * tileWidth;
 			textureSource.top = tv2 * tileHeight;
-
 			textureSource.width = tileWidth;
 			textureSource.height = tileHeight;
 
@@ -228,45 +176,83 @@ void TmxHandler::LoadObjects()
 			spriteVector[spriteVector.size() - 1]->setTexture(*tempTex);
 		}
 	}
-}*/
+}
+
+void TmxHandler::SetTile
+(	sf::Vertex* &quad,
+	Tmx::MapTile tile,
+	int i, int j,
+	const sf::Vector2i tileSize,
+	sf::Vector2i textCoord)
+{
+		FLIPPED flipped;
+		// Position the vertices, as specified above
+		quad[0].position = sf::Vector2f(j * tileSize.x, i * tileSize.y);
+		quad[1].position = sf::Vector2f((j + 1) * tileSize.x, i * tileSize.y);
+		quad[2].position = sf::Vector2f((j + 1) * tileSize.x, (i + 1) * tileSize.y);
+		quad[3].position = sf::Vector2f(j * tileSize.x, (i + 1) * tileSize.y);
+
+		// The default order to specify texture coordinates by.
+		std::array<size_t, 4> texOrder = { 0, 1, 2, 3 };
+		// Different order if the tile is flipped horizontally
+		if (tile.flippedHorizontally && tile.flippedVertically)
+			flipped = DIAGONAL;
+		else if (tile.flippedHorizontally)
+			flipped = HORIZONTAL;
+		else if (tile.flippedVertically)
+			flipped = VERTICAL;
+		else
+			flipped = NONE;
+
+		switch (flipped)
+		{
+		case DIAGONAL:
+			texOrder = { 2, 3, 0, 1 };
+			break;
+		case HORIZONTAL:
+			texOrder = { 1, 0, 3, 2 };
+			break;
+		case VERTICAL:
+			texOrder = { 3, 2, 1, 0 };
+			break;
+		case NONE:
+			texOrder = { 0, 1, 2, 3 };
+			break;
+		default:
+			break;
+		}
+
+		// Position the texture coordinates. Coordinates is specified in pixels, not 0-1
+		quad[texOrder[0]].texCoords = sf::Vector2f(textCoord.x * tileSize.x, textCoord.y * tileSize.y);
+		quad[texOrder[1]].texCoords = sf::Vector2f((textCoord.x + 1) * tileSize.x, textCoord.y * tileSize.y);
+		quad[texOrder[2]].texCoords = sf::Vector2f((textCoord.x + 1) * tileSize.x, (textCoord.y + 1) * tileSize.y);
+		quad[texOrder[3]].texCoords = sf::Vector2f(textCoord.x * tileSize.x, (textCoord.y + 1) * tileSize.y);
+
+		quad[0].color = sf::Color(255, 255, 255, 255);
+		quad[1].color = sf::Color(255, 255, 255, 255);
+		quad[2].color = sf::Color(255, 255, 255, 255);
+		quad[3].color = sf::Color(255, 255, 255, 255);
+
+
+}
+
 
 void TmxHandler::DrawMap(sf::RenderWindow& window)
 {
-	//Set textureState size
-	/*while(textureState.size() < tileSetTexture.size())
-	{
-		textureState.push_back(new sf::RenderStates());
-	}*/
-
+	// Create a non-default renderstate, and bind our tilesets texture to it
 	sf::RenderStates state;
 
 	for (int i = 0; i < vertexLayers.size(); i++) {
-		state.texture = tileSetTexture[i % tileSetTexture.size()];
+		state.texture = tileSetTexture[i % tileSetTexture.size()]; //Draw every tileSet for every vertexLayer
 		window.draw(*vertexLayers[i], state);
 	}
-
-
-/*	//For every tileset..
-	for (int i = 0; i < tileSetTexture.size(); i++)
-	{
-		textureState[i]->texture = tileSetTexture[i];
-
-		//for (auto j : vertexLayers)
-		for (int j = 0; j < vertexTile.size(); j++)
-		{
-			// Render a vertexarray, with the custom renderstate
-			window.draw(*vertexTile[j], *textureState[i]);
-		}
-	}*/
-	
 }
 
 void TmxHandler::DrawObjects(sf::RenderWindow & window)
 {
-/*	//Draws all sprites inside the spriteVector
-	for (int i = 0; i < spriteVector.size() - 1; i++)
+	//Draws all sprites inside the spriteVector
+	for (int i = 0; i < spriteVector.size(); i++)
 	{
 		window.draw(*spriteVector[i]);
 	}
-	*/
 }
