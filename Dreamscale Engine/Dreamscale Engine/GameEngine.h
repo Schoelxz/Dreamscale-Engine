@@ -1,13 +1,15 @@
 #pragma once
-#include <iostream>
 #include "CollisionHandler.h"
 #include "InputManager.h"
 #include "ObjectHandler.h"
 #include "ProjectHandler.h"
+#include "TmxHandler.h"
+
 #include <lua.hpp>
 #include <LuaBridge.h>
 #include <SFML\Graphics.hpp>
-#include "TmxHandler.h"
+#include <iostream>
+
 
 
 using namespace luabridge;

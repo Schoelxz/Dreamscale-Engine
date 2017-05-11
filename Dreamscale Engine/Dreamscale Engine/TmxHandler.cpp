@@ -1,4 +1,19 @@
 #include "TmxHandler.h"
+#include <Tmx\TmxPolygon.h>
+#include <Tmx\TmxEllipse.h>
+#include <Tmx\TmxPolyline.h>
+#include <Tmx\TmxObjectGroup.h>
+
+#include <Tmx\TmxTileset.h>
+#include <Tmx\TmxTileLayer.h>
+#include <Tmx\TmxImage.h>
+#include <Tmx\TmxTile.h>
+#include <Tmx\TmxMapTile.h>
+
+#include <cassert>
+#include <iostream>
+#include <array>
+
 
 enum FLIPPED
 {
@@ -16,8 +31,8 @@ TmxHandler::TmxHandler()
 void TmxHandler::LoadMap()
 {
 	//Tmx map file loads.
-	//map.ParseFile("orthogonal-outside.tmx");
-	map.ParseFile("EmanuelHolm-DesertDwellersPort.tmx");
+	map.ParseFile("orthogonal-outside.tmx");
+	//map.ParseFile("EmanuelHolm-DesertDwellersPort.tmx");
 
 	const std::vector<Tmx::Tileset*>& tmxTileSetMap = map.GetTilesets();
 	const std::vector<Tmx::TileLayer*>& tileLayers = map.GetTileLayers(); //number of tilelayers
@@ -152,7 +167,7 @@ void TmxHandler::LoadMap()
 	
 //	std::cout << vertexTile.size();
 }
-/*
+
 void TmxHandler::LoadObjects()
 {
 	//Parse tmx file into Map map
@@ -179,11 +194,13 @@ void TmxHandler::LoadObjects()
 		//for each object IN object layer
 		for (auto object : objects->GetObjects())
 		{
-
-			//spriteVector.push_back(new sf::Sprite);
-			std::cout << spriteVector.size() << std::endl;
+			spriteVector.push_back(new sf::Sprite);
+			//std::cout << spriteVector.size() << std::endl;
 
 			const int gid = object->GetGid();
+			DeterminePolygonType(*object);
+			if (gid == 0)
+				continue;
 
 			for (int i = tmxTileSet.size() - 1; i >= 0; i--)
 			{
@@ -196,9 +213,10 @@ void TmxHandler::LoadObjects()
 				break;
 			}
 
+			std::cout << object->GetId();
+			
 			int real_id = gid - tmxTileSet[tempCurrentTileset]->GetFirstGid();
-			if (real_id == -1)
-				continue;
+			
 
 			std::cout << tempCurrentTileset << ": currenttileset in Objects" << std::endl;
 
@@ -228,7 +246,7 @@ void TmxHandler::LoadObjects()
 			spriteVector[spriteVector.size() - 1]->setTexture(*tempTex);
 		}
 	}
-}*/
+}
 
 void TmxHandler::DrawMap(sf::RenderWindow& window)
 {
@@ -269,4 +287,83 @@ void TmxHandler::DrawObjects(sf::RenderWindow & window)
 		window.draw(*spriteVector[i]);
 	}
 	*/
+	for (int i = 0; i < drawable.size(); i++) {
+		window.draw(*drawable[i]);
+	}
+}
+
+void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
+{
+	switch (obj.GetPrimitiveType())
+	{
+	case Tmx::TMX_PT_ELLIPSE: //circle
+		{
+			std::cout << " ellipse" << std::endl;
+			sf::CircleShape *circle = new sf::CircleShape();
+			circle->setRadius(obj.GetEllipse()->GetRadiusX());
+			circle->setPosition(obj.GetX(), obj.GetY());
+			circle->setFillColor(sf::Color(255, 255, 0, 64));
+			drawable.push_back(circle);
+		}
+		break;
+	case Tmx::TMX_PT_POLYGON: //polygon
+		{
+			std::cout << " polygon" << std::endl;
+			sf::ConvexShape *convex = new sf::ConvexShape();
+			int numPoints = obj.GetPolygon()->GetNumPoints();
+			convex->setPointCount(numPoints);
+			for (int i = 0; i < numPoints; i++)
+			{
+				const sf::Vector2f pointPos = sf::Vector2f(obj.GetX() + obj.GetPolygon()->GetPoint(i).x, obj.GetY() + obj.GetPolygon()->GetPoint(i).y);
+				convex->setPoint(i, pointPos);
+			}
+			convex->setFillColor(sf::Color(0, 0, 255, 64));
+			drawable.push_back(convex);
+		}
+		break;
+	case Tmx::TMX_PT_POLYLINE: //polyline
+		{
+			std::cout << " polyline" << std::endl;
+			sf::ConvexShape *convex = new sf::ConvexShape();
+			int numPoints = obj.GetPolyline()->GetNumPoints();
+			convex->setPointCount(numPoints);
+			for (int i = 0; i < numPoints; i++)
+			{
+				const sf::Vector2f pointPos = sf::Vector2f(obj.GetX() + obj.GetPolyline()->GetPoint(i).x, obj.GetY() + obj.GetPolyline()->GetPoint(i).y);
+				convex->setPoint(i, pointPos);
+			}
+			//for (int i = numPoints / 2; i < numPoints; i++)
+			//{
+			//	for (int i = numPoints / 2 - 1; i > 0; i--)
+			//	{
+			//		const sf::Vector2f pointPos = sf::Vector2f(obj.GetX() + obj.GetPolyline()->GetPoint(i).x, obj.GetY() + obj.GetPolyline()->GetPoint(i).y);
+			//		convex->setPoint(i, pointPos);
+			//	}
+			//}
+			convex->setFillColor(sf::Color(0, 0, 0, 128));
+			drawable.push_back(convex);
+		}
+		break;
+	case Tmx::TMX_PT_NONE:
+		{
+			
+			if (obj.GetGid() == 0) //rectangle
+			{
+				std::cout << "rect" << std::endl;
+				sf::RectangleShape *rectangle = new sf::RectangleShape();
+				rectangle->setSize(sf::Vector2f(obj.GetWidth(), obj.GetHeight()));
+				rectangle->setPosition(obj.GetX(), obj.GetY());
+				rectangle->setFillColor(sf::Color(0, 255, 0, 64));
+				drawable.push_back(rectangle);
+			}
+			else //tileObject
+			{
+				std::cout << "tile" << std::endl;
+			}
+			//std::cout << " something went wrong" << std::endl;
+		}
+		break;
+	default:
+		break;
+	}
 }

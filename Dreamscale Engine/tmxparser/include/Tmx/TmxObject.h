@@ -41,6 +41,30 @@ namespace Tmx
     class Polygon;
     class Polyline;
 
+	//-------------------------------------------------------------------------
+	// Representing the type of poly an object is, if any.
+	//-------------------------------------------------------------------------
+	enum PrimitiveType
+	{
+		// This object isn't a primitive
+		TMX_PT_NONE = 0,
+
+		// This object is an ellipse
+		TMX_PT_ELLIPSE,
+
+		// This object is a polygon
+		TMX_PT_POLYGON,
+
+		// This object is a polyline
+		TMX_PT_POLYLINE,
+
+		// This object is a rectangle
+		TMX_PT_RECTANGLE,
+
+		// this object has a tile
+		TMX_PT_TILEOBJECT
+	};
+
     //-------------------------------------------------------------------------
     // Class used for representing a single object from the objectgroup.
     //-------------------------------------------------------------------------
@@ -95,6 +119,8 @@ namespace Tmx
         // Get the property set.
         const Tmx::PropertySet &GetProperties() const { return properties; }
 
+		const PrimitiveType &GetPrimitiveType() const { return primitivetype; }
+
     private:
         std::string name;
         std::string type;
@@ -108,6 +134,8 @@ namespace Tmx
 
         double rotation;
         bool visible;
+
+		Tmx::PrimitiveType primitivetype;
 
         Tmx::Ellipse *ellipse;
         Tmx::Polygon *polygon;
