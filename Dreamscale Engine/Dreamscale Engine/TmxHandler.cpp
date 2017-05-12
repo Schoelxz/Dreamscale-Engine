@@ -14,7 +14,6 @@
 #include <iostream>
 #include <array>
 
-
 enum FLIPPED
 {
 	DIAGONAL,
@@ -324,23 +323,18 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
 	case Tmx::TMX_PT_POLYLINE: //polyline
 		{
 			std::cout << " polyline" << std::endl;
-			sf::ConvexShape *convex = new sf::ConvexShape();
+			
+
+			sf::VertexArray* vertex = new sf::VertexArray(sf::LineStrip, obj.GetPolyline()->GetNumPoints());
 			int numPoints = obj.GetPolyline()->GetNumPoints();
-			convex->setPointCount(numPoints * 2);
-			sf::Vector2f pointPos;
-			for (int i = 0; i < convex->getPointCount() / 2; i++)
+			for (int i = 0; i < numPoints; i++)
 			{
-				pointPos = sf::Vector2f(obj.GetX() + obj.GetPolyline()->GetPoint(i).x, obj.GetY() + obj.GetPolyline()->GetPoint(i).y);
-				convex->setPoint(i, pointPos);
+				const sf::Vector2f pointPos = sf::Vector2f(obj.GetX() + obj.GetPolyline()->GetPoint(i).x, obj.GetY() + obj.GetPolyline()->GetPoint(i).y);
+				(*vertex)[i].position = pointPos;
+				(*vertex)[i].color = sf::Color::Red;
 			}
-			for (int j = convex->getPointCount()-1; j >= numPoints; j--)
-			{
-				pointPos = sf::Vector2f(convex->getPoint(convex->getPointCount() - j).x, convex->getPoint(convex->getPointCount() - j).y);
-				convex->setPoint(j, pointPos);
-				
-			}
-			convex->setFillColor(sf::Color(0, 0, 0, 128));
-			drawable.push_back(convex);
+			
+			drawable.push_back(vertex);
 		}
 		break;
 	case Tmx::TMX_PT_NONE:
