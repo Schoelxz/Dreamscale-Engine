@@ -29,11 +29,16 @@ public:
 	//used for getting above function's values.
 	std::vector<std::string> allFileNames;
 
-	void LoadMap();
-	void LoadObjects();
+	//Resources kinda..
+	void ParseAllMaps();
+	void LoadAllTilesets();
+	//\\
+
+	void LoadMap(Tmx::Map* map);
+	void LoadObjects(Tmx::Map& map);
 	void DrawMap(sf::RenderWindow& window);
 	void DrawObjects(sf::RenderWindow& window);
-
+	
 	void SetTile(
 		sf::Vertex* &quad,
 		Tmx::MapTile tile,
@@ -42,16 +47,21 @@ public:
 		sf::Vector2i textCoord
 		); //Sets a tiles texture and flips it correct
 
+
+	Tmx::Map* map2;
+	std::map<std::string, Tmx::Map*> mapVector;
 private:
 	//TODO: Skapa en vector av map för att kunna ladda in flera tmx filer
 	//Trouble to create map as a pointer, gave weird error to a another library class.
-	Tmx::Map map;
+
 
 	std::vector<sf::VertexArray*> vertexLayers;
 	std::vector<sf::Sprite*> spriteVector;
 
 	// Load the texture specifying the tileset
 	std::vector<sf::Texture*> tileSetTexture;
+
+	std::vector<sf::Texture*> spriteTextures;
 
 	int currentTileset; //For Loading Map
 

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Flyweight">
+      <UniqueIdentifier>{9de9dc05-e5fd-4ddd-826c-c9439be2134f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ObjectHandler.cpp">
@@ -48,6 +51,12 @@
     <ClCompile Include="TmxHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ResourceHandler.cpp">
+      <Filter>Flyweight</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Flyweight</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObjectHandler.h">
@@ -82,6 +91,12 @@
     </ClInclude>
     <ClInclude Include="TmxHandler.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Flyweight</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceHandler.h">
+      <Filter>Flyweight</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

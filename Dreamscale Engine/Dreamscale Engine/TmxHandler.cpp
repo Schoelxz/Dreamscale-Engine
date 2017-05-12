@@ -13,6 +13,17 @@ TmxHandler::TmxHandler()
 	
 }
 
+void TmxHandler::ParseAllMaps()
+{
+	//Parse all Maps (.tmx files) and save each in a mapVector
+	for (size_t i = 0; i < allFileNames.size(); i++)
+	{
+		map2 = new Tmx::Map();
+		map2->ParseFile(allFileNames[i]);
+		mapVector.insert(std::make_pair(allFileNames[i], map2));
+	}
+}
+
 std::vector<std::string> TmxHandler::get_all_files_names_within_folder(std::string folder)
 {
 	std::vector<std::string> names;
@@ -32,14 +43,31 @@ std::vector<std::string> TmxHandler::get_all_files_names_within_folder(std::stri
 	return names;
 }
 
-void TmxHandler::LoadMap()
+
+
+void TmxHandler::LoadMap(Tmx::Map* map)
 {
 	//Tmx map file loads.
-	//map.ParseFile("orthogonal-outside.tmx");
-	map.ParseFile("EmanuelHolm-DesertDwellersPort.tmx");
 
-	const std::vector<Tmx::Tileset*>& tmxTileSetMap = map.GetTilesets();	//Number of tileset
-	const std::vector<Tmx::TileLayer*>& tileLayers = map.GetTileLayers();	//Number of tilelayers
+	//vertexLayers.clear();
+	//spriteVector.clear();
+	//// Load the texture specifying the tileset
+	//tileSetTexture.clear();
+	for (int i = 0; i < vertexLayers.size(); i++)
+	{
+		delete vertexLayers[i];
+	}
+	for (int i = 0; i < tileSetTexture.size(); i++)
+	{
+		delete tileSetTexture[i];
+	}
+	vertexLayers.clear();
+	tileSetTexture.clear();
+
+	//// Load the texture specifying the tileset
+
+	const std::vector<Tmx::Tileset*>& tmxTileSetMap = map->GetTilesets();	//Number of tileset
+	const std::vector<Tmx::TileLayer*>& tileLayers = map->GetTileLayers();	//Number of tilelayers
 
 	FLIPPED flipped = NONE;
 
@@ -55,10 +83,10 @@ void TmxHandler::LoadMap()
 	}
 
 	// Get size for map and tiles
-	const sf::Vector2i mapSize(map.GetWidth(), map.GetHeight());			//MapSize
-	const sf::Vector2i tileSize(map.GetTileWidth(), map.GetTileHeight());	//TileSize
+	const sf::Vector2i mapSize(map->GetWidth(), map->GetHeight());			//MapSize
+	const sf::Vector2i tileSize(map->GetTileWidth(), map->GetTileHeight());	//TileSize
 	//for each layers..
-	for (auto layer : map.GetLayers()) 
+	for (auto layer : map->GetLayers()) 
 	{
 		//for each tileset..
 		for (int t = 0; t < tileSetTexture.size(); t++)
@@ -108,9 +136,14 @@ void TmxHandler::LoadMap()
 	}
 }
 
-void TmxHandler::LoadObjects()
+void TmxHandler::LoadObjects(Tmx::Map& map)
 {
-	//Parse tmx file into Map map
+
+	for (int i = 0; i < spriteVector.size(); i++)
+	{
+		delete spriteVector[i];
+	}
+	spriteVector.clear();
 	int tempCurrentTileset;
 
 	const std::vector<Tmx::Tileset*> tmxTileSet = map.GetTilesets();
@@ -166,14 +199,19 @@ void TmxHandler::LoadObjects()
 			textureSource.width = tileWidth;
 			textureSource.height = tileHeight;
 
+			//TODO: Memory leak. tempImg and tempTex needs to be deleted. but if tempTex is deleted, the objects wont have textures.
+			//Potential solution: create a vector of sprites to be saved in header file?
 			sf::Image* tempImg = new sf::Image();
 			sf::Texture* tempTex = new sf::Texture();
-					
+
 			tempImg->loadFromFile(tmxTileSet[tempCurrentTileset]->GetImage()->GetSource());
 			tempTex->loadFromImage(*tempImg, textureSource);
 
 			spriteVector[spriteVector.size() - 1]->setPosition(object->GetX(), object->GetY() - object->GetHeight());
 			spriteVector[spriteVector.size() - 1]->setTexture(*tempTex);
+			delete tempImg;
+			//delete tempTex; //Deleting this removes any texture to be shown on sprites.
+			
 		}
 	}
 }

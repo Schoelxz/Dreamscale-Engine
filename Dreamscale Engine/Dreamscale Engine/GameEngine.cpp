@@ -8,9 +8,6 @@ using namespace dse;
 GameEngine::GameEngine()
 {
 	std::cout << "class:	GameEngine:	Constructed!" << std::endl;
-	window.create(sf::VideoMode(1024, 768), "DreamScale Engine");
-	tmx.LoadMap();
-	tmx.LoadObjects();
 }
 
 void dse::GameEngine::Update()
@@ -21,6 +18,12 @@ void dse::GameEngine::Update()
 
 	bool mouseInsideAWindow = false;
 
+	window.create(sf::VideoMode(1024, 768), "DreamScale Engine");
+
+	tmx.allFileNames = tmx.get_all_files_names_within_folder("./");
+	tmx.ParseAllMaps();
+	
+	
 	sf::View view2;
 	view2.setCenter(sf::Vector2f(350, 300));
 	view2.setSize(sf::Vector2f(200, 200));
@@ -42,6 +45,17 @@ void dse::GameEngine::Update()
 				if (event.key.code == sf::Keyboard::Escape)
 				{
 					window.close();
+				}
+				if (event.key.code == sf::Keyboard::Left)
+				{
+					tmx.LoadMap(tmx.mapVector[tmx.allFileNames[0]]);
+					tmx.LoadObjects(*tmx.mapVector[tmx.allFileNames[0]]);
+					
+				}
+				if (event.key.code == sf::Keyboard::Right)
+				{
+					tmx.LoadMap(tmx.mapVector[tmx.allFileNames[1]]);
+					tmx.LoadObjects(*tmx.mapVector[tmx.allFileNames[1]]);
 				}
 			}
 			if (event.type == sf::Event::MouseEntered)

@@ -142,6 +142,8 @@
     <ClCompile Include="ObjectHandler.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ProjectHandler.cpp" />
+    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="ResourceHandler.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="TmxHandler.cpp" />
   </ItemGroup>
@@ -155,6 +157,8 @@
     <ClInclude Include="ObjectHandler.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ProjectHandler.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceHandler.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="TmxHandler.h" />
   </ItemGroup>
