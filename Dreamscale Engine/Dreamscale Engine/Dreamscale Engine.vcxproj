@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="CircleShape.cpp" />
     <ClCompile Include="CollisionHandler.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -147,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h" />
+    <ClInclude Include="CircleShape.h" />
     <ClInclude Include="CollisionHandler.h" />
     <ClInclude Include="Components.h" />
     <ClInclude Include="GameEngine.h" />

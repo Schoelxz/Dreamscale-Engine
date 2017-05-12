@@ -1,4 +1,6 @@
 #include "TmxHandler.h"
+#include "CircleShape.h"
+
 #include <Tmx\TmxPolygon.h>
 #include <Tmx\TmxEllipse.h>
 #include <Tmx\TmxPolyline.h>
@@ -194,7 +196,7 @@ void TmxHandler::LoadObjects()
 		for (auto object : objects->GetObjects())
 		{
 			spriteVector.push_back(new sf::Sprite);
-			//std::cout << spriteVector.size() << std::endl;
+			std::cout << spriteVector.size() << std::endl;
 
 			const int gid = object->GetGid();
 			DeterminePolygonType(*object);
@@ -291,6 +293,7 @@ void TmxHandler::DrawObjects(sf::RenderWindow & window)
 	}
 }
 
+//TODO: Do a representive dse::subclass of every sf::drawable (shape) class
 void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
 {
 	switch (obj.GetPrimitiveType())
@@ -298,10 +301,11 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
 	case Tmx::TMX_PT_ELLIPSE: //circle
 		{
 			std::cout << " ellipse" << std::endl;
-			sf::CircleShape *circle = new sf::CircleShape();
+			dse::CircleShape *circle = new dse::CircleShape();
 			circle->setRadius(obj.GetEllipse()->GetRadiusX());
 			circle->setPosition(obj.GetX(), obj.GetY());
 			circle->setFillColor(sf::Color(255, 255, 0, 64));
+			circle->GetName();
 			drawable.push_back(circle);
 		}
 		break;
@@ -317,6 +321,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
 				convex->setPoint(i, pointPos);
 			}
 			convex->setFillColor(sf::Color(0, 0, 255, 64));
+
 			drawable.push_back(convex);
 		}
 		break;
@@ -324,22 +329,19 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
 		{
 			std::cout << " polyline" << std::endl;
 			
-
 			sf::VertexArray* vertex = new sf::VertexArray(sf::LineStrip, obj.GetPolyline()->GetNumPoints());
 			int numPoints = obj.GetPolyline()->GetNumPoints();
 			for (int i = 0; i < numPoints; i++)
 			{
 				const sf::Vector2f pointPos = sf::Vector2f(obj.GetX() + obj.GetPolyline()->GetPoint(i).x, obj.GetY() + obj.GetPolyline()->GetPoint(i).y);
 				(*vertex)[i].position = pointPos;
-				(*vertex)[i].color = sf::Color::Red;
+				(*vertex)[i].color = sf::Color(rand() % 255, rand() % 255, rand() % 255, 255);
 			}
-			
 			drawable.push_back(vertex);
 		}
 		break;
 	case Tmx::TMX_PT_NONE:
 		{
-			
 			if (obj.GetGid() == 0) //rectangle
 			{
 				std::cout << "rect" << std::endl;
