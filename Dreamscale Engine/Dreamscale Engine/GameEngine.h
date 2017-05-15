@@ -35,9 +35,12 @@ namespace dse
 		sf::RectangleShape rect;
 		sf::Vector2f vect{ 50,50 };
 
+
+
 	private:
-		//TmxHandler tmx;
+		TmxHandler tmx;
 		sf::RenderWindow window;
+		//TODO: objHandler creates a tmxHandler class. Plz fix or something i guess babidibobidi.
 		ObjectHandler objHandler;
 		InputManager inpManager;
 		CollisionHandler collision;
