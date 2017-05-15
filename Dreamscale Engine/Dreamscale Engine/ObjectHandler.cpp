@@ -13,7 +13,7 @@ ObjectHandler::ObjectHandler()
 	//	gameObject.push_back(new sf::Sprite(tmx.GetObjects(i)));
 	//	std::cout << gameObject[i]->getPosition().x << " " << gameObject[i]->getPosition().y << std::endl;
 	//}
-	std::cout << gameObject.size() << std::endl;
+	//std::cout << gameObject.size() << std::endl;
 	//SetObjectType();
 }
 

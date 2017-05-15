@@ -138,6 +138,12 @@ void TmxHandler::LoadMap(Tmx::Map* map)
 
 void TmxHandler::LoadObjects(Tmx::Map& map)
 {
+	//TODO:: skapa vectorer av shapes och deleta dem ur minnet.
+	for (int i = 0; i < drawable.size(); i++)
+	{
+		delete drawable[i];
+	}
+	drawable.clear();
 
 	for (int i = 0; i < spriteTextures.size(); i++)
 	{
@@ -212,7 +218,7 @@ void TmxHandler::LoadObjects(Tmx::Map& map)
 			//textureSource.width = tileWidth;
 			//textureSource.height = tileHeight;
 
-			////TODO: Memory leak. tempImg and tempTex needs to be deleted. but if tempTex is deleted, the objects wont have textures.
+			//TODO: Memory leak. tempImg and tempTex needs to be deleted. but if tempTex is deleted, the objects wont have textures.
 			////Potential solution: create a vector of sprites to be saved in header file?
 			//sf::Image* tempImg = new sf::Image();
 
@@ -352,18 +358,19 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 	{
 	case Tmx::TMX_PT_ELLIPSE: //circle
 		{
-			std::cout << "ellipse" << std::endl;
+			//std::cout << "ellipse" << std::endl;
 			dse::CircleShape *circle = new dse::CircleShape();
 			circle->setRadius(obj.GetEllipse()->GetRadiusX());
 			circle->setPosition(obj.GetX(), obj.GetY());
 			circle->setFillColor(sf::Color(255, 255, 0, 64));
 			circle->GetName();
 			drawable.push_back(new DrawableType(DrawableType::CIRCLE_SHAPE, circle));
+			//delete circle;
 		}
 		break;
 	case Tmx::TMX_PT_POLYGON: //polygon
 		{
-			std::cout << "polygon" << std::endl;
+			//std::cout << "polygon" << std::endl;
 			sf::ConvexShape *convex = new sf::ConvexShape();
 			int numPoints = obj.GetPolygon()->GetNumPoints();
 			convex->setPointCount(numPoints);
@@ -375,11 +382,13 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 			convex->setFillColor(sf::Color(0, 0, 255, 64));
 
 			drawable.push_back(new DrawableType(DrawableType::CONVEX_SHAPE, convex));
+
+			//delete convex;
 		}
 		break;
 	case Tmx::TMX_PT_POLYLINE: //polyline
 		{
-			std::cout << "polyline" << std::endl;
+			//std::cout << "polyline" << std::endl;
 			
 			sf::VertexArray* vertex = new sf::VertexArray(sf::LineStrip, obj.GetPolyline()->GetNumPoints());
 			int numPoints = obj.GetPolyline()->GetNumPoints();
@@ -390,22 +399,24 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 				(*vertex)[i].color = sf::Color(rand() % 255, rand() % 255, rand() % 255, 255);
 			}
 			drawable.push_back(new DrawableType(DrawableType::VERTEX_ARRAY, vertex));
+			//delete vertex;
 		}
 		break;
 	case Tmx::TMX_PT_NONE:
 		{
 			if (obj.GetGid() == 0) //rectangle
 			{
-				std::cout << "rect" << std::endl;
+				//std::cout << "rect" << std::endl;
 				sf::RectangleShape *rectangle = new sf::RectangleShape();
 				rectangle->setSize(sf::Vector2f(obj.GetWidth(), obj.GetHeight()));
 				rectangle->setPosition(obj.GetX(), obj.GetY());
 				rectangle->setFillColor(sf::Color(0, 255, 0, 64));
 				drawable.push_back(new DrawableType(DrawableType::RECTANGLE_SHAPE, rectangle));
+				//delete rectangle;
 			}
 			else //tileObject
 			{
-				std::cout << "tile" << std::endl;
+				//std::cout << "tile" << std::endl;
 
 				
 
@@ -459,6 +470,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 				delete tempImg;
 
 				drawable.push_back(new DrawableType(DrawableType::SPRITE, sprite));
+				//delete sprite;
 			}
 			//std::cout << " something went wrong" << std::endl;
 		}
