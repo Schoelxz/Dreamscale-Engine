@@ -29,6 +29,6 @@ void dse::ObjectHandler::Update()
 
 void dse::ObjectHandler::DrawObjects(sf::RenderWindow& win)
 {
-	tmx.DrawMap(win);
-	tmx.DrawObjects(win);
+	//tmx.DrawMap(win);
+	//tmx.DrawObjects(win);
 }

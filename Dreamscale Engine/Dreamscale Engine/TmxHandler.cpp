@@ -139,6 +139,12 @@ void TmxHandler::LoadMap(Tmx::Map* map)
 void TmxHandler::LoadObjects(Tmx::Map& map)
 {
 
+	for (int i = 0; i < spriteTextures.size(); i++)
+	{
+		delete spriteTextures[i];
+	}
+	spriteTextures.clear();
+
 	for (int i = 0; i < spriteVector.size(); i++)
 	{
 		delete spriteVector[i];
@@ -146,7 +152,7 @@ void TmxHandler::LoadObjects(Tmx::Map& map)
 	spriteVector.clear();
 	int tempCurrentTileset;
 
-	const std::vector<Tmx::Tileset*> tmxTileSet = map.GetTilesets();
+	//const std::vector<Tmx::Tileset*> tmxTileSet = map.GetTilesets();
 	const std::vector<Tmx::ObjectGroup*>& objLayers = map.GetObjectGroups(); //number of object layers
 
 	// Get size for map and tiles
@@ -169,55 +175,54 @@ void TmxHandler::LoadObjects(Tmx::Map& map)
 			/*spriteVector.push_back(new sf::Sprite);
 			std::cout << spriteVector.size() << std::endl; Kevin Kod*/
 
-			sf::Sprite* sprite = new sf::Sprite();
-			spriteVector.push_back(sprite);
+			//sf::Sprite* sprite = new sf::Sprite();
+			//spriteVector.push_back(sprite);
 
 
-			const int gid = object->GetGid();
-			DeterminePolygonType(*object);
-			if (gid == 0)
-				continue;
+			//const int gid = object->GetGid();
+			DeterminePolygonType(*object, map);
+			//if (gid == 0)
+			//	continue;
 
-			for (int i = tmxTileSet.size() - 1; i >= 0; i--)
-			{
-				if (tmxTileSet[i]->GetFirstGid() > gid)
-				{
-					tempCurrentTileset = i;
-					continue;
-				}
-				tempCurrentTileset = i;
-				break;
-			}
-			
-			int real_id = gid - tmxTileSet[tempCurrentTileset]->GetFirstGid();
-			
+			//for (int i = tmxTileSet.size() - 1; i >= 0; i--)
+			//{
+			//	if (tmxTileSet[i]->GetFirstGid() > gid)
+			//	{
+			//		tempCurrentTileset = i;
+			//		continue;
+			//	}
+			//	tempCurrentTileset = i;
+			//	break;
+			//}
+			//
+			//int real_id = gid - tmxTileSet[tempCurrentTileset]->GetFirstGid();
+			//
 
-			real_id &=	~(FLIPPED_HORIZONTALLY_FLAG |
-							FLIPPED_VERTICALLY_FLAG |
-							FLIPPED_DIAGONALLY_FLAG);
+			//real_id &=	~(FLIPPED_HORIZONTALLY_FLAG |
+			//				FLIPPED_VERTICALLY_FLAG |
+			//				FLIPPED_DIAGONALLY_FLAG);
 
-			int tu2 = real_id % (tileSetTexture[tempCurrentTileset]->getSize().x / tileWidth);
-			int tv2 = real_id / (tileSetTexture[tempCurrentTileset]->getSize().x / tileWidth);
+			//int tu2 = real_id % (tileSetTexture[tempCurrentTileset]->getSize().x / tileWidth);
+			//int tv2 = real_id / (tileSetTexture[tempCurrentTileset]->getSize().x / tileWidth);
 
 
-			sf::IntRect textureSource; //= Objectets 4 rektangel värden
-			textureSource.left = tu2 * tileWidth;
-			textureSource.top = tv2 * tileHeight;
-			textureSource.width = tileWidth;
-			textureSource.height = tileHeight;
+			//sf::IntRect textureSource; //= Objectets 4 rektangel värden
+			//textureSource.left = tu2 * tileWidth;
+			//textureSource.top = tv2 * tileHeight;
+			//textureSource.width = tileWidth;
+			//textureSource.height = tileHeight;
 
-			//TODO: Memory leak. tempImg and tempTex needs to be deleted. but if tempTex is deleted, the objects wont have textures.
-			//Potential solution: create a vector of sprites to be saved in header file?
-			sf::Image* tempImg = new sf::Image();
-			sf::Texture* tempTex = new sf::Texture();
+			////TODO: Memory leak. tempImg and tempTex needs to be deleted. but if tempTex is deleted, the objects wont have textures.
+			////Potential solution: create a vector of sprites to be saved in header file?
+			//sf::Image* tempImg = new sf::Image();
 
-			tempImg->loadFromFile(tmxTileSet[tempCurrentTileset]->GetImage()->GetSource());
-			tempTex->loadFromImage(*tempImg, textureSource);
+			//tempImg->loadFromFile(tmxTileSet[tempCurrentTileset]->GetImage()->GetSource());
+			//spriteTextures[spriteTextures.size() -1]->loadFromImage(*tempImg, textureSource);
 
-			spriteVector[spriteVector.size() - 1]->setPosition(object->GetX(), object->GetY() - object->GetHeight());
-			spriteVector[spriteVector.size() - 1]->setTexture(*tempTex);
-			delete tempImg;
-			//delete tempTex; //Deleting this removes any texture to be shown on sprites.
+			//spriteVector[spriteVector.size() - 1]->setPosition(object->GetX(), object->GetY() - object->GetHeight());
+			//spriteVector[spriteVector.size() - 1]->setTexture(*spriteTextures[spriteTextures.size() - 1]);
+			//delete tempImg;
+
 			
 		}
 	}
@@ -291,18 +296,58 @@ void TmxHandler::DrawMap(sf::RenderWindow& window)
 		state.texture = tileSetTexture[i % tileSetTexture.size()]; //Draw every tileSet for every vertexLayer
 		window.draw(*vertexLayers[i], state);
 	}
+
+	for (auto i : drawable)
+	{
+		switch (i->t)
+		{
+			case DrawableType::CIRCLE_SHAPE:
+			{
+				sf::CircleShape* circle = i->GetCircleShape();
+				// Do typical circle stuff ...
+				break;
+			}
+			case DrawableType::CONVEX_SHAPE:
+			{
+				sf::ConvexShape* convex = i->GetConvexShape();
+				// Do typical convex stuff ...
+				break;
+			}
+			case DrawableType::SPRITE:
+			{
+				sf::Sprite* sprite = i->GetSprite(); // TODO: FIX A GetSprite-FUNCTION!!!!!
+				break;
+			}
+		}
+		float radius = i->GetCircleShape()->getRadius();
+		float width = i->GetRectangleShape()->getSize().x;
+	}
 }
 
 void TmxHandler::DrawObjects(sf::RenderWindow & window)
 {
 	for (int i = 0; i < drawable.size(); i++) {
-		window.draw(*drawable[i]);
+		window.draw(*drawable[i]->d);
 	}
 }
 
 //TODO: Do a representive dse::subclass of every sf::drawable (shape) class
-void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
+void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 {
+	int tempCurrentTileset;
+
+	const std::vector<Tmx::Tileset*> tmxTileSet = m.GetTilesets();
+	//const std::vector<Tmx::ObjectGroup*>& objLayers = map.GetObjectGroups(); //number of object layers
+
+	const int height = m.GetHeight();
+	const int width = m.GetWidth();
+	const int tileHeight = m.GetTileHeight();
+	const int tileWidth = m.GetTileWidth();
+
+	const unsigned FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
+	const unsigned FLIPPED_VERTICALLY_FLAG = 0x40000000;
+	const unsigned FLIPPED_DIAGONALLY_FLAG = 0x20000000;
+
 	switch (obj.GetPrimitiveType())
 	{
 	case Tmx::TMX_PT_ELLIPSE: //circle
@@ -313,7 +358,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
 			circle->setPosition(obj.GetX(), obj.GetY());
 			circle->setFillColor(sf::Color(255, 255, 0, 64));
 			circle->GetName();
-			drawable.push_back(circle);
+			drawable.push_back(new DrawableType(DrawableType::CIRCLE_SHAPE, circle));
 		}
 		break;
 	case Tmx::TMX_PT_POLYGON: //polygon
@@ -329,7 +374,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
 			}
 			convex->setFillColor(sf::Color(0, 0, 255, 64));
 
-			drawable.push_back(convex);
+			drawable.push_back(new DrawableType(DrawableType::CONVEX_SHAPE, convex));
 		}
 		break;
 	case Tmx::TMX_PT_POLYLINE: //polyline
@@ -344,7 +389,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
 				(*vertex)[i].position = pointPos;
 				(*vertex)[i].color = sf::Color(rand() % 255, rand() % 255, rand() % 255, 255);
 			}
-			drawable.push_back(vertex);
+			drawable.push_back(new DrawableType(DrawableType::VERTEX_ARRAY, vertex));
 		}
 		break;
 	case Tmx::TMX_PT_NONE:
@@ -356,11 +401,64 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
 				rectangle->setSize(sf::Vector2f(obj.GetWidth(), obj.GetHeight()));
 				rectangle->setPosition(obj.GetX(), obj.GetY());
 				rectangle->setFillColor(sf::Color(0, 255, 0, 64));
-				drawable.push_back(rectangle);
+				drawable.push_back(new DrawableType(DrawableType::RECTANGLE_SHAPE, rectangle));
 			}
 			else //tileObject
 			{
 				std::cout << "tile" << std::endl;
+
+				
+
+				// TODO: Initialize the sprite property, and add it to the vector
+				sf::Sprite* sprite = new sf::Sprite();
+
+				const int gid = obj.GetGid();
+
+				if (gid == 0)
+					break;
+
+				for (int i = tmxTileSet.size() - 1; i >= 0; i--)
+				{
+					if (tmxTileSet[i]->GetFirstGid() > gid)
+					{
+						tempCurrentTileset = i;
+						continue;
+					}
+					tempCurrentTileset = i;
+					break;
+				}
+
+				int real_id = gid - tmxTileSet[tempCurrentTileset]->GetFirstGid();
+
+
+				real_id &= ~(FLIPPED_HORIZONTALLY_FLAG |
+					FLIPPED_VERTICALLY_FLAG |
+					FLIPPED_DIAGONALLY_FLAG);
+
+				int tu2 = real_id % (tileSetTexture[tempCurrentTileset]->getSize().x / tileWidth);
+				int tv2 = real_id / (tileSetTexture[tempCurrentTileset]->getSize().x / tileWidth);
+
+
+				sf::IntRect textureSource; //= Objectets 4 rektangel värden
+				textureSource.left = tu2 * tileWidth;
+				textureSource.top = tv2 * tileHeight;
+				textureSource.width = tileWidth;
+				textureSource.height = tileHeight;
+
+				//TODO: Memory leak. tempImg and tempTex needs to be deleted. but if tempTex is deleted, the objects wont have textures.
+				//Potential solution: create a vector of sprites to be saved in header file?
+				sf::Image* tempImg = new sf::Image();
+				spriteTextures.push_back(new sf::Texture());
+
+
+				tempImg->loadFromFile(tmxTileSet[tempCurrentTileset]->GetImage()->GetSource());
+				spriteTextures[spriteTextures.size() - 1]->loadFromImage(*tempImg, textureSource);
+
+				sprite->setPosition(obj.GetX(), obj.GetY() - obj.GetHeight());
+				sprite->setTexture(*spriteTextures[spriteTextures.size() - 1]);
+				delete tempImg;
+
+				drawable.push_back(new DrawableType(DrawableType::SPRITE, sprite));
 			}
 			//std::cout << " something went wrong" << std::endl;
 		}

@@ -19,6 +19,6 @@ namespace dse
 
 	private:
 		std::vector<sf::Sprite*> gameObject;
-		TmxHandler tmx;
+		//TmxHandler tmx;
 	};
 }
