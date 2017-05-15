@@ -7,8 +7,8 @@ ObjectHandler::ObjectHandler()
 {
 	std::cout << "class:	ObjectHandler:	Constructed!" << std::endl;
 
-	tmx.LoadMap();
-	tmx.LoadObjects();
+	//tmx.LoadMap();
+	//tmx.LoadObjects();
 	//for (int i = 0; i < tmx.spriteVector.size(); i++) {
 	//	gameObject.push_back(new sf::Sprite(tmx.GetObjects(i)));
 	//	std::cout << gameObject[i]->getPosition().x << " " << gameObject[i]->getPosition().y << std::endl;

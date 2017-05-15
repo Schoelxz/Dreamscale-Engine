@@ -1,20 +1,4 @@
 #include "TmxHandler.h"
-#include "CircleShape.h"
-
-#include <Tmx\TmxPolygon.h>
-#include <Tmx\TmxEllipse.h>
-#include <Tmx\TmxPolyline.h>
-#include <Tmx\TmxObjectGroup.h>
-
-#include <Tmx\TmxTileset.h>
-#include <Tmx\TmxTileLayer.h>
-#include <Tmx\TmxImage.h>
-#include <Tmx\TmxTile.h>
-#include <Tmx\TmxMapTile.h>
-
-#include <cassert>
-#include <iostream>
-#include <array>
 
 enum FLIPPED
 {
@@ -204,8 +188,6 @@ void TmxHandler::LoadObjects(Tmx::Map& map)
 				tempCurrentTileset = i;
 				break;
 			}
-
-			std::cout << object->GetId();
 			
 			int real_id = gid - tmxTileSet[tempCurrentTileset]->GetFirstGid();
 			
@@ -325,7 +307,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
 	{
 	case Tmx::TMX_PT_ELLIPSE: //circle
 		{
-			std::cout << " ellipse" << std::endl;
+			std::cout << "ellipse" << std::endl;
 			dse::CircleShape *circle = new dse::CircleShape();
 			circle->setRadius(obj.GetEllipse()->GetRadiusX());
 			circle->setPosition(obj.GetX(), obj.GetY());
@@ -336,7 +318,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
 		break;
 	case Tmx::TMX_PT_POLYGON: //polygon
 		{
-			std::cout << " polygon" << std::endl;
+			std::cout << "polygon" << std::endl;
 			sf::ConvexShape *convex = new sf::ConvexShape();
 			int numPoints = obj.GetPolygon()->GetNumPoints();
 			convex->setPointCount(numPoints);
@@ -352,7 +334,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj)
 		break;
 	case Tmx::TMX_PT_POLYLINE: //polyline
 		{
-			std::cout << " polyline" << std::endl;
+			std::cout << "polyline" << std::endl;
 			
 			sf::VertexArray* vertex = new sf::VertexArray(sf::LineStrip, obj.GetPolyline()->GetNumPoints());
 			int numPoints = obj.GetPolyline()->GetNumPoints();

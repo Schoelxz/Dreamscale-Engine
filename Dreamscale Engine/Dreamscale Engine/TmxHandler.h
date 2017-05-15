@@ -6,6 +6,24 @@
 #include <string>
 #include <Windows.h>
 
+#include "CircleShape.h"
+
+#include <Tmx\TmxPolygon.h>
+#include <Tmx\TmxEllipse.h>
+#include <Tmx\TmxPolyline.h>
+#include <Tmx\TmxObjectGroup.h>
+#include <Tmx\TmxMapTile.h>
+#include <Tmx\TmxTileset.h>
+#include <Tmx\TmxTileLayer.h>
+#include <Tmx\TmxImage.h>
+#include <Tmx\TmxTile.h>
+#include <Tmx\TmxMapTile.h>
+
+#include <cassert>
+#include <iostream>
+#include <array>
+
+
 //For rendering every layer
 #include <SFML\Graphics.hpp>
 
