@@ -10,7 +10,14 @@ enum FLIPPED
 
 TmxHandler::TmxHandler()
 {
-	
+	std::cout << "class:	TmxHandler:	Constructed!" << std::endl;
+	const std::string folder_name = ".\\TmxFiles\\";
+	allFileNames = get_all_files_names_within_folder(folder_name);
+	for (int i = 0; i < allFileNames.size(); i++)
+	{
+		allFileNames[i] = folder_name + allFileNames[i];
+		std::cout << allFileNames[i] << std::endl;
+	}
 }
 
 void TmxHandler::ParseAllMaps()
@@ -43,8 +50,6 @@ std::vector<std::string> TmxHandler::get_all_files_names_within_folder(std::stri
 	return names;
 }
 
-
-
 void TmxHandler::LoadMap(Tmx::Map* map)
 {
 	//TODO: sf::VertexArray läcker 2 gånger varje gång en ny map laddas in, pga. vi inte delete:ar 2 instanser.
@@ -70,7 +75,9 @@ void TmxHandler::LoadMap(Tmx::Map* map)
 		//Load the texture specifying the tileset
 		sf::Texture* tileset = new sf::Texture();
 		tileSetTexture.push_back(tileset);
-		if (!tileset->loadFromFile(tmxTileSetMap[i]->GetImage()->GetSource()))
+		const std::string folder_name = ".\\TmxFiles";
+		std::cout << folder_name << tmxTileSetMap[i]->GetImage()->GetSource() << std::endl;
+		if (!tileset->loadFromFile(folder_name + tmxTileSetMap[i]->GetImage()->GetSource()))
 		{
 			assert(!"Couldn't load file!");
 		}
@@ -384,7 +391,9 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 				sf::Image* tempImg = new sf::Image();
 				spriteTextures.push_back(new sf::Texture());
 
-				tempImg->loadFromFile(tmxTileSet[tempCurrentTileset]->GetImage()->GetSource());
+				const std::string folder_name = ".\\TmxFiles";
+
+				tempImg->loadFromFile(folder_name + tmxTileSet[tempCurrentTileset]->GetImage()->GetSource());
 				spriteTextures[spriteTextures.size() - 1]->loadFromImage(*tempImg, textureSource);
 
 				spriteVector[spriteVector.size()-1]->setPosition(obj.GetX(), obj.GetY() - obj.GetHeight());

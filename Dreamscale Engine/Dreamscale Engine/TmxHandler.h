@@ -23,7 +23,6 @@
 #include <iostream>
 #include <array>
 
-
 //For rendering every layer
 #include <SFML\Graphics.hpp>
 
@@ -66,31 +65,32 @@ struct DrawableType
 	}
 };
 
-
 class TmxHandler
 {
 public:
 	TmxHandler();
 
 	//Does what it says
-	std::vector<std::string> get_all_files_names_within_folder(std::string folder);
-	//used for getting above function's values.
-	std::vector<std::string> allFileNames;
+	std::vector<std::string> get_all_files_names_within_folder(std::string folder); //TODO Joel: Create path dir for tmx maps (a place designers put their .tmx files)
 
+	std::vector<std::string> GetTmxNames() { return allFileNames; };
+
+	//used for storing values gained from gafnwf-function.
+	std::vector<std::string> allFileNames;
+	
 	//Resources kinda..
 	void ParseAllMaps();
-	void LoadAllTilesets();
-	//\\
+	void LoadAllTilesets(); //Unused?
 
+	//Map
 	void LoadMap(Tmx::Map* map);
-	void LoadObjects(Tmx::Map& map);
 	void DrawMap(sf::RenderWindow& window);
+	//Objects
+	void LoadObjects(Tmx::Map& map);
 	void DrawObjects(sf::RenderWindow& window);
-	
+
 	void SetTile(sf::Vertex* &quad, Tmx::MapTile tile, int i, int j,
 		const sf::Vector2i tileSize, sf::Vector2i textCoord); //Sets a tiles texture and flips it correct
-
-	
 
 	Tmx::Map* map2;
 	std::map<std::string, Tmx::Map*> mapVector;
@@ -107,5 +107,6 @@ private:
 
 	void DeterminePolygonType(Tmx::Object& obj, Tmx::Map& m);
 	//TODO: Fast? Fråga om hjälp!
-};
 
+
+};
