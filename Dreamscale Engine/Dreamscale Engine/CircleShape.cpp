@@ -6,17 +6,16 @@ CircleShape::CircleShape()
 {
 }
 
-
 CircleShape::~CircleShape()
 {
 }
 
-std::string dse::CircleShape::GetName() const
+std::string CircleShape::GetName() const
 {
-	return std::string();
+	return name;
 }
 
-void dse::CircleShape::SetName(std::string n)
+void CircleShape::SetName(std::string n)
 {
 	name = n;
 }

@@ -7,6 +7,10 @@
 #include <Windows.h>
 
 #include "CircleShape.h"
+#include "RectangleShape.h"
+#include "VertexArray.h"
+#include "ConvexShape.h"
+#include "Sprite.h"
 
 #include <Tmx\TmxPolygon.h>
 #include <Tmx\TmxEllipse.h>
@@ -42,21 +46,25 @@ struct DrawableType
 	Type t;
 	sf::Drawable* d;
 
-	sf::CircleShape* GetCircleShape() const
+	dse::CircleShape* GetCircleShape() const
 	{
-		return static_cast<sf::CircleShape*>(d);
+		return static_cast<dse::CircleShape*>(d);
 	}
-	sf::ConvexShape* GetConvexShape() const
+	dse::ConvexShape* GetConvexShape() const
 	{
-		return static_cast<sf::ConvexShape*>(d);
+		return static_cast<dse::ConvexShape*>(d);
 	}
-	sf::RectangleShape* GetRectangleShape() const
+	dse::RectangleShape* GetRectangleShape() const
 	{
-		return static_cast<sf::RectangleShape*>(d);
+		return static_cast<dse::RectangleShape*>(d);
 	}
-	sf::Sprite* GetSprite() const
+	dse::Sprite* GetSprite() const
 	{
-		return static_cast<sf::Sprite*>(d);
+		return static_cast<dse::Sprite*>(d);
+	}
+	dse::VertexArray* GetVertexShape() const
+	{
+		return static_cast<dse::VertexArray*>(d);
 	}
 
 	DrawableType(Type _t, sf::Drawable* _d)
@@ -72,7 +80,6 @@ class TmxHandler
 public:
 	TmxHandler();
 
-	//Does what it says
 	std::vector<std::string> get_all_files_names_within_folder(std::string folder);
 	//used for getting above function's values.
 	std::vector<std::string> allFileNames;
@@ -80,7 +87,6 @@ public:
 	//Resources kinda..
 	void ParseAllMaps();
 	void LoadAllTilesets();
-	//\\
 
 	void LoadMap(Tmx::Map* map);
 	void LoadObjects(Tmx::Map& map);
@@ -90,17 +96,16 @@ public:
 	void SetTile(sf::Vertex* &quad, Tmx::MapTile tile, int i, int j,
 		const sf::Vector2i tileSize, sf::Vector2i textCoord); //Sets a tiles texture and flips it correct
 
-	
-
 	Tmx::Map* map2;
 	std::map<std::string, Tmx::Map*> mapVector;
+
 private:
 	int currentTileset; //For Loading Map
 	std::vector<sf::VertexArray*> vertexLayers;
-	std::vector<sf::Sprite*> spriteVector;
-	std::vector<sf::RectangleShape*> rectangleVector;
+	std::vector<dse::Sprite*> spriteVector;
+	std::vector<dse::RectangleShape*> rectangleVector;
 	std::vector<dse::CircleShape*> circleVector;
-	std::vector<sf::ConvexShape*> convexVector;
+	std::vector<dse::ConvexShape*> convexVector;
 	std::vector<DrawableType*> drawable;
 	std::vector<sf::Texture*> tileSetTexture;
 	std::vector<sf::Texture*> spriteTextures;
