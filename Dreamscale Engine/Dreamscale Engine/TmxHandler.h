@@ -87,37 +87,25 @@ public:
 	void DrawMap(sf::RenderWindow& window);
 	void DrawObjects(sf::RenderWindow& window);
 	
-	void SetTile(
-		sf::Vertex* &quad,
-		Tmx::MapTile tile,
-		int i, int j,
-		const sf::Vector2i tileSize,
-		sf::Vector2i textCoord
-		); //Sets a tiles texture and flips it correct
+	void SetTile(sf::Vertex* &quad, Tmx::MapTile tile, int i, int j,
+		const sf::Vector2i tileSize, sf::Vector2i textCoord); //Sets a tiles texture and flips it correct
 
-	void DeterminePolygonType(Tmx::Object& obj, Tmx::Map& m);
-
-	// Create a non-default renderstate, and bind our tileset texture to it
-	//std::vector<sf::RenderStates*> textureState;
+	
 
 	Tmx::Map* map2;
 	std::map<std::string, Tmx::Map*> mapVector;
 private:
-	//TODO: Skapa en vector av map för att kunna ladda in flera tmx filer
-	//Trouble to create map as a pointer, gave weird error to a another library class.
-
+	int currentTileset; //For Loading Map
 	std::vector<sf::VertexArray*> vertexLayers;
 	std::vector<sf::Sprite*> spriteVector;
+	std::vector<sf::RectangleShape*> rectangleVector;
+	std::vector<dse::CircleShape*> circleVector;
+	std::vector<sf::ConvexShape*> convexVector;
 	std::vector<DrawableType*> drawable;
-
-	// Load the texture specifying the tileset
 	std::vector<sf::Texture*> tileSetTexture;
 	std::vector<sf::Texture*> spriteTextures;
 
-
-
-	int currentTileset; //For Loading Map
-
+	void DeterminePolygonType(Tmx::Object& obj, Tmx::Map& m);
 	//TODO: Fast? Fråga om hjälp!
 };
 
