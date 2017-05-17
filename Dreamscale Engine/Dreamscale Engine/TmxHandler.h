@@ -92,6 +92,7 @@ public:
 	void DrawObjects(sf::RenderWindow& window);
 
 	std::map<std::string, Tmx::Map*> mapVector;
+	std::vector<DrawableType*> drawable;
 private:
 	int currentTileset; //For Loading Map
 	std::vector<sf::VertexArray*> vertexLayers;
@@ -99,7 +100,7 @@ private:
 	std::vector<sf::RectangleShape*> rectangleVector;
 	std::vector<dse::CircleShape*> circleVector;
 	std::vector<sf::ConvexShape*> convexVector;
-	std::vector<DrawableType*> drawable;
+	
 	std::vector<sf::Texture*> tileSetTexture;
 	std::vector<sf::Texture*> spriteTextures;
 	Tmx::Map* map2;
