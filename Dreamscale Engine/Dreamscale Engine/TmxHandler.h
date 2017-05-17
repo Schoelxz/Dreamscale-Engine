@@ -26,6 +26,14 @@
 //For rendering every layer
 #include <SFML\Graphics.hpp>
 
+enum FLIPPED
+{
+	DIAGONAL,
+	HORIZONTAL,
+	VERTICAL,
+	NONE,
+};
+
 struct DrawableType
 {
 	enum Type {
@@ -72,27 +80,17 @@ public:
 
 	//Does what it says
 	std::vector<std::string> get_all_files_names_within_folder(std::string folder); //TODO Joel: Create path dir for tmx maps (a place designers put their .tmx files)
-
 	std::vector<std::string> GetTmxNames() { return allFileNames; };
-
-	//used for storing values gained from gafnwf-function.
-	std::vector<std::string> allFileNames;
-	
 	//Resources kinda..
 	void ParseAllMaps();
 	void LoadAllTilesets(); //Unused?
-
 	//Map
 	void LoadMap(Tmx::Map* map);
 	void DrawMap(sf::RenderWindow& window);
 	//Objects
-	void LoadObjects(Tmx::Map& map);
+	void LoadObjects(Tmx::Map* map);
 	void DrawObjects(sf::RenderWindow& window);
 
-	void SetTile(sf::Vertex* &quad, Tmx::MapTile tile, int i, int j,
-		const sf::Vector2i tileSize, sf::Vector2i textCoord); //Sets a tiles texture and flips it correct
-
-	Tmx::Map* map2;
 	std::map<std::string, Tmx::Map*> mapVector;
 private:
 	int currentTileset; //For Loading Map
@@ -104,9 +102,15 @@ private:
 	std::vector<DrawableType*> drawable;
 	std::vector<sf::Texture*> tileSetTexture;
 	std::vector<sf::Texture*> spriteTextures;
+	Tmx::Map* map2;
+
+	//used for storing values gained from gafnwf-function.
+	std::vector<std::string> allFileNames;
 
 	void DeterminePolygonType(Tmx::Object& obj, Tmx::Map& m);
-	//TODO: Fast? Fråga om hjälp!
 
+	void SetTile(sf::Vertex*& quad, Tmx::MapTile tile, int i, int j,
+		const sf::Vector2i tileSize, sf::Vector2i textCoord); //Sets a tiles texture and flips it correct
+	//TODO: Fast? Fråga om hjälp!
 
 };

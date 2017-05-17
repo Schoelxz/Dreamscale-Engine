@@ -1,13 +1,5 @@
 #include "TmxHandler.h"
 
-enum FLIPPED
-{
-	DIAGONAL,
-	HORIZONTAL,
-	VERTICAL,
-	NONE,
-};
-
 TmxHandler::TmxHandler()
 {
 	std::cout << "class:	TmxHandler:	Constructed!" << std::endl;
@@ -135,7 +127,7 @@ void TmxHandler::LoadMap(Tmx::Map* map)
 	}
 }
 
-void TmxHandler::LoadObjects(Tmx::Map& map)
+void TmxHandler::LoadObjects(Tmx::Map* map)
 {
 	//TODO: skapa vectorer av shapes och delet:a dem ur minnet.
 	for (int i = 0; i < drawable.size(); i++)
@@ -172,7 +164,7 @@ void TmxHandler::LoadObjects(Tmx::Map& map)
 	int tempCurrentTileset;
 
 	//const std::vector<Tmx::Tileset*> tmxTileSet = map.GetTilesets();
-	const std::vector<Tmx::ObjectGroup*>& objLayers = map.GetObjectGroups(); //number of object layers
+	const std::vector<Tmx::ObjectGroup*>& objLayers = map->GetObjectGroups(); //number of object layers
 
 	//for each object layer
 	for (auto objects : objLayers)
@@ -180,7 +172,7 @@ void TmxHandler::LoadObjects(Tmx::Map& map)
 		//for each object in the object layer
 		for (auto object : objects->GetObjects())
 		{
-			DeterminePolygonType(*object, map);
+			DeterminePolygonType(*object, *map);
 		}
 	}
 }

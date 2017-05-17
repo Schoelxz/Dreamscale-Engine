@@ -41,13 +41,13 @@ void dse::GameEngine::Update()
 				if (event.key.code == sf::Keyboard::Left)
 				{
 					tmx.LoadMap(tmx.mapVector[tmx.GetTmxNames()[0]]);
-					tmx.LoadObjects(*tmx.mapVector[tmx.GetTmxNames()[0]]);
+					tmx.LoadObjects(tmx.mapVector[tmx.GetTmxNames()[0]]);
 					
 				}
 				if (event.key.code == sf::Keyboard::Right)
 				{
 					tmx.LoadMap(tmx.mapVector[tmx.GetTmxNames()[1]]);
-					tmx.LoadObjects(*tmx.mapVector[tmx.GetTmxNames()[1]]);
+					tmx.LoadObjects(tmx.mapVector[tmx.GetTmxNames()[1]]);
 				}
 			}
 			if (event.type == sf::Event::MouseEntered)
