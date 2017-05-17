@@ -86,7 +86,6 @@ public:
 
 	//Resources kinda..
 	void ParseAllMaps();
-	void LoadAllTilesets();
 
 	void LoadMap(Tmx::Map* map);
 	void LoadObjects(Tmx::Map& map);

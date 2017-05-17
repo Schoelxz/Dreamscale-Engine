@@ -18,7 +18,7 @@ void dse::GameEngine::Update()
 
 	bool mouseInsideAWindow = false;
 
-	window.create(sf::VideoMode().getDesktopMode(), "DreamScale Engine", sf::Style::None);
+	window.create(sf::VideoMode().getDesktopMode(), "DreamScale Engine");
 
 	tmx.allFileNames = tmx.get_all_files_names_within_folder("./");
 	tmx.ParseAllMaps();
@@ -31,7 +31,7 @@ void dse::GameEngine::Update()
 	const float viewSize = 320.0f;
 	view2.setSize(sf::Vector2f(viewSize, viewSize / aspectRatio));
 
-	view2.zoom(2);
+	view2.zoom(3);
 
 	while (window.isOpen())
 	{
@@ -67,7 +67,7 @@ void dse::GameEngine::Update()
 				mouseInsideAWindow = false;
 		}
 		
-		view2.setCenter(400, 400);
+		view2.setCenter(0, window.getSize().y / 5);
 		if (mouseInsideAWindow)
 		view2.move(mouse.getPosition(window).x, mouse.getPosition(window).y);
 

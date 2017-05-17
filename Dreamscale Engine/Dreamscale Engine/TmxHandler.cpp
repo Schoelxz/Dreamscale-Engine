@@ -43,8 +43,6 @@ std::vector<std::string> TmxHandler::get_all_files_names_within_folder(std::stri
 	return names;
 }
 
-
-
 void TmxHandler::LoadMap(Tmx::Map* map)
 {
 	//TODO: sf::VertexArray läcker 2 gånger varje gång en ny map laddas in, pga. vi inte delete:ar 2 instanser.
@@ -157,11 +155,9 @@ void TmxHandler::LoadObjects(Tmx::Map& map)
 		for (auto object : objects->GetObjects())
 		{
 			DeterminePolygonType(*object, map);
-
-			
 		}
 	}
-
+	//TODO: make into an update class instead
 	for (auto i : drawable)
 	{
 		switch (i->t)
@@ -187,6 +183,12 @@ void TmxHandler::LoadObjects(Tmx::Map& map)
 			case DrawableType::RECTANGLE_SHAPE:
 			{
 				dse::RectangleShape* rectangle = i->GetRectangleShape();
+				
+				if (rectangle->GetVisible() == true)
+					rectangle->setFillColor(sf::Color(0, 255, 0, 64));
+				else
+					rectangle->setFillColor(sf::Color(0, 255, 0, 0));
+
 				std::cout << rectangle->GetName() << std::endl;
 
 				break;
@@ -194,7 +196,7 @@ void TmxHandler::LoadObjects(Tmx::Map& map)
 			case DrawableType::SPRITE:
 			{
 				dse::Sprite* sprite = i->GetSprite();
-
+				
 				std::cout << sprite->GetName() << std::endl;
 				break;
 			}
@@ -277,21 +279,9 @@ void TmxHandler::DrawObjects(sf::RenderWindow & window)
 	}
 }
 
-//TODO: Do a representive dse::subclass of every sf::drawable (shape) class
 void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 {
-	const std::vector<Tmx::Tileset*> tmxTileSet = m.GetTilesets();
-
-	int tempCurrentTileset;
-	const int height = m.GetHeight();
-	const int width = m.GetWidth();
-	const int tileHeight = m.GetTileHeight();
-	const int tileWidth = m.GetTileWidth();
-
-	const unsigned FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
-	const unsigned FLIPPED_VERTICALLY_FLAG = 0x40000000;
-	const unsigned FLIPPED_DIAGONALLY_FLAG = 0x20000000;
-
+	//TODO: fix tag, name, isVisible and isAlive functions for every objectclass
 	//sets the settings for each object depending on the objects type(shape)
 	switch (obj.GetPrimitiveType())
 	{
@@ -346,11 +336,24 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 			rectangleVector[rectangleVector.size() - 1]->SetName(obj.GetName());
 			rectangleVector[rectangleVector.size() - 1]->setSize(sf::Vector2f(obj.GetWidth(), obj.GetHeight()));
 			rectangleVector[rectangleVector.size() - 1]->setPosition(obj.GetX(), obj.GetY());
-			rectangleVector[rectangleVector.size() - 1]->setFillColor(sf::Color(0, 255, 0, 64));
+			rectangleVector[rectangleVector.size() - 1]->SetVisible(false);
+			
+
 			drawable.push_back(new DrawableType(DrawableType::RECTANGLE_SHAPE, rectangleVector[rectangleVector.size() - 1]));
 		}
 		else //tileObject
 		{
+			const std::vector<Tmx::Tileset*> tmxTileSet = m.GetTilesets();
+
+			int tempCurrentTileset;
+			const int height = m.GetHeight();
+			const int width = m.GetWidth();
+			const int tileHeight = obj.GetHeight();
+			const int tileWidth = obj.GetWidth();
+
+			const unsigned FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
+			const unsigned FLIPPED_VERTICALLY_FLAG = 0x40000000;
+			const unsigned FLIPPED_DIAGONALLY_FLAG = 0x20000000;
 			//std::cout << "tile" << std::endl;
 			// TODO: Initialize the sprite property, and add it to the vector
 			spriteVector.push_back(new dse::Sprite());
@@ -397,6 +400,12 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 			spriteVector[spriteVector.size()-1]->setPosition(obj.GetX(), obj.GetY() - obj.GetHeight());
 			spriteVector[spriteVector.size()-1]->setTexture(*spriteTextures[spriteTextures.size() - 1]);
 			delete tempImg;
+
+			//spriteVector[spriteVector.size() - 1]->SetVisible(false);
+			if (spriteVector[spriteVector.size() - 1]->GetVisible() == true)
+				spriteVector[spriteVector.size() - 1]->setColor(sf::Color(255, 255, 255, 255));
+			else
+				spriteVector[spriteVector.size() - 1]->setColor(sf::Color(255, 255, 255, 0));
 
 			drawable.push_back(new DrawableType(DrawableType::SPRITE, spriteVector[spriteVector.size()-1]));
 		}

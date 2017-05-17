@@ -20,3 +20,13 @@ void RectangleShape::SetName(std::string n)
 {
 	name = n;
 }
+
+void dse::RectangleShape::SetVisible(bool state)
+{
+	isVisible = state;
+}
+
+bool dse::RectangleShape::GetVisible()
+{
+	return isVisible;
+}

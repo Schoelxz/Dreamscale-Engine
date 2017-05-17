@@ -11,8 +11,12 @@ namespace dse
 
 		std::string GetName() const;
 		void SetName(std::string n);
+		void SetVisible(bool state);
+		bool GetVisible();
 
 	private:
 		std::string name;
+		bool isAlive = true;
+		bool isVisible = true;
 	};
 }
