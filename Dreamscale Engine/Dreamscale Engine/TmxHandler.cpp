@@ -8,9 +8,65 @@ enum FLIPPED
 	NONE,
 };
 
-TmxHandler::TmxHandler()
+TmxHandler::TmxHandler() :
+	mapIndex(0)
 {
 	
+}
+//TODO: just nu så printas inte type. och när man byter map så krashar programmet av en vector out of bound.
+void TmxHandler::UpdateObjects()
+{
+	for (int i = 0; i < m_drawable.size(); i++)
+	{
+		switch (drawable[i]->t)
+		{
+			case DrawableType::CIRCLE_SHAPE:
+			{
+				dse::CircleShape* circle = drawable[i]->GetCircleShape();
+				// Do typical circle stuff ...
+				std::cout << m_drawable[i]->GetCircleShape()->GetType() << std::endl;
+
+				if (circle->GetVisible() == true)
+					circle->setFillColor(sf::Color(0, 255, 0, 64));
+				else
+					circle->setFillColor(sf::Color(0, 255, 0, 0));
+			}
+				break;
+			case DrawableType::CONVEX_SHAPE:
+			{
+				dse::ConvexShape* convex = drawable[i]->GetConvexShape();
+				//std::cout << convex->GetName() << std::endl;
+				// Do typical convex stuff ...
+			}
+				break;
+			case DrawableType::RECTANGLE_SHAPE:
+			{
+				dse::RectangleShape* rectangle = drawable[i]->GetRectangleShape();
+				if (rectangle->GetVisible() == true)
+					rectangle->setFillColor(sf::Color(0, 255, 0, 64));
+				else
+					rectangle->setFillColor(sf::Color(0, 255, 0, 0));
+				//std::cout << rectangle->GetName() << std::endl;
+			}
+				break;
+			case DrawableType::SPRITE:
+			{
+				dse::Sprite* sprite = drawable[i]->GetSprite();
+				if (sprite->GetVisible() == true)
+					sprite->setColor(sf::Color(255, 255, 255, 255));
+				else
+					sprite->setColor(sf::Color(255, 255, 255, 0));
+				//std::cout << sprite->GetName() << std::endl;
+			}
+				break;
+			case DrawableType::VERTEX_ARRAY:
+			{
+				dse::VertexArray* vertex = drawable[i]->GetVertexShape();
+				//std::cout << vertex->GetName();
+			}
+				break;
+		}
+	}
 }
 
 void TmxHandler::ParseAllMaps()
@@ -157,57 +213,6 @@ void TmxHandler::LoadObjects(Tmx::Map& map)
 			DeterminePolygonType(*object, map);
 		}
 	}
-	//TODO: make into an update class instead
-	for (auto i : drawable)
-	{
-		switch (i->t)
-		{
-			case DrawableType::CIRCLE_SHAPE:
-			{
-				dse::CircleShape* circle = i->GetCircleShape();
-				// Do typical circle stuff ...
-				
-				std::cout << circle->GetName() << std::endl;
-				//float radius = i->GetCircleShape()->getRadius();
-				//float width = i->GetRectangleShape()->getSize().x;
-				break;
-			}
-			case DrawableType::CONVEX_SHAPE:
-			{
-				dse::ConvexShape* convex = i->GetConvexShape();
-				std::cout << convex->GetName() << std::endl;
-
-				// Do typical convex stuff ...
-				break;
-			}
-			case DrawableType::RECTANGLE_SHAPE:
-			{
-				dse::RectangleShape* rectangle = i->GetRectangleShape();
-				
-				if (rectangle->GetVisible() == true)
-					rectangle->setFillColor(sf::Color(0, 255, 0, 64));
-				else
-					rectangle->setFillColor(sf::Color(0, 255, 0, 0));
-
-				std::cout << rectangle->GetName() << std::endl;
-
-				break;
-			}
-			case DrawableType::SPRITE:
-			{
-				dse::Sprite* sprite = i->GetSprite();
-				
-				std::cout << sprite->GetName() << std::endl;
-				break;
-			}
-			case DrawableType::VERTEX_ARRAY:
-			{
-				dse::VertexArray* vertex = i->GetVertexShape();
-				//std::cout << vertex->GetName();
-				break;
-			}
-		}
-	}
 }
 
 void TmxHandler::SetTile(sf::Vertex* &quad, Tmx::MapTile tile, int i, int j,
@@ -289,34 +294,37 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 		{
 			//std::cout << "ellipse" << std::endl;
 			circleVector.push_back(new dse::CircleShape());
-			circleVector[circleVector.size() - 1]->SetName(obj.GetName());
-			circleVector[circleVector.size() - 1]->setRadius(obj.GetEllipse()->GetRadiusX());
-			circleVector[circleVector.size() - 1]->setPosition(obj.GetX(), obj.GetY());
-			circleVector[circleVector.size() - 1]->setFillColor(sf::Color(255, 255, 0, 64));
+			circleVector.back()->SetName(obj.GetName());
+			circleVector.back()->SetType(obj.GetType());
+			circleVector.back()->setRadius(obj.GetEllipse()->GetRadiusX());
+			circleVector.back()->setPosition(obj.GetX(), obj.GetY());
+			circleVector.back()->setFillColor(sf::Color(255, 255, 0, 64));
 			drawable.push_back(new DrawableType(DrawableType::CIRCLE_SHAPE, circleVector[circleVector.size() - 1]));
+			m_drawable.insert(std::make_pair(mapIndex++, drawable.back()));
+			break;
 		}
-		break;
 	case Tmx::TMX_PT_POLYGON: //polygon
 		{
 			//std::cout << "polygon" << std::endl;
 			convexVector.push_back(new dse::ConvexShape());
-			convexVector[convexVector.size() - 1]->SetName(obj.GetName());
+			convexVector.back()->SetName(obj.GetName());
+			convexVector.back()->SetType(obj.GetType());
 			int numPoints = obj.GetPolygon()->GetNumPoints();
-			convexVector[convexVector.size()-1]->setPointCount(numPoints);
+			convexVector.back()->setPointCount(numPoints);
 			for (int i = 0; i < numPoints; i++)
 			{
 				const sf::Vector2f pointPos = sf::Vector2f(obj.GetX() + obj.GetPolygon()->GetPoint(i).x, obj.GetY() + obj.GetPolygon()->GetPoint(i).y);
-				convexVector[convexVector.size() - 1]->setPoint(i, pointPos);
+				convexVector.back()->setPoint(i, pointPos);
 			}
-			convexVector[convexVector.size() - 1]->setFillColor(sf::Color(0, 0, 255, 64));
-			drawable.push_back(new DrawableType(DrawableType::CONVEX_SHAPE, convexVector[convexVector.size() - 1]));
+			convexVector.back()->setFillColor(sf::Color(0, 0, 255, 64));
+			drawable.push_back(new DrawableType(DrawableType::CONVEX_SHAPE, convexVector.back()));
+			m_drawable.insert(std::make_pair(mapIndex++, drawable.back()));
 		}
-		break;
+			break;
 	case Tmx::TMX_PT_POLYLINE: //polyline
 		{
 			//std::cout << "polyline" << std::endl;
 			sf::VertexArray* vertex = new sf::VertexArray(sf::LineStrip, obj.GetPolyline()->GetNumPoints());
-
 			int numPoints = obj.GetPolyline()->GetNumPoints();
 			for (int i = 0; i < numPoints; i++)
 			{
@@ -325,21 +333,23 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 				(*vertex)[i].color = sf::Color(rand() % 255, rand() % 255, rand() % 255, 255);
 			}
 			drawable.push_back(new DrawableType(DrawableType::VERTEX_ARRAY, vertex));
+			m_drawable.insert(std::make_pair(mapIndex++, drawable.back()));
 		}
-		break;
+			break;
 	case Tmx::TMX_PT_NONE:
 	{
 		if (obj.GetGid() == 0) //rectangle
 		{
 			//std::cout << "rect" << std::endl;
 			rectangleVector.push_back(new dse::RectangleShape());
-			rectangleVector[rectangleVector.size() - 1]->SetName(obj.GetName());
-			rectangleVector[rectangleVector.size() - 1]->setSize(sf::Vector2f(obj.GetWidth(), obj.GetHeight()));
-			rectangleVector[rectangleVector.size() - 1]->setPosition(obj.GetX(), obj.GetY());
-			rectangleVector[rectangleVector.size() - 1]->SetVisible(false);
+			rectangleVector.back()->SetName(obj.GetName());
+			rectangleVector.back()->SetType(obj.GetType());
+			rectangleVector.back()->setSize(sf::Vector2f(obj.GetWidth(), obj.GetHeight()));
+			rectangleVector.back()->setPosition(obj.GetX(), obj.GetY());
+			rectangleVector.back()->SetVisible(false);
 			
-
-			drawable.push_back(new DrawableType(DrawableType::RECTANGLE_SHAPE, rectangleVector[rectangleVector.size() - 1]));
+			drawable.push_back(new DrawableType(DrawableType::RECTANGLE_SHAPE, rectangleVector.back()));
+			m_drawable.insert(std::make_pair(mapIndex++, drawable.back()));
 		}
 		else //tileObject
 		{
@@ -357,7 +367,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 			//std::cout << "tile" << std::endl;
 			// TODO: Initialize the sprite property, and add it to the vector
 			spriteVector.push_back(new dse::Sprite());
-			spriteVector[spriteVector.size() - 1]->SetName(obj.GetName());
+			spriteVector.back()->SetName(obj.GetName());
 
 			const int gid = obj.GetGid();
 			if (gid == 0)
@@ -395,21 +405,20 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 			spriteTextures.push_back(new sf::Texture());
 
 			tempImg->loadFromFile(tmxTileSet[tempCurrentTileset]->GetImage()->GetSource());
-			spriteTextures[spriteTextures.size() - 1]->loadFromImage(*tempImg, textureSource);
+			spriteTextures.back()->loadFromImage(*tempImg, textureSource);
 
-			spriteVector[spriteVector.size()-1]->setPosition(obj.GetX(), obj.GetY() - obj.GetHeight());
-			spriteVector[spriteVector.size()-1]->setTexture(*spriteTextures[spriteTextures.size() - 1]);
+			spriteVector.back()->setPosition(obj.GetX(), obj.GetY() - obj.GetHeight());
+			spriteVector.back()->setTexture(*spriteTextures.back());
 			delete tempImg;
 
+			spriteVector.back()->SetName(obj.GetName());
+			spriteVector.back()->SetType(obj.GetType());
 			//spriteVector[spriteVector.size() - 1]->SetVisible(false);
-			if (spriteVector[spriteVector.size() - 1]->GetVisible() == true)
-				spriteVector[spriteVector.size() - 1]->setColor(sf::Color(255, 255, 255, 255));
-			else
-				spriteVector[spriteVector.size() - 1]->setColor(sf::Color(255, 255, 255, 0));
 
-			drawable.push_back(new DrawableType(DrawableType::SPRITE, spriteVector[spriteVector.size()-1]));
+			drawable.push_back(new DrawableType(DrawableType::SPRITE, spriteVector.back()));
+			m_drawable.insert(std::make_pair(mapIndex++, drawable.back()));
 		}
-		break;
+			break;
 	}
 	default:
 		break;

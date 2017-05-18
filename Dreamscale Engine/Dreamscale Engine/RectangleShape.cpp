@@ -16,17 +16,27 @@ std::string RectangleShape::GetName() const
 	return name;
 }
 
-void RectangleShape::SetName(std::string n)
+std::string dse::RectangleShape::GetType() const
 {
-	name = n;
-}
-
-void dse::RectangleShape::SetVisible(bool state)
-{
-	isVisible = state;
+	return std::string();
 }
 
 bool dse::RectangleShape::GetVisible()
 {
 	return isVisible;
+}
+
+void RectangleShape::SetName(std::string n)
+{
+	name = n;
+}
+
+void dse::RectangleShape::SetType(std::string t)
+{
+	type = t;
+}
+
+void dse::RectangleShape::SetVisible(bool state)
+{
+	isVisible = state;
 }

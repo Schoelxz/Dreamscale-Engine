@@ -81,6 +81,7 @@ void dse::GameEngine::Update()
 		objHandler.Update();
 		objHandler.DrawObjects(window);
 		tmx.DrawMap(window);
+		tmx.UpdateObjects();
 		tmx.DrawObjects(window);
 
 		window.setView(view2);

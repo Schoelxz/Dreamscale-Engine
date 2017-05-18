@@ -1,5 +1,7 @@
 #pragma once
+
 #include <SFML\Graphics.hpp>
+#include <string>
 
 namespace dse
 {
@@ -10,12 +12,15 @@ namespace dse
 		~RectangleShape();
 
 		std::string GetName() const;
-		void SetName(std::string n);
-		void SetVisible(bool state);
+		std::string GetType() const;
 		bool GetVisible();
+		void SetName(std::string n);
+		void SetType(std::string t);
+		void SetVisible(bool state);
 
 	private:
 		std::string name;
+		std::string type;
 		bool isAlive = true;
 		bool isVisible = true;
 	};

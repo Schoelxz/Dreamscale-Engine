@@ -15,9 +15,9 @@ std::string Sprite::GetName() const
 	return name;
 }
 
-std::string dse::Sprite::GetTag() const
+std::string dse::Sprite::GetType() const
 {
-	return std::string();
+	return std::string(type);
 }
 
 bool dse::Sprite::GetVisible()
@@ -30,8 +30,9 @@ void Sprite::SetName(std::string n)
 	name = n;
 }
 
-void dse::Sprite::SetTag(std::string n)
+void dse::Sprite::SetType(std::string t)
 {
+	type = t;
 }
 
 void dse::Sprite::SetVisible(bool state)

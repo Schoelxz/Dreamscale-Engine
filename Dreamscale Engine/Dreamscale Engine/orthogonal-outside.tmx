@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="45" height="31" tilewidth="16" tileheight="16" nextobjectid="57">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="45" height="31" tilewidth="16" tileheight="16" nextobjectid="59">
  <properties>
   <property name="enemyTint" type="color" value="#ffa33636"/>
  </properties>
@@ -391,6 +391,9 @@
    <polygon points="0,0 0,49 13,64 13,82 60,122 63,167 43,178 44,193 57,201 64,242 118,239 131,233 135,190 149,184 149,128 72,57 70,30 62,34 47,48 37,30"/>
   </object>
   <object id="53" name="32x32" gid="605" x="458" y="259.333" width="32" height="32"/>
+  <object id="58" name="gg" x="36" y="268" width="37" height="120">
+   <ellipse/>
+  </object>
  </objectgroup>
  <objectgroup name="32x32">
   <object id="54" gid="605" x="525.333" y="294" width="32" height="32"/>

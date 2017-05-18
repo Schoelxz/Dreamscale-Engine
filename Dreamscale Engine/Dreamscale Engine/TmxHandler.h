@@ -26,7 +26,7 @@
 #include <cassert>
 #include <iostream>
 #include <array>
-
+#include <map>
 
 //For rendering every layer
 #include <SFML\Graphics.hpp>
@@ -84,6 +84,19 @@ public:
 	//used for getting above function's values.
 	std::vector<std::string> allFileNames;
 
+	////////////////////////////////////////////////////////////
+	/// \brief Refreshes all objects.
+	/// Loops through all objects and updates them
+	/// if they're different from the last update funtction \n
+	/// Example:
+	/// Bandit1 died which changed representive Sprite
+	/// class to not be visible. So the next time
+	/// UpdateObjects loops through bandit's sprite
+	/// it will make bandit invisible.
+	///		This function will only be called from GameEngine.
+	////////////////////////////////////////////////////////////
+	void UpdateObjects();
+
 	//Resources kinda..
 	void ParseAllMaps();
 
@@ -100,6 +113,9 @@ public:
 
 private:
 	int currentTileset; //For Loading Map
+	int mapIndex;
+
+	std::map<int, DrawableType*> m_drawable;
 	std::vector<sf::VertexArray*> vertexLayers;
 	std::vector<dse::Sprite*> spriteVector;
 	std::vector<dse::RectangleShape*> rectangleVector;

@@ -16,7 +16,6 @@ using namespace luabridge;
 
 namespace dse
 {
-
 	class GameEngine
 	{
 	public:
@@ -27,15 +26,12 @@ namespace dse
 		//InputManager inpManager();
 		//CollisionHandler collision();
 		//ProjectHandler project();
-		
 		void Update();
 
 		//Temp Mouse and Rectangle Test
 		sf::Mouse mouse;
 		sf::RectangleShape rect;
 		sf::Vector2f vect{ 50,50 };
-
-
 
 	private:
 		TmxHandler tmx;
@@ -45,8 +41,5 @@ namespace dse
 		InputManager inpManager;
 		CollisionHandler collision;
 		ProjectHandler project;
-		
 	};
-
 }
-
