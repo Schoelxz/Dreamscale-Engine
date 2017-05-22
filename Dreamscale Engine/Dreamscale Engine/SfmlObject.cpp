@@ -7,6 +7,11 @@ SfmlObject::SfmlObject()
 	sfmlObjects.push_back(this);
 }
 
+SfmlObject::SfmlObject(const std::string& name)
+	: SfmlObject()
+{
+	m_instanceName = name;
+}
 
 SfmlObject::~SfmlObject()
 {
@@ -51,6 +56,11 @@ sf::Vector2f SfmlObject::GetSize()
 sf::Vector2f SfmlObject::GetPosition()
 {
 	return m_pos;
+}
+
+std::string SfmlObject::GetInstanceName()
+{
+	return m_instanceName;
 }
 
 const std::vector<SfmlObject*>& SfmlObject::GetAllObjects()

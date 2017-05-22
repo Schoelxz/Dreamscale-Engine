@@ -12,6 +12,8 @@ public:
 	SfmlObject();
 	~SfmlObject();
 
+	SfmlObject(const std::string& name);
+
 	//void LoadScript(lua_State* L, const std::string& scriptFileName, const std::string& tableName);
 
 	void SetSize(int x, int y);
@@ -23,12 +25,16 @@ public:
 	sf::RectangleShape rectShape;
 
 	SfmlObject* Find() const;
+	//TODO: Keep working on finding and using class instances for LUA
+	std::string GetInstanceName();
 
 	static const std::vector<SfmlObject*>& GetAllObjects();
 
 private:
 	sf::Vector2f m_pos;
 	sf::Vector2f m_size;
+
+	std::string m_instanceName;
 
 	static std::vector<SfmlObject*> sfmlObjects;
 };

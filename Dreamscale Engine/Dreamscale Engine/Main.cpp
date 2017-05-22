@@ -11,7 +11,7 @@ using namespace luabridge;
 
 int main()
 {
-	SfmlObject BlueRectangle;
+	SfmlObject BlueRectangle("BlueRectangle");
 	
 	sf::RenderWindow window;
 	window.create(sf::VideoMode(1024, 768), "DreamScale Engine");
@@ -45,16 +45,24 @@ int main()
 	BlueRectangle.rectShape.setFillColor(sf::Color::Blue);
 	BlueRectangle.rectShape.setSize(sf::Vector2f(32.0f, 32.0f));
 	BlueRectangle.rectShape.setPosition(sf::Vector2f(0.0f, 0.0f));
-
+	
 	//SfmlObject::GetAllObjects()
-
+	sf::Event event;
 	while (window.isOpen())
 	{
+		while (window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
+
 		window.clear();
 
 		for (auto v : SfmlObject::GetAllObjects())
 		{
-			window.draw(v->rectShape);
+			if (v->GetInstanceName() != "BlueRectangle")
+				window.draw(v->rectShape);
+			else
+				std::cout << "yo" << std::endl;
 		}
 
 		window.display();
