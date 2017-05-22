@@ -19,6 +19,7 @@ namespace dse
 
 		ObjectHandler();
 		~ObjectHandler();
+
 	private:
 		std::vector<GameObject*> gameObject;
 		
