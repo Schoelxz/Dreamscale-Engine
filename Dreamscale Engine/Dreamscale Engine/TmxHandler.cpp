@@ -13,7 +13,7 @@ TmxHandler::TmxHandler() :
 {
 	
 }
-//TODO: just nu så printas inte type. och när man byter map så krashar programmet av en vector out of bound.
+
 void TmxHandler::UpdateObjects()
 {
 	for (int i = 0; i < m_drawable.size(); i++)
@@ -25,7 +25,7 @@ void TmxHandler::UpdateObjects()
 				dse::CircleShape* circle = drawable[i]->GetCircleShape();
 				// Do typical circle stuff ...
 				std::cout << m_drawable[i]->GetCircleShape()->GetType() << std::endl;
-
+				std::cout << circle->GetName();
 				if (circle->GetVisible() == true)
 					circle->setFillColor(sf::Color(0, 255, 0, 64));
 				else
@@ -182,9 +182,8 @@ void TmxHandler::LoadMap(Tmx::Map* map)
 	}
 }
 
-void TmxHandler::LoadObjects(Tmx::Map& map)
+void TmxHandler::LoadObjects(const Tmx::Map& map)
 {
-	//TODO: skapa vectorer av shapes och delet:a dem ur minnet.
 	for (int i = 0; i < drawable.size(); i++) {delete drawable[i];}
 	for (int i = 0; i < spriteTextures.size(); i++) {delete spriteTextures[i];}
 	for (int i = 0; i < spriteVector.size(); i++) {delete spriteVector[i];}
@@ -284,9 +283,22 @@ void TmxHandler::DrawObjects(sf::RenderWindow & window)
 	}
 }
 
-void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
+void TmxHandler::ResetVector()
 {
-	//TODO: fix tag, name, isVisible and isAlive functions for every objectclass
+	for (int i = 0; i < drawable.size(); i++)
+	{
+		delete drawable[i];
+	}
+	
+	m_drawable.erase(m_drawable.begin(), m_drawable.end());
+	
+	drawable.clear();
+	m_drawable.clear();
+	mapIndex = 0;
+}
+
+void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & m)
+{
 	//sets the settings for each object depending on the objects type(shape)
 	switch (obj.GetPrimitiveType())
 	{
@@ -294,7 +306,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 		{
 			//std::cout << "ellipse" << std::endl;
 			circleVector.push_back(new dse::CircleShape());
-			circleVector.back()->SetName(obj.GetName());
+			circleVector.back()->SetName(obj.GetProperties().GetStringProperty("script"));
 			circleVector.back()->SetType(obj.GetType());
 			circleVector.back()->setRadius(obj.GetEllipse()->GetRadiusX());
 			circleVector.back()->setPosition(obj.GetX(), obj.GetY());
@@ -365,7 +377,6 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 			const unsigned FLIPPED_VERTICALLY_FLAG = 0x40000000;
 			const unsigned FLIPPED_DIAGONALLY_FLAG = 0x20000000;
 			//std::cout << "tile" << std::endl;
-			// TODO: Initialize the sprite property, and add it to the vector
 			spriteVector.push_back(new dse::Sprite());
 			spriteVector.back()->SetName(obj.GetName());
 

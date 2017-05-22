@@ -84,30 +84,32 @@ public:
 	//used for getting above function's values.
 	std::vector<std::string> allFileNames;
 
-	////////////////////////////////////////////////////////////
-	/// \brief Refreshes all objects.
-	/// Loops through all objects and updates them
-	/// if they're different from the last update funtction \n
-	/// Example:
-	/// Bandit1 died which changed representive Sprite
-	/// class to not be visible. So the next time
-	/// UpdateObjects loops through bandit's sprite
-	/// it will make bandit invisible.
-	///		This function will only be called from GameEngine.
-	////////////////////////////////////////////////////////////
+	/*
+	\brief Refreshes all objects.
+	Loops through all objects and updates them
+	if they're different from the last update funtction \n
+	Example:
+	Bandit1 died which changed representive Sprite
+	class to not be visible. So the next time
+	UpdateObjects loops through bandit's sprite
+	it will make bandit invisible.
+		This function will only be called from GameEngine.
+	*/
 	void UpdateObjects();
 
 	//Resources kinda..
 	void ParseAllMaps();
-
+	
 	void LoadMap(Tmx::Map* map);
-	void LoadObjects(Tmx::Map& map);
+	void LoadObjects(const Tmx::Map& map);
 	void DrawMap(sf::RenderWindow& window);
 	void DrawObjects(sf::RenderWindow& window);
-	
-	void SetTile(sf::Vertex* &quad, Tmx::MapTile tile, int i, int j,
-		const sf::Vector2i tileSize, sf::Vector2i textCoord); //Sets a tiles texture and flips it correct
+	void ResetVector();
 
+	void SetTile(sf::Vertex* &quad, Tmx::MapTile tile, int i, int j,
+	const sf::Vector2i tileSize, sf::Vector2i textCoord); //Sets a tiles texture and flips it correct
+
+	
 	Tmx::Map* map2;
 	std::map<std::string, Tmx::Map*> mapVector;
 
@@ -125,7 +127,7 @@ private:
 	std::vector<sf::Texture*> tileSetTexture;
 	std::vector<sf::Texture*> spriteTextures;
 
-	void DeterminePolygonType(Tmx::Object& obj, Tmx::Map& m);
+	void DeterminePolygonType(Tmx::Object& obj, const Tmx::Map& m);
 	//TODO: Fast? Fråga om hjälp!
 };
 

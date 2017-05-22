@@ -27,10 +27,12 @@ namespace dse
 		//CollisionHandler collision();
 		//ProjectHandler project();
 		void Update();
-
+		//void testMove(float a, float b);
 		//Temp Mouse and Rectangle Test
 		sf::Mouse mouse;
 		sf::RectangleShape rect;
+
+		//sf::RectangleShape rect2;
 		sf::Vector2f vect{ 50,50 };
 
 	private:

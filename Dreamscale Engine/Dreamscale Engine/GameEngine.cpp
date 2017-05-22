@@ -51,12 +51,14 @@ void dse::GameEngine::Update()
 				}
 				if (event.key.code == sf::Keyboard::Left)
 				{
+					tmx.ResetVector();
 					tmx.LoadMap(tmx.mapVector[tmx.allFileNames[0]]);
 					tmx.LoadObjects(*tmx.mapVector[tmx.allFileNames[0]]);
 					
 				}
 				if (event.key.code == sf::Keyboard::Right)
 				{
+					tmx.ResetVector();
 					tmx.LoadMap(tmx.mapVector[tmx.allFileNames[1]]);
 					tmx.LoadObjects(*tmx.mapVector[tmx.allFileNames[1]]);
 				}
@@ -92,6 +94,11 @@ void dse::GameEngine::Update()
 		window.display();
 	}
 }
+
+//void dse::GameEngine::testMove(float a, float b)
+//{
+//	rect2.move(a, b);
+//}
 
 GameEngine::~GameEngine()
 {
