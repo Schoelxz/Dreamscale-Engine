@@ -3,7 +3,7 @@
 #pragma comment(lib, "lua53.lib")
 #include <lua.hpp>
 #include <LuaBridge.h>
-
+#include "GameEngine.h"
 #include "SfmlObject.h"
 using namespace luabridge;
 
@@ -25,6 +25,10 @@ int main()
 				.addConstructor<void(*)(void)>()
 				.addFunction("SetPosition",	 &SfmlObject::SetPosition)
 				.addFunction("SetSize",		 &SfmlObject::SetSize)
+		.endClass()
+		.beginClass<dse::GameEngine>("Engine")
+		.addConstructor<void(*)(void)>()
+		.addFunction("StartUpdate", &dse::GameEngine::Update)
 		
 			.endClass();
 

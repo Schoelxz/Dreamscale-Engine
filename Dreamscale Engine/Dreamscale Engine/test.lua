@@ -11,6 +11,10 @@ asdf = GameEngine.FindObject("BlueRectangle");
 asdf:SetPosition(250, 250);
 asdf:SetSize(250, 250);
 
+asdf2 = GameEngine.Engine();
+asdf2:StartUpdate();
+asdf2:StartUpdate();
+
 --asdf2 = GameEngine.SfmlObject();
 --asdf2:SetPosition(100, 100);
 --asdf2:SetSize(75, 500);
