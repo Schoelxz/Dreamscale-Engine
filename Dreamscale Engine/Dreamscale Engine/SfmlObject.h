@@ -24,7 +24,7 @@ public:
 	//std::shared_ptr<luabridge::LuaRef> interactFunction;
 	sf::RectangleShape rectShape;
 
-	SfmlObject* Find() const;
+	static SfmlObject* Find(const std::string instanceName);
 	//TODO: Keep working on finding and using class instances for LUA
 	std::string GetInstanceName();
 

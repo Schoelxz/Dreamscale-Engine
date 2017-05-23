@@ -1,6 +1,6 @@
 #include "SfmlObject.h"
 
-std::vector<SfmlObject*> SfmlObject::sfmlObjects;// = std::vector<SfmlObject*>();
+std::vector<SfmlObject*> SfmlObject::sfmlObjects = std::vector<SfmlObject*>();
 
 SfmlObject::SfmlObject()
 {
@@ -31,9 +31,6 @@ SfmlObject::~SfmlObject()
 ////	}
 ////}
 
-
-
-
 void SfmlObject::SetSize(int x, int y)
 {
 	m_size.x = x;
@@ -56,6 +53,20 @@ sf::Vector2f SfmlObject::GetSize()
 sf::Vector2f SfmlObject::GetPosition()
 {
 	return m_pos;
+}
+
+SfmlObject* SfmlObject::Find(const std::string instanceName)
+{
+	
+	for (int i = 0; i < sfmlObjects.size(); i++)
+	{
+		if(sfmlObjects[i]->GetInstanceName() == instanceName)
+			return sfmlObjects[i];
+	}
+
+	std::cout << "Could not find " << instanceName << std::endl;
+	//return nullptr;
+	
 }
 
 std::string SfmlObject::GetInstanceName()
