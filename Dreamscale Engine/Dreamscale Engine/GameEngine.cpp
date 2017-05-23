@@ -1,9 +1,9 @@
 #include "GameEngine.h"
 
-
+using namespace dse;
 
 using namespace luabridge;
-using namespace dse;
+
 
 GameEngine::GameEngine()
 {
@@ -12,16 +12,6 @@ GameEngine::GameEngine()
 
 void dse::GameEngine::Update()
 {
-
-	lua_State* L = luaL_newstate();
-	luaL_openlibs(L);
-	getGlobalNamespace(L)
-		.beginNamespace("GameEngine")
-		.beginClass<TmxHandler>("Tmxhandler")
-		.addConstructor<void(*)(void)>()
-		.addFunction
-		.endClass();
-
 
 	//Temp MR
 	rect.setFillColor(sf::Color::Green);
@@ -79,6 +69,27 @@ void dse::GameEngine::Update()
 			if (event.type == sf::Event::MouseLeft)
 				mouseInsideAWindow = false;
 		}
+
+		lua_State* L = luaL_newstate();
+		luaL_openlibs(L);
+		getGlobalNamespace(L)
+			.beginNamespace("GameEngine")
+			.beginClass<CircleShape>("Circleshape")
+			.addConstructor<void(*)(void)>()
+			.addFunction("SetVisible", &CircleShape::SetVisible)
+			.endClass();
+
+		
+		if (luaL_dofile(L, "kiss.lua"))
+		{
+			// If Lua encountered an error, we can find at ontop of the stack
+			std::cerr << lua_tostring(L, -1) << std::endl;
+			// Return 1 as an error code
+			window.close();
+			//return 1;
+		}
+
+		luabridge::LuaRef SetVisible = luabridge::getGlobal(L, "SetVisible");
 		
 		view2.setCenter(0, window.getSize().y / 5);
 		if (mouseInsideAWindow)

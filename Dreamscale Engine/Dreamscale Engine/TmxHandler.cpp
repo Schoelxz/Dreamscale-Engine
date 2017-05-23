@@ -26,6 +26,7 @@ void TmxHandler::UpdateObjects()
 				// Do typical circle stuff ...
 				//std::cout << m_drawable[i]->GetCircleShape()->GetType() << std::endl;
 				//std::cout << circle->GetName();
+
 				if (circle->GetVisible() == true)
 					circle->setFillColor(sf::Color(0, 255, 0, 64));
 				else
