@@ -2,7 +2,7 @@
 
 
 
-
+using namespace luabridge;
 using namespace dse;
 
 GameEngine::GameEngine()
@@ -12,6 +12,17 @@ GameEngine::GameEngine()
 
 void dse::GameEngine::Update()
 {
+
+	lua_State* L = luaL_newstate();
+	luaL_openlibs(L);
+	getGlobalNamespace(L)
+		.beginNamespace("GameEngine")
+		.beginClass<TmxHandler>("Tmxhandler")
+		.addConstructor<void(*)(void)>()
+		.addFunction
+		.endClass();
+
+
 	//Temp MR
 	rect.setFillColor(sf::Color::Green);
 	rect.setSize(vect);
@@ -79,7 +90,7 @@ void dse::GameEngine::Update()
 
 		window.clear();
 
-
+		
 		objHandler.Update();
 		objHandler.DrawObjects(window);
 		tmx.DrawMap(window);

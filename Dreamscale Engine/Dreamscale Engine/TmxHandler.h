@@ -101,7 +101,38 @@ public:
 	void ParseAllMaps();
 	
 	void LoadMap(Tmx::Map* map);
-	void LoadObjects(const Tmx::Map& map);
+	void LoadObjects(const Tmx::Map& map)
+	{
+		for (int i = 0; i < drawable.size(); i++) { delete drawable[i]; }
+		for (int i = 0; i < spriteTextures.size(); i++) { delete spriteTextures[i]; }
+		for (int i = 0; i < spriteVector.size(); i++) { delete spriteVector[i]; }
+		for (int i = 0; i < rectangleVector.size(); i++) { delete rectangleVector[i]; }
+		for (int i = 0; i < circleVector.size(); i++) { delete circleVector[i]; }
+		for (int i = 0; i < convexVector.size(); i++) { delete convexVector[i]; }
+
+		drawable.clear();
+		spriteTextures.clear();
+		spriteVector.clear();
+		rectangleVector.clear();
+		circleVector.clear();
+		convexVector.clear();
+
+		int tempCurrentTileset;
+
+		//const std::vector<Tmx::Tileset*> tmxTileSet = map.GetTilesets();
+		const std::vector<Tmx::ObjectGroup*>& objLayers = map.GetObjectGroups(); //number of object layers
+
+
+																				 //for each object layer
+		for (auto objects : objLayers)
+		{
+			//for each object in the object layer
+			for (auto object : objects->GetObjects())
+			{
+				DeterminePolygonType(*object, map);
+			}
+		}
+	}
 	void DrawMap(sf::RenderWindow& window);
 	void DrawObjects(sf::RenderWindow& window);
 	void ResetVector();

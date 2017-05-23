@@ -9,10 +9,8 @@
 #include <LuaBridge.h>
 #include <SFML\Graphics.hpp>
 #include <iostream>
+#pragma comment(lib, "lua53.lib")
 
-
-
-using namespace luabridge;
 
 namespace dse
 {

@@ -24,12 +24,13 @@ void TmxHandler::UpdateObjects()
 			{
 				dse::CircleShape* circle = drawable[i]->GetCircleShape();
 				// Do typical circle stuff ...
-				std::cout << m_drawable[i]->GetCircleShape()->GetType() << std::endl;
-				std::cout << circle->GetName();
+				//std::cout << m_drawable[i]->GetCircleShape()->GetType() << std::endl;
+				//std::cout << circle->GetName();
 				if (circle->GetVisible() == true)
 					circle->setFillColor(sf::Color(0, 255, 0, 64));
 				else
 					circle->setFillColor(sf::Color(0, 255, 0, 0));
+				
 			}
 				break;
 			case DrawableType::CONVEX_SHAPE:
@@ -178,38 +179,6 @@ void TmxHandler::LoadMap(Tmx::Map* map)
 					}
 				}
 			}
-		}
-	}
-}
-
-void TmxHandler::LoadObjects(const Tmx::Map& map)
-{
-	for (int i = 0; i < drawable.size(); i++) {delete drawable[i];}
-	for (int i = 0; i < spriteTextures.size(); i++) {delete spriteTextures[i];}
-	for (int i = 0; i < spriteVector.size(); i++) {delete spriteVector[i];}
-	for (int i = 0; i < rectangleVector.size(); i++) {delete rectangleVector[i];	}
-	for (int i = 0; i < circleVector.size(); i++) {delete circleVector[i];}
-	for (int i = 0; i < convexVector.size(); i++) {delete convexVector[i];}
-
-	drawable.clear();
-	spriteTextures.clear();
-	spriteVector.clear();
-	rectangleVector.clear();
-	circleVector.clear();
-	convexVector.clear();
-
-	int tempCurrentTileset;
-
-	//const std::vector<Tmx::Tileset*> tmxTileSet = map.GetTilesets();
-	const std::vector<Tmx::ObjectGroup*>& objLayers = map.GetObjectGroups(); //number of object layers
-
-	//for each object layer
-	for (auto objects : objLayers)
-	{
-		//for each object in the object layer
-		for (auto object : objects->GetObjects())
-		{
-			DeterminePolygonType(*object, map);
 		}
 	}
 }
