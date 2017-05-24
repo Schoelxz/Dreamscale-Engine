@@ -3,34 +3,21 @@
 #pragma comment(lib, "lua53.lib")
 #include <lua.hpp>
 #include <LuaBridge.h>
-#include "GameEngine.h"
-#include "SfmlObject.h"
+
+#include "LuaBridge.h"
 using namespace luabridge;
 
 //TODO: asdf2 = GameEngine.FindObject("name"); (.lua script)
 
 int main()
 {
+	LuaBridge LuaTester;
 	SfmlObject BlueRectangle("BlueRectangle");
 
 	sf::RenderWindow window;
 	window.create(sf::VideoMode(1024, 768), "DreamScale Engine");
 
-	lua_State* L = luaL_newstate();
-	luaL_openlibs(L);
-	getGlobalNamespace(L)
-		.beginNamespace("GameEngine")
-			.addFunction("FindObject", &SfmlObject::Find)
-			.beginClass<SfmlObject>("SfmlObject")
-				.addConstructor<void(*)(void)>()
-				.addFunction("SetPosition",	 &SfmlObject::SetPosition)
-				.addFunction("SetSize",		 &SfmlObject::SetSize)
-		.endClass()
-		.beginClass<dse::GameEngine>("Engine")
-		.addConstructor<void(*)(void)>()
-		.addFunction("StartUpdate", &dse::GameEngine::Update)
-		
-			.endClass();
+	LuaTester.DoLuaBridge();
 
 	//luabridge::LuaRef setPosition = luabridge::getGlobal(L, "SetPosition");
 	//luabridge::LuaRef setSize = luabridge::getGlobal(L, "SetSize");
@@ -54,13 +41,8 @@ int main()
 				if (event.key.code == sf::Keyboard::Space)
 				{
 					std::cout << "najs" << std::endl;
-					if (luaL_dofile(L, "test.lua"))
-					{
-						// If Lua encountered an error, we can find at ontop of the stack
-						std::cerr << lua_tostring(L, -1) << std::endl;
-						// Return 1 as an error code
-						return 1;
-					}
+					LuaTester.StartLuaScript();
+		
 				}
 			}
 		}
