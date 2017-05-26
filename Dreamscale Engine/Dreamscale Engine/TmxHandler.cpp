@@ -5,6 +5,7 @@ TmxHandler::TmxHandler()
 	std::cout << "class:	TmxHandler:	Constructed!" << std::endl;
 	const std::string folder_name = ".\\TmxFiles\\";
 	allFileNames = get_all_files_names_within_folder(folder_name);
+	std::cout << "Prints all file names in folder inside	" << folder_name << ":" << std::endl;
 	for (int i = 0; i < allFileNames.size(); i++)
 	{
 		allFileNames[i] = folder_name + allFileNames[i];
@@ -12,6 +13,7 @@ TmxHandler::TmxHandler()
 	}
 }
 
+//Parses all maps inside folder
 void TmxHandler::ParseAllMaps()
 {
 	//Parse all Maps (.tmx files) and save each in a mapVector
@@ -23,6 +25,7 @@ void TmxHandler::ParseAllMaps()
 	}
 }
 
+//As name says
 std::vector<std::string> TmxHandler::get_all_files_names_within_folder(std::string folder)
 {
 	std::vector<std::string> names;
@@ -41,7 +44,7 @@ std::vector<std::string> TmxHandler::get_all_files_names_within_folder(std::stri
 	}
 	return names;
 }
-
+ 
 void TmxHandler::LoadMap(Tmx::Map* map)
 {
 	//TODO: sf::VertexArray läcker 2 gånger varje gång en ny map laddas in, pga. vi inte delete:ar 2 instanser.
@@ -278,14 +281,15 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, Tmx::Map & m)
 	const std::vector<Tmx::Tileset*> tmxTileSet = m.GetTilesets();
 
 	int tempCurrentTileset;
-	const int height = m.GetHeight();
-	const int width = m.GetWidth();
-	const int tileHeight = m.GetTileHeight();
-	const int tileWidth = m.GetTileWidth();
 
-	const unsigned FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
-	const unsigned FLIPPED_VERTICALLY_FLAG = 0x40000000;
-	const unsigned FLIPPED_DIAGONALLY_FLAG = 0x20000000;
+	const int height		= m.GetHeight();
+	const int width			= m.GetWidth();
+	const int tileHeight	= m.GetTileHeight();
+	const int tileWidth		= m.GetTileWidth();
+
+	const unsigned FLIPPED_HORIZONTALLY_FLAG	= 0x80000000;
+	const unsigned FLIPPED_VERTICALLY_FLAG		= 0x40000000;
+	const unsigned FLIPPED_DIAGONALLY_FLAG		= 0x20000000;
 
 	switch (obj.GetPrimitiveType())
 	{

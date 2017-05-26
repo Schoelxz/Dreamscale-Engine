@@ -1,16 +1,30 @@
 #include "SfmlObject.h"
 
 std::vector<SfmlObject*> SfmlObject::sfmlObjects = std::vector<SfmlObject*>();
+int SfmlObject::s_test = 0;
 
 SfmlObject::SfmlObject()
 {
+	++s_test;
 	sfmlObjects.push_back(this);
+	std::cout << s_test << std::endl;
 }
 
 SfmlObject::SfmlObject(const std::string& name)
 	: SfmlObject()
 {
 	m_instanceName = name;
+}
+SfmlObject* SfmlObject::Find(const std::string instanceName)
+{
+	for (int i = 0; i < sfmlObjects.size(); i++)
+	{
+		if (sfmlObjects[i]->GetInstanceName() == instanceName)
+			return sfmlObjects[i];
+	}
+
+	std::cout << "Could not find " << instanceName << std::endl;
+	return nullptr;
 }
 
 SfmlObject::~SfmlObject()
@@ -55,19 +69,7 @@ sf::Vector2f SfmlObject::GetPosition()
 	return m_pos;
 }
 
-SfmlObject* SfmlObject::Find(const std::string instanceName)
-{
-	
-	for (int i = 0; i < sfmlObjects.size(); i++)
-	{
-		if(sfmlObjects[i]->GetInstanceName() == instanceName)
-			return sfmlObjects[i];
-	}
 
-	std::cout << "Could not find " << instanceName << std::endl;
-	//return nullptr;
-	
-}
 
 std::string SfmlObject::GetInstanceName()
 {

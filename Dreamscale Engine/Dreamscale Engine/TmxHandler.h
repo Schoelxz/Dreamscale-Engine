@@ -83,9 +83,8 @@ public:
 	std::vector<std::string> GetTmxNames() { return allFileNames; };
 	//Resources kinda..
 	void ParseAllMaps();
-	void LoadAllTilesets(); //Unused?
 	//Map
-	void LoadMap(Tmx::Map* map);
+	void LoadMap(Tmx::Map* map); //Only used inside GameEngine update/play?
 	void DrawMap(sf::RenderWindow& window);
 	//Objects
 	void LoadObjects(Tmx::Map* map);

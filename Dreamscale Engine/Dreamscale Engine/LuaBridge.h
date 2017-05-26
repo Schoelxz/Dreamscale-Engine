@@ -12,7 +12,7 @@ public:
 	LuaBridge();
 	~LuaBridge();
 
-	void DoLuaBridge();
+	void DoLuaBridge(); //This is also known as doing the bind _/-(*_*)-\_
 	int StartLuaScript();
 	lua_State* L = luaL_newstate();
 

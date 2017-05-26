@@ -7,27 +7,27 @@
 #include "LuaBridge.h"
 using namespace luabridge;
 
+int asdfasdf;
+
 //TODO: asdf2 = GameEngine.FindObject("name"); (.lua script)
 
 int main()
 {
 	LuaBridge LuaTester;
-	SfmlObject BlueRectangle("BlueRectangle");
+	//SfmlObject BlueRectangle("BlueRectangle");
 
 	sf::RenderWindow window;
 	window.create(sf::VideoMode(1024, 768), "DreamScale Engine");
 
 	LuaTester.DoLuaBridge();
 
+	//LuaRef used for intertwine code more between cpp and lua
 	//luabridge::LuaRef setPosition = luabridge::getGlobal(L, "SetPosition");
 	//luabridge::LuaRef setSize = luabridge::getGlobal(L, "SetSize");
 
-	//BlueRectangle.SetPosition(50, 50);
-	//BlueRectangle.SetSize(50, 50);
-
-	BlueRectangle.rectShape.setFillColor(sf::Color::Blue);
-	BlueRectangle.rectShape.setSize(sf::Vector2f(32.0f, 32.0f));
-	BlueRectangle.rectShape.setPosition(sf::Vector2f(0.0f, 0.0f));
+	//BlueRectangle.rectShape.setFillColor(sf::Color::Blue);
+	//BlueRectangle.rectShape.setSize(sf::Vector2f(32.0f, 32.0f));
+	//BlueRectangle.rectShape.setPosition(sf::Vector2f(0.0f, 0.0f));
 
 	//SfmlObject::GetAllObjects()
 	sf::Event event;

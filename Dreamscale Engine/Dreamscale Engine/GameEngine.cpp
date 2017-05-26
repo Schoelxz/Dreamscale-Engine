@@ -5,7 +5,8 @@
 
 using namespace dse;
 
-GameEngine::GameEngine()
+GameEngine::GameEngine() :
+	tmx(new TmxHandler())
 {
 	std::cout << "class:	GameEngine:	Constructed!" << std::endl;
 }
@@ -20,7 +21,7 @@ void dse::GameEngine::Update()
 
 	window.create(sf::VideoMode(1024, 768), "DreamScale Engine");
 
-	tmx.ParseAllMaps();	
+	//tmx.ParseAllMaps();	
 
 	while (window.isOpen())
 	{
@@ -40,14 +41,14 @@ void dse::GameEngine::Update()
 				}
 				if (event.key.code == sf::Keyboard::Left)
 				{
-					tmx.LoadMap(tmx.mapVector[tmx.GetTmxNames()[0]]);
-					tmx.LoadObjects(tmx.mapVector[tmx.GetTmxNames()[0]]);
+					tmx->LoadMap(tmx->mapVector[tmx->GetTmxNames()[0]]);
+					tmx->LoadObjects(tmx->mapVector[tmx->GetTmxNames()[0]]);
 					
 				}
 				if (event.key.code == sf::Keyboard::Right)
 				{
-					tmx.LoadMap(tmx.mapVector[tmx.GetTmxNames()[1]]);
-					tmx.LoadObjects(tmx.mapVector[tmx.GetTmxNames()[1]]);
+					tmx->LoadMap(tmx->mapVector[tmx->GetTmxNames()[1]]);
+					tmx->LoadObjects(tmx->mapVector[tmx->GetTmxNames()[1]]);
 				}
 			}
 			if (event.type == sf::Event::MouseEntered)
@@ -64,13 +65,18 @@ void dse::GameEngine::Update()
 
 		objHandler.Update();
 		objHandler.DrawObjects(window);
-		tmx.DrawMap(window);
-		tmx.DrawObjects(window);
+		tmx->DrawMap(window);
+		tmx->DrawObjects(window);
 
 		window.draw(rect);//Temp MR
 
 		window.display();
 	}
+}
+
+TmxHandler* dse::GameEngine::GetTmxHandler() const
+{
+	return tmx;
 }
 
 GameEngine::~GameEngine()

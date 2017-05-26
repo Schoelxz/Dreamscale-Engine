@@ -1,3 +1,83 @@
+
+-- :=Funktion .=Static
+-- property = foo 
+-- function = foo()
+
+--property set = foo = x
+--property get = x = foo
+
+asdf3 = GameEngine.SfmlObject("BlueRectangle");
+
+asdf = GameEngine.FindObject("BlueRectangle"); --Finds the first element with the name BlueRectangle and changes THAT instance (only) with specified values.
+asdf:SetPosition(250, 500);
+asdf:SetSize(300, 300);
+
+
+asdf2 = GameEngine.Engine();
+--asdf2:GetTmxHandler();
+tmxhandler = asdf2:GetTmxHandler();
+--tmxhandler:ParseAllMaps();
+asdf2:StartUpdate();
+--tmxhandler:ParseAllMaps();
+--asdf2:StartUpdate();
+
+--asdf2 = GameEngine.Engine();
+--asdf2:StartUpdate();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--deadMansLand
+
 -- script rectangles
 
 --blueRect = GameEngine.FindObject("BlueRectangle");
@@ -7,13 +87,6 @@
 
 
 --
-asdf = GameEngine.FindObject("BlueRectangle");
-asdf:SetPosition(250, 250);
-asdf:SetSize(250, 250);
-
-asdf2 = GameEngine.Engine();
-asdf2:StartUpdate();
-asdf2:StartUpdate();
 
 --asdf2 = GameEngine.SfmlObject();
 --asdf2:SetPosition(100, 100);

@@ -37,5 +37,6 @@ private:
 	std::string m_instanceName;
 
 	static std::vector<SfmlObject*> sfmlObjects;
+	static int s_test;
 };
 
