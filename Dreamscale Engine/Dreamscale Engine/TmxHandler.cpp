@@ -14,7 +14,7 @@ TmxHandler::TmxHandler() :
 	
 }
 
-void TmxHandler::UpdateObjects()
+void TmxHandler::RefreshObjects()
 {
 	for (int i = 0; i < m_drawable.size(); i++)
 	{
@@ -328,7 +328,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & m)
 			rectangleVector.back()->SetType(obj.GetType());
 			rectangleVector.back()->setSize(sf::Vector2f(obj.GetWidth(), obj.GetHeight()));
 			rectangleVector.back()->setPosition(obj.GetX(), obj.GetY());
-			rectangleVector.back()->SetVisible(false);
+			//rectangleVector.back()->SetVisible(false);
 			
 			drawable.push_back(new DrawableType(DrawableType::RECTANGLE_SHAPE, rectangleVector.back()));
 			m_drawable.insert(std::make_pair(mapIndex++, drawable.back()));

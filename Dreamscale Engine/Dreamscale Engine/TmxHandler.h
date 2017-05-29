@@ -95,7 +95,7 @@ public:
 	it will make bandit invisible.
 		This function will only be called from GameEngine.
 	*/
-	void UpdateObjects();
+	void RefreshObjects();
 
 	//Resources kinda..
 	void ParseAllMaps();
@@ -160,5 +160,6 @@ private:
 
 	void DeterminePolygonType(Tmx::Object& obj, const Tmx::Map& m);
 	//TODO: Fast? Fråga om hjälp!
+
 };
 
