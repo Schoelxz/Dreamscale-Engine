@@ -18,7 +18,7 @@ std::string RectangleShape::GetName() const
 
 std::string dse::RectangleShape::GetType() const
 {
-	return std::string();
+	return type;
 }
 
 bool dse::RectangleShape::GetVisible()

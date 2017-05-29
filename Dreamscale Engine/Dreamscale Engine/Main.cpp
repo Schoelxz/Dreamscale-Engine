@@ -2,30 +2,22 @@
 //x86
 #pragma comment(lib, "lua53.lib")
 #include <lua.hpp>
-
 #include "LuaBridge.h"
 
-
 using namespace luabridge;
+using namespace dse;
 
 //TODO: asdf2 = GameEngine.FindObject("name"); (.lua script)
-
 int main()
 {
-	
 	LuaBridge LuaTester;
-	//SfmlObject BlueRectangle("BlueRectangle");
+	dse::CircleShape circleShape;
 
 	sf::RenderWindow window;
 	window.create(sf::VideoMode(1024, 768), "DreamScale Engine");
 
 	LuaTester.DoLuaBridge();
 
-	//LuaRef used for intertwine code more between cpp and lua
-	//luabridge::LuaRef setPosition = luabridge::getGlobal(L, "SetPosition");
-	//luabridge::LuaRef setSize = luabridge::getGlobal(L, "SetSize");
-
-	//SfmlObject::GetAllObjects()
 	sf::Event event;
 	while (window.isOpen())
 	{
@@ -38,18 +30,14 @@ int main()
 				{
 					std::cout << "najs" << std::endl;
 					LuaTester.StartLuaScript();
-		
 				}
 			}
 		}
-
 		window.clear();
 
+	for (size_t i = 0; i < circleShape.GetCircleshapeVector().size(); i++)
+			window.draw(*circleShape.GetCircleshapeVector()[i]);
 
 		window.display();
 	}
-
-
-
-
 }

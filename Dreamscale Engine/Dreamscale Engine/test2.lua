@@ -12,15 +12,12 @@
 --asdf:SetPosition(250, 500);
 --asdf:SetSize(300, 300);
 
+
 gameEngine = GameEngine.Engine();
 tmxhandler = gameEngine:GetTmxHandler();
+position = GameEngine.Vector2f(10, 10);
 
---circleshape = GameEngine.CircleShape();
-
---circleshape.position = GameEngine.Vector2f(400, 300);
---circleshape.radius = 130;
-tmxhandler:ParseAllMaps();
-gameEngine:StartUpdate();
+tmxhandler:SetPosition(tmxhandler:GetDrawables(1), position);
 
 
 

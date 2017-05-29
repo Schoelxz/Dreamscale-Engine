@@ -19,6 +19,7 @@ TmxHandler::TmxHandler() :
 
 void TmxHandler::LoadObjects(const Tmx::Map& map)
 {
+
 	for (int i = 0; i < drawable.size(); i++) { delete drawable[i]; }
 	for (int i = 0; i < spriteTextures.size(); i++) { delete spriteTextures[i]; }
 	for (int i = 0; i < spriteVector.size(); i++) { delete spriteVector[i]; }
@@ -56,7 +57,7 @@ void TmxHandler::LoadObjects(const Tmx::Map& map)
 
 void TmxHandler::RefreshObjects()
 {
-	for (int i = 0; i < m_drawable.size(); i++)
+	for (int i = 0; i < drawable.size(); i++)
 	{
 		switch (drawable[i]->t)
 		{
@@ -229,7 +230,6 @@ void TmxHandler::LoadMap(Tmx::Map* map)
 	}
 }
 
-
 void TmxHandler::SetTile(sf::Vertex* &quad, Tmx::MapTile tile, int i, int j,
 	const sf::Vector2i tileSize, sf::Vector2i textCoord)
 {
@@ -311,6 +311,11 @@ void TmxHandler::ResetVector()
 	drawable.clear();
 	m_drawable.clear();
 	mapIndex = 0;
+}
+
+std::vector<DrawableType*> TmxHandler::GetDrawable() const
+{
+	return drawable;
 }
 
 void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & m)

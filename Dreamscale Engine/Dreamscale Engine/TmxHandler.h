@@ -119,6 +119,8 @@ public:
 
 	void ResetVector();
 
+	std::vector<DrawableType*> GetDrawable() const; //For Lua Binding (but TmxHandler is getting big. Should be alot in seperate class/classes)
+
 	std::map<std::string, Tmx::Map*> mapVector;
 
 private:

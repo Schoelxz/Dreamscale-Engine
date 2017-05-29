@@ -10,6 +10,7 @@ GameEngine::GameEngine() :
 
 void dse::GameEngine::Update()
 {
+
 	//Temp MR
 	rect.setFillColor(sf::Color::Green);
 	rect.setSize(vect);
@@ -38,14 +39,20 @@ void dse::GameEngine::Update()
 				}
 				if (event.key.code == sf::Keyboard::Left)
 				{
+					tmx->ResetVector();
 					tmx->LoadMap(tmx->mapVector[tmx->GetTmxNames()[0]]);
 					tmx->LoadObjects(*tmx->mapVector[tmx->GetTmxNames()[0]]);
 					
 				}
 				if (event.key.code == sf::Keyboard::Right)
 				{
+					tmx->ResetVector();
 					tmx->LoadMap(tmx->mapVector[tmx->GetTmxNames()[1]]);
 					tmx->LoadObjects(*tmx->mapVector[tmx->GetTmxNames()[1]]);
+				}
+				if (event.key.code == sf::Keyboard::Space)
+				{
+					//LuaTester.StartLuaScript();
 				}
 			}
 			if (event.type == sf::Event::MouseEntered)
@@ -60,6 +67,8 @@ void dse::GameEngine::Update()
 
 		window.clear();
 
+		tmx->RefreshObjects();
+		
 		objHandler.Update();
 		objHandler.DrawObjects(window);
 		tmx->DrawMap(window);

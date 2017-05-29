@@ -5,16 +5,20 @@
 #include <lua.hpp>
 #include <LuaBridge.h>
 #include "SfmlObject.h"
+#include "CircleShape.h"
 
-class LuaBridge
+namespace dse
 {
-public:
-	LuaBridge();
-	~LuaBridge();
 
-	void DoLuaBridge(); //This is also known as doing the bind _/-(*_*)-\_
-	int StartLuaScript();
-	lua_State* L = luaL_newstate();
+	class LuaBridge
+	{
+	public:
+		LuaBridge();
+		~LuaBridge();
 
-};
+		void DoLuaBridge(); //Or more accurately do lua binding
+		int StartLuaScript();
+		lua_State* L = luaL_newstate();
 
+	};
+}
