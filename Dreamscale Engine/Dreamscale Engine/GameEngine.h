@@ -10,8 +10,6 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
 
-
-
 using namespace luabridge;
 
 namespace dse
@@ -36,8 +34,6 @@ namespace dse
 		sf::RectangleShape rect;
 		sf::Vector2f vect{ 50,50 };
 
-
-
 	private:
 		TmxHandler* tmx;
 		sf::RenderWindow window;
@@ -46,7 +42,6 @@ namespace dse
 		InputManager inpManager;
 		CollisionHandler collision;
 		ProjectHandler project;
-		
 	};
 
 }

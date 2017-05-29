@@ -7,8 +7,6 @@
 #include "LuaBridge.h"
 using namespace luabridge;
 
-int asdfasdf;
-
 //TODO: asdf2 = GameEngine.FindObject("name"); (.lua script)
 
 int main()
@@ -24,10 +22,6 @@ int main()
 	//LuaRef used for intertwine code more between cpp and lua
 	//luabridge::LuaRef setPosition = luabridge::getGlobal(L, "SetPosition");
 	//luabridge::LuaRef setSize = luabridge::getGlobal(L, "SetSize");
-
-	//BlueRectangle.rectShape.setFillColor(sf::Color::Blue);
-	//BlueRectangle.rectShape.setSize(sf::Vector2f(32.0f, 32.0f));
-	//BlueRectangle.rectShape.setPosition(sf::Vector2f(0.0f, 0.0f));
 
 	//SfmlObject::GetAllObjects()
 	sf::Event event;
