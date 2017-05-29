@@ -1,117 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="Character.cpp" />
+    <ClCompile Include="CircleShape.cpp" />
+    <ClCompile Include="CollisionHandler.cpp" />
+    <ClCompile Include="ConvexShape.cpp" />
+    <ClCompile Include="GameEngine.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="ObjectHandler.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ProjectHandler.cpp" />
+    <ClCompile Include="RectangleShape.cpp" />
+    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="ResourceHandler.cpp" />
+    <ClCompile Include="SfmlObject.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="TmxHandler.cpp" />
+    <ClCompile Include="VertexArray.cpp" />
+    <ClCompile Include="LuaBridge.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ObjectHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ProjectHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Character.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TmxHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CircleShape.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Resource.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SfmlObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LuaBridge.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ObjectHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ProjectHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Character.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Components.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TmxHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CircleShape.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SfmlObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LuaBridge.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="Character.h" />
+    <ClInclude Include="CircleShape.h" />
+    <ClInclude Include="CollisionHandler.h" />
+    <ClInclude Include="Components.h" />
+    <ClInclude Include="ConvexShape.h" />
+    <ClInclude Include="GameEngine.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="ObjectHandler.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="ProjectHandler.h" />
+    <ClInclude Include="RectangleShape.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceHandler.h" />
+    <ClInclude Include="SfmlObject.h" />
+    <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="TmxHandler.h" />
+    <ClInclude Include="VertexArray.h" />
+    <ClInclude Include="LuaBridge.h" />
   </ItemGroup>
 </Project>

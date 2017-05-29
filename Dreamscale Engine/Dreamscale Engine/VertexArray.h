@@ -5,11 +5,11 @@
 
 namespace dse
 {
-	class CircleShape : public sf::CircleShape
+	class VertexArray : public sf::VertexArray
 	{
 	public:
-		CircleShape();
-		~CircleShape();
+		VertexArray();
+		~VertexArray();
 
 		std::string GetName() const;
 		std::string GetType() const;

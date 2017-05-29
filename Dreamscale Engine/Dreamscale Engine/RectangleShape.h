@@ -5,11 +5,11 @@
 
 namespace dse
 {
-	class CircleShape : public sf::CircleShape
+	class RectangleShape : public sf::RectangleShape
 	{
 	public:
-		CircleShape();
-		~CircleShape();
+		RectangleShape();
+		~RectangleShape();
 
 		std::string GetName() const;
 		std::string GetType() const;

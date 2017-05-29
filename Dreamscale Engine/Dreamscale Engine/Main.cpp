@@ -2,15 +2,17 @@
 //x86
 #pragma comment(lib, "lua53.lib")
 #include <lua.hpp>
-#include <LuaBridge.h>
 
 #include "LuaBridge.h"
+
+
 using namespace luabridge;
 
 //TODO: asdf2 = GameEngine.FindObject("name"); (.lua script)
 
 int main()
 {
+	
 	LuaBridge LuaTester;
 	//SfmlObject BlueRectangle("BlueRectangle");
 
@@ -42,14 +44,7 @@ int main()
 		}
 
 		window.clear();
-		
-		for (auto v : SfmlObject::GetAllObjects())
-		{
-			//if (v->GetInstanceName() != "BlueRectangle")
-				window.draw(v->rectShape);
-			//else
-				//std::cout << "yo" << std::endl;
-		}
+
 
 		window.display();
 	}
