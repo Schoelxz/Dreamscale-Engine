@@ -44,6 +44,7 @@ enum FLIPPED
 
 namespace dse
 {
+	//Kevin code
 	struct DrawableType
 	{
 		enum Type
@@ -98,23 +99,26 @@ namespace dse
 		//Map
 		void LoadMap(Tmx::Map*); //Only used inside GameEngine update/play?
 
-		//\brief Refreshes all objects.
+		//Refreshes all objects.
 		//Loops through all objects and updates them
 		//if they're different from the last update funtction \n
 		//Example:
-		//Bandit1 died which changed representive Sprite
+		//Bandit died which changed representive Sprite
 		//class to not be visible. So the next time
 		//UpdateObjects loops through bandit's sprite
 		//it will make bandit invisible.
 		//		This function will only be called from GameEngine.
-		void RefreshObjects();
+		void RefreshObjects(); //Kevin code
 
 		void DrawMap(sf::RenderWindow&);
 
-		//Objects
+		//Kevin and Daniel code
 		void LoadObjects(const Tmx::Map&);
+
+		//Kevin and Daniel code
 		void DrawObjects(sf::RenderWindow&);
 
+		//Kevin code
 		void ResetVector();
 
 		std::vector<DrawableType*> GetDrawable() const; //For Lua Binding (but TmxHandler is getting big. Should be alot in seperate class/classes)
@@ -144,6 +148,7 @@ namespace dse
 		void SetTile(sf::Vertex*&, Tmx::MapTile, int, int,
 			const sf::Vector2i, sf::Vector2i); //Sets a tiles texture and flips it correct
 
+		//Kevin and Daniel code
 		void DeterminePolygonType(Tmx::Object&, const Tmx::Map&);
 	};
 }

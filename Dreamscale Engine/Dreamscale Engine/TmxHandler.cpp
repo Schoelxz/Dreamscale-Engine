@@ -16,6 +16,7 @@ TmxHandler::TmxHandler() :
 	}
 }
 
+//Kevin Daniel code
 void TmxHandler::LoadObjects(const Tmx::Map& map)
 {
 	for (int i = 0; i < m_drawable.size(); i++) { delete m_drawable[i]; }
@@ -46,6 +47,7 @@ void TmxHandler::LoadObjects(const Tmx::Map& map)
 	}
 }
 
+//Kevin code
 void TmxHandler::RefreshObjects()
 {
 	for (int i = 0; i < m_drawable.size(); i++)
@@ -271,6 +273,7 @@ void TmxHandler::DrawMap(sf::RenderWindow& window)
 	}
 }
 
+//Kevin and Daniel code
 void TmxHandler::DrawObjects(sf::RenderWindow & window)
 {
 	for (int i = 0; i < m_drawable.size(); i++) {
@@ -278,6 +281,7 @@ void TmxHandler::DrawObjects(sf::RenderWindow & window)
 	}
 }
 
+//Kevin and Daniel code
 void TmxHandler::ResetVector()
 {
 	for (int i = 0; i < m_drawable.size(); i++)
@@ -297,12 +301,13 @@ std::vector<DrawableType*> TmxHandler::GetDrawable() const
 	return m_drawable;
 }
 
+//Kevin and Daniel code
 void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & tmx_map)
 {
 	//sets the settings for each object depending on the objects type(shape)
 	switch (obj.GetPrimitiveType())
 	{
-	case Tmx::TMX_PT_ELLIPSE: //circle
+	case Tmx::TMX_PT_ELLIPSE: //Circle
 		{
 			//std::cout << "ellipse" << std::endl;
 			m_circle_vector.push_back(new dse::CircleShape());
@@ -315,7 +320,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & tmx_ma
 			m_drawables.insert(std::make_pair(m_map_index++, m_drawable.back()));
 			break;
 		}
-	case Tmx::TMX_PT_POLYGON: //polygon
+	case Tmx::TMX_PT_POLYGON: //Polygon
 		{
 			//std::cout << "polygon" << std::endl;
 			m_convex_vector.push_back(new dse::ConvexShape());
@@ -333,7 +338,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & tmx_ma
 			m_drawables.insert(std::make_pair(m_map_index++, m_drawable.back()));
 		}
 			break;
-	case Tmx::TMX_PT_POLYLINE: //polyline
+	case Tmx::TMX_PT_POLYLINE: //Polyline
 		{
 			//std::cout << "polyline" << std::endl;
 			sf::VertexArray* vertex = new sf::VertexArray(sf::LineStrip, obj.GetPolyline()->GetNumPoints());
@@ -350,7 +355,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & tmx_ma
 			break;
 	case Tmx::TMX_PT_NONE:
 	{
-		if (obj.GetGid() == 0) //rectangle
+		if (obj.GetGid() == 0) //Rectangle
 		{
 			m_rectangle_vector.push_back(new dse::RectangleShape());
 			m_rectangle_vector.back()->SetName(obj.GetName());
@@ -361,7 +366,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & tmx_ma
 			m_drawable.push_back(new DrawableType(DrawableType::RECTANGLE_SHAPE, m_rectangle_vector.back()));
 			m_drawables.insert(std::make_pair(m_map_index++, m_drawable.back()));
 		}
-		else //tileObject
+		else //TileObject
 		{
 			const std::vector<Tmx::Tileset*> tmxTileSet = tmx_map.GetTilesets();
 
