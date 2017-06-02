@@ -15,7 +15,7 @@ ObjectHandler::~ObjectHandler()
 
 void dse::ObjectHandler::Update()
 {
-	
+
 }
 
 void dse::ObjectHandler::DrawObjects(sf::RenderWindow& win)

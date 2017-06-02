@@ -1,4 +1,5 @@
 #include "GameEngine.h"
+#include "LuaBridge.h"
 
 using namespace dse;
 
@@ -10,13 +11,29 @@ GameEngine::GameEngine() :
 
 void dse::GameEngine::Update()
 {
+	LuaBridge lua_bridge;
+
+	m_tmx->ParseAllMaps();
+
+	sf::Clock clock;
+	const int NUM_FRAMES_PER_SECOND = 60;
+	const float UPDATE_INTERVAL = 1.0f / (NUM_FRAMES_PER_SECOND);
+	float current_time = 0.0f;
+
 	bool mouse_inside_a_window = false;
+	bool key_is_pressed = false;
 
 	m_window.create(sf::VideoMode(1024, 768), "DreamScale Engine");
 
 	while (m_window.isOpen())
 	{
+		sf::Time dt = clock.restart();
+		current_time += dt.asSeconds();
+
 		sf::Event event;
+
+		key_is_pressed = false;
+
 		// Poll events for this window
 		while (m_window.pollEvent(event))
 		{
@@ -54,14 +71,24 @@ void dse::GameEngine::Update()
 				mouse_inside_a_window = false;
 		}
 
+		if (current_time >= UPDATE_INTERVAL) //Update intervals
+		{
+			//Lua Scripts that updates movement
+			//-_
+			//lua_bridge.StartLuaScript("movement");
+			m_test_object.SetSize(50, 50);
+			m_test_object.SetPosition(m_position_temp++, m_position_temp++);
+
+			current_time -= UPDATE_INTERVAL;
+		}
+
 		m_window.clear();
 
 		m_tmx->RefreshObjects();
 		
-		m_obj_handler.Update();
-		m_obj_handler.DrawObjects(m_window);
 		m_tmx->DrawMap(m_window);
 		m_tmx->DrawObjects(m_window);
+		m_test_object.Draw(&m_window);
 
 		m_window.display();
 	}

@@ -2,7 +2,6 @@
 #define DREAMSCALEENGINE_LUABRIDGE_H_
 
 #include "TmxHandler.h"
-#include "GameEngine.h"
 #pragma comment(lib, "lua53.lib")
 #include <lua.hpp>
 #include <LuaBridge.h>
@@ -11,14 +10,13 @@
 
 namespace dse
 {
-
 	class LuaBridge
 	{
 	public:
 		LuaBridge();
 		~LuaBridge();
 
-		void DoLuaBridge(); //Or more accurately do lua binding
+		void BindLua(); //Or more accurately do lua binding
 		int StartLuaScript(const char*);
 		lua_State* L = luaL_newstate();
 	};

@@ -1,18 +1,16 @@
 #ifndef DREAMSCALEENGINE_TMXHANDLER_H_
 #define DREAMSCALEENGINE_TMXHANDLER_H_
-//For handling TMX files
-#include <Tmx\TmxMap.h>
-#include <Tmx\TmxObject.h>
 
 #include <string>
 #include <Windows.h>
+#include <cassert>
+#include <iostream>
+#include <array>
+#include <map>
 
-#include "CircleShape.h"
-#include "RectangleShape.h"
-#include "VertexArray.h"
-#include "ConvexShape.h"
-#include "Sprite.h"
-
+//For handling TMX files
+#include <Tmx\TmxMap.h>
+#include <Tmx\TmxObject.h>
 #include <Tmx\TmxPolygon.h>
 #include <Tmx\TmxEllipse.h>
 #include <Tmx\TmxPolyline.h>
@@ -24,15 +22,14 @@
 #include <Tmx\TmxTile.h>
 #include <Tmx\TmxMapTile.h>
 
-#include <cassert>
-#include <iostream>
-#include <array>
-
-#include <map>
-
-
-//For rendering every layer
+//For rendering
 #include <SFML\Graphics.hpp>
+
+#include "CircleShape.h"
+#include "RectangleShape.h"
+#include "VertexArray.h"
+#include "ConvexShape.h"
+#include "Sprite.h"
 
 enum FLIPPED
 {

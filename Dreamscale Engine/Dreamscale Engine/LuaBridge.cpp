@@ -1,4 +1,5 @@
 #include "LuaBridge.h"
+#include "GameEngine.h"
 
 using namespace dse;
 
@@ -12,7 +13,7 @@ LuaBridge::~LuaBridge()
 //LuaRef used for intertwine code more between cpp and lua
 //luabridge::LuaRef setPosition = luabridge::getGlobal(L, "SetPosition");
 //luabridge::LuaRef setSize = luabridge::getGlobal(L, "SetSize");
-void LuaBridge::DoLuaBridge()
+void LuaBridge::BindLua()
 {
 	luaL_openlibs(L);
 	getGlobalNamespace(L)
@@ -35,8 +36,6 @@ void LuaBridge::DoLuaBridge()
 			.beginClass<TmxHandler>("TmxHandler")
 				.addFunction("ParseAllMaps", &TmxHandler::ParseAllMaps)
 				.addFunction("GetDrawables", &TmxHandler::GetDrawable)
-				//.addFunction("SetPosition", &TmxHandler::SetPosition)
-				//.addFunction("LoadMap", &TmxHandler::LoadMap)
 			.endClass()
 
 			.beginClass<sf::Vector2f>("Vector2f")

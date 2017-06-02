@@ -138,7 +138,6 @@
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="LuaBridge.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="ObjectHandler.cpp" />
     <ClCompile Include="RectangleShape.cpp" />
     <ClCompile Include="SfmlObject.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -150,7 +149,6 @@
     <ClInclude Include="ConvexShape.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="LuaBridge.h" />
-    <ClInclude Include="ObjectHandler.h" />
     <ClInclude Include="RectangleShape.h" />
     <ClInclude Include="SfmlObject.h" />
     <ClInclude Include="Sprite.h" />
