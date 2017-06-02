@@ -12,7 +12,7 @@ ConvexShape::~ConvexShape()
 
 std::string ConvexShape::GetName() const
 {
-	return name;
+	return m_name;
 }
 
 std::string dse::ConvexShape::GetType() const
@@ -22,20 +22,20 @@ std::string dse::ConvexShape::GetType() const
 
 bool dse::ConvexShape::GetVisible()
 {
-	return isVisible;
+	return m_is_visible;
 }
 
 void ConvexShape::SetName(std::string n)
 {
-	name = n;
+	m_name = n;
 }
 
 void dse::ConvexShape::SetType(std::string t)
 {
-	type = t;
+	m_type = t;
 }
 
 void dse::ConvexShape::SetVisible(bool state)
 {
-	isVisible = state;
+	m_is_visible = state;
 }

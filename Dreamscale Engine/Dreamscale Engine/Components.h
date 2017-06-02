@@ -1,5 +1,5 @@
-#ifndef DSE_COMPONENTS_H
-#define DSE_COMPONENTS_H
+#ifndef DREAMSCALEENGINE_COMPONENTS_H_
+#define DREAMSCALEENGINE_COMPONENTS_H_
 
 #include <SFML\Graphics.hpp>
 

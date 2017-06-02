@@ -7,11 +7,14 @@
 using namespace luabridge;
 using namespace dse;
 
-//TODO: asdf2 = GameEngine.FindObject("name"); (.lua script)
 int main()
 {
 	LuaBridge LuaTester;
 	dse::CircleShape circleShape;
+
+	static SfmlObject drawe;
+
+	const char* PATH_NAME_LUA = "test.lua";
 
 	sf::RenderWindow window;
 	window.create(sf::VideoMode(1024, 768), "DreamScale Engine");
@@ -21,15 +24,18 @@ int main()
 	sf::Event event;
 	while (window.isOpen())
 	{
-		while (window.pollEvent(event)) {
+		while (window.pollEvent(event))
+		{
 			if (event.type == sf::Event::Closed)
 				window.close();
 			if (event.type == sf::Event::KeyPressed)
 			{
+				if (event.key.code == sf::Keyboard::Escape)
+					window.close();
 				if (event.key.code == sf::Keyboard::Space)
 				{
 					std::cout << "najs" << std::endl;
-					LuaTester.StartLuaScript();
+					LuaTester.StartLuaScript(PATH_NAME_LUA);
 				}
 			}
 		}
@@ -38,6 +44,9 @@ int main()
 	for (size_t i = 0; i < circleShape.GetCircleshapeVector().size(); i++)
 			window.draw(*circleShape.GetCircleshapeVector()[i]);
 
+	drawe.Draw(&window);
+
 		window.display();
 	}
+	return 0;
 }

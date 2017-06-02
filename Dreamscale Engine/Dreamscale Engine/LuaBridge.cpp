@@ -55,13 +55,12 @@ void LuaBridge::DoLuaBridge()
 				
 			.endClass()
 
-		
 	.endNamespace();
 }
 
-int LuaBridge::StartLuaScript()
+int LuaBridge::StartLuaScript(const char* path)
 {
-	if (luaL_dofile(L, "test.lua"))
+	if (luaL_dofile(L, path))
 	{
 		// If Lua encountered an error, we can find at ontop of the stack
 		std::cerr << lua_tostring(L, -1) << std::endl;

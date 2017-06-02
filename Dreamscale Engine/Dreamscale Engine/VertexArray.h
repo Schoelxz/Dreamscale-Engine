@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DREAMSCALEENGINE_VERTEXARRAY_H_
+#define DREAMSCALEENGINE_VERTEXARRAY_H_
 
 #include <SFML\Graphics.hpp>
 #include <string>
@@ -14,14 +15,15 @@ namespace dse
 		std::string GetName() const;
 		std::string GetType() const;
 		bool GetVisible();
-		void SetName(std::string n);
-		void SetType(std::string t);
-		void SetVisible(bool state);
+		void SetName(std::string);
+		void SetType(std::string);
+		void SetVisible(bool);
 
 	private:
-		std::string name;
-		std::string type;
-		bool isAlive = true;
-		bool isVisible = true;
+		std::string m_name;
+		std::string m_type;
+		bool m_is_alive = true;
+		bool m_is_visible = true;
 	};
 }
+#endif

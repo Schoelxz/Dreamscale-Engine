@@ -1,26 +1,32 @@
 #include "SfmlObject.h"
 
-std::vector<SfmlObject*> SfmlObject::sfmlObjects = std::vector<SfmlObject*>();
-int SfmlObject::s_test = 0;
+std::vector<SfmlObject*> SfmlObject::s_sfml_objects = std::vector<SfmlObject*>();
 
 SfmlObject::SfmlObject()
 {
-	++s_test;
-	sfmlObjects.push_back(this);
-	std::cout << s_test << std::endl;
+	s_sfml_objects.push_back(this);
 }
 
 SfmlObject::SfmlObject(const std::string& name)
 	: SfmlObject()
 {
-	m_instanceName = name;
+	m_instance_name = name;
 }
+
+void SfmlObject::Draw(sf::RenderWindow* window)
+{
+	for (int i = 0; i < s_sfml_objects.size(); i++)
+	{
+		window->draw(s_sfml_objects[i]->rect_shape);
+	}
+}
+
 SfmlObject* SfmlObject::Find(const std::string instanceName)
 {
-	for (int i = 0; i < sfmlObjects.size(); i++)
+	for (int i = 0; i < s_sfml_objects.size(); i++)
 	{
-		if (sfmlObjects[i]->GetInstanceName() == instanceName)
-			return sfmlObjects[i];
+		if (s_sfml_objects[i]->GetInstanceName() == instanceName)
+			return s_sfml_objects[i];
 	}
 
 	std::cout << "Could not find " << instanceName << std::endl;
@@ -31,54 +37,38 @@ SfmlObject::~SfmlObject()
 {
 }
 
-////void SfmlObject::LoadScript(lua_State * L, const std::string & scriptFileName, const std::string & tableName)
-////{
-////	using namespace luabridge;
-////	if (luaL_dofile(L, scriptFileName.c_str()) == 0) {
-////		LuaRef table = getGlobal(L, tableName.c_str());
-////		if (table.isTable()) {
-////	
-////		}
-////	}
-////	else {
-////		std::cout << "Error, can't open script!" << std::endl;
-////	}
-////}
-
 void SfmlObject::SetSize(int x, int y)
 {
 	m_size.x = x;
 	m_size.y = y;
-	rectShape.setSize(m_size);
+	rect_shape.setSize(m_size);
 }
 
 void SfmlObject::SetPosition(int x, int y)
 {
 	m_pos.x = x;
 	m_pos.y = y;
-	rectShape.setPosition(m_pos);
+	rect_shape.setPosition(m_pos);
 }
 
-sf::Vector2f SfmlObject::GetSize()
+const sf::Vector2f SfmlObject::GetSize() const
 {
 	return m_size;
 }
 
-sf::Vector2f SfmlObject::GetPosition()
+const sf::Vector2f SfmlObject::GetPosition() const
 {
 	return m_pos;
 }
 
-
-
-std::string SfmlObject::GetInstanceName()
+const std::string SfmlObject::GetInstanceName() const
 {
-	return m_instanceName;
+	return m_instance_name;
 }
 
 const std::vector<SfmlObject*>& SfmlObject::GetAllObjects()
 {
-	return sfmlObjects;
+	return s_sfml_objects;
 }
 
 

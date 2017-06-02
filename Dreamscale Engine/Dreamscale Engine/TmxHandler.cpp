@@ -1,47 +1,42 @@
 #include "TmxHandler.h"
 
-
-
+using namespace dse;
 
 TmxHandler::TmxHandler() :
-	mapIndex(0)
+	m_map_index(0)
 {
 	std::cout << "class:	TmxHandler:	Constructed!" << std::endl;
 	const std::string folder_name = ".\\TmxFiles\\";
-	allFileNames = get_all_files_names_within_folder(folder_name);
+	m_all_file_names = GetFileNames(folder_name);
 	std::cout << "Prints all file names in folder inside	" << folder_name << ":" << std::endl;
-	for (int i = 0; i < allFileNames.size(); i++)
+	for (int i = 0; i < m_all_file_names.size(); i++)
 	{
-		allFileNames[i] = folder_name + allFileNames[i];
-		std::cout << allFileNames[i] << std::endl;
+		m_all_file_names[i] = folder_name + m_all_file_names[i];
+		std::cout << m_all_file_names[i] << std::endl;
 	}
 }
 
 void TmxHandler::LoadObjects(const Tmx::Map& map)
 {
+	for (int i = 0; i < m_drawable.size(); i++) { delete m_drawable[i]; }
+	for (int i = 0; i < m_sprite_textures.size(); i++) { delete m_sprite_textures[i]; }
+	for (int i = 0; i < m_sprite_vector.size(); i++) { delete m_sprite_vector[i]; }
+	for (int i = 0; i < m_rectangle_vector.size(); i++) { delete m_rectangle_vector[i]; }
+	for (int i = 0; i < m_circle_vector.size(); i++) { delete m_circle_vector[i]; }
+	for (int i = 0; i < m_convex_vector.size(); i++) { delete m_convex_vector[i]; }
 
-	for (int i = 0; i < drawable.size(); i++) { delete drawable[i]; }
-	for (int i = 0; i < spriteTextures.size(); i++) { delete spriteTextures[i]; }
-	for (int i = 0; i < spriteVector.size(); i++) { delete spriteVector[i]; }
-	for (int i = 0; i < rectangleVector.size(); i++) { delete rectangleVector[i]; }
-	for (int i = 0; i < circleVector.size(); i++) { delete circleVector[i]; }
-	for (int i = 0; i < convexVector.size(); i++) { delete convexVector[i]; }
-
-	drawable.clear();
-	spriteTextures.clear();
-	spriteVector.clear();
-	rectangleVector.clear();
-	circleVector.clear();
-	convexVector.clear();
-
-	int tempCurrentTileset;
+	m_drawable.clear();
+	m_sprite_textures.clear();
+	m_sprite_vector.clear();
+	m_rectangle_vector.clear();
+	m_circle_vector.clear();
+	m_convex_vector.clear();
 
 	//const std::vector<Tmx::Tileset*> tmxTileSet = map.GetTilesets();
-	const std::vector<Tmx::ObjectGroup*>& objLayers = map.GetObjectGroups(); //number of object layers
+	const std::vector<Tmx::ObjectGroup*>& OBJ_LAYERS = map.GetObjectGroups(); //number of object layers
 
-
-																			 //for each object layer
-	for (auto objects : objLayers)
+	//for each object layer												
+	for (auto objects : OBJ_LAYERS)
 	{
 		//for each object in the object layer
 		for (auto object : objects->GetObjects())
@@ -51,81 +46,66 @@ void TmxHandler::LoadObjects(const Tmx::Map& map)
 	}
 }
 
-
-
-//Parses all maps inside folder
-
 void TmxHandler::RefreshObjects()
 {
-	for (int i = 0; i < drawable.size(); i++)
+	for (int i = 0; i < m_drawable.size(); i++)
 	{
-		switch (drawable[i]->t)
+		switch (m_drawable[i]->type)
 		{
 			case DrawableType::CIRCLE_SHAPE:
 			{
-				dse::CircleShape* circle = drawable[i]->GetCircleShape();
-				// Do typical circle stuff ...
-				//std::cout << m_drawable[i]->GetCircleShape()->GetType() << std::endl;
-				//std::cout << circle->GetName();
+				dse::CircleShape* circle = m_drawable[i]->GetCircleShape();
 
 				if (circle->GetVisible() == true)
 					circle->setFillColor(sf::Color(0, 255, 0, 64));
 				else
 					circle->setFillColor(sf::Color(0, 255, 0, 0));
-				
 			}
 				break;
 			case DrawableType::CONVEX_SHAPE:
 			{
-				dse::ConvexShape* convex = drawable[i]->GetConvexShape();
-				//std::cout << convex->GetName() << std::endl;
-				// Do typical convex stuff ...
+				dse::ConvexShape* convex = m_drawable[i]->GetConvexShape();
 			}
 				break;
 			case DrawableType::RECTANGLE_SHAPE:
 			{
-				dse::RectangleShape* rectangle = drawable[i]->GetRectangleShape();
+				dse::RectangleShape* rectangle = m_drawable[i]->GetRectangleShape();
 				if (rectangle->GetVisible() == true)
 					rectangle->setFillColor(sf::Color(0, 255, 0, 64));
 				else
 					rectangle->setFillColor(sf::Color(0, 255, 0, 0));
-				//std::cout << rectangle->GetName() << std::endl;
 			}
 				break;
 			case DrawableType::SPRITE:
 			{
-				dse::Sprite* sprite = drawable[i]->GetSprite();
+				dse::Sprite* sprite = m_drawable[i]->GetSprite();
 				if (sprite->GetVisible() == true)
 					sprite->setColor(sf::Color(255, 255, 255, 255));
 				else
 					sprite->setColor(sf::Color(255, 255, 255, 0));
-				//std::cout << sprite->GetName() << std::endl;
 			}
 				break;
 			case DrawableType::VERTEX_ARRAY:
 			{
-				dse::VertexArray* vertex = drawable[i]->GetVertexShape();
-				//std::cout << vertex->GetName();
+				dse::VertexArray* vertex = m_drawable[i]->GetVertexShape();
 			}
 				break;
 		}
 	}
 }
 
-
 void TmxHandler::ParseAllMaps()
 {
 	//Parse all Maps (.tmx files) and save each in a mapVector
-	for (size_t i = 0; i < allFileNames.size(); i++)
+	for (size_t i = 0; i < m_all_file_names.size(); i++)
 	{
-		map2 = new Tmx::Map();
-		map2->ParseFile(allFileNames[i]);
-		mapVector.insert(std::make_pair(allFileNames[i], map2));
+		m_tmx_map = new Tmx::Map();
+		m_tmx_map->ParseFile(m_all_file_names[i]);
+		map_vector.insert(std::make_pair(m_all_file_names[i], m_tmx_map));
 	}
 }
 
-//As name says
-std::vector<std::string> TmxHandler::get_all_files_names_within_folder(std::string folder)
+std::vector<std::string> TmxHandler::GetFileNames(std::string folder)
 {
 	std::vector<std::string> names;
 	std::string search_path = folder + "/*.tmx*";
@@ -144,77 +124,76 @@ std::vector<std::string> TmxHandler::get_all_files_names_within_folder(std::stri
 	return names;
 }
 
-
 void TmxHandler::LoadMap(Tmx::Map* map)
 {
 	//TODO: sf::VertexArray läcker 2 gånger varje gång en ny map laddas in, pga. vi inte delete:ar 2 instanser.
-	for (int i = 0; i < vertexLayers.size(); i++)
+	for (int i = 0; i < m_vertex_layers.size(); i++)
 	{
-		delete vertexLayers[i];
+		delete m_vertex_layers[i];
 	}
-	for (int i = 0; i < tileSetTexture.size(); i++)
+	for (int i = 0; i < m_tileset_textures.size(); i++)
 	{
-		delete tileSetTexture[i];
+		delete m_tileset_textures[i];
 	}
-	vertexLayers.clear();
-	tileSetTexture.clear();
+	m_vertex_layers.clear();
+	m_tileset_textures.clear();
 
-	const std::vector<Tmx::Tileset*>& tmxTileSetMap = map->GetTilesets();	//Number of tileset
-	const std::vector<Tmx::TileLayer*>& tileLayers = map->GetTileLayers();	//Number of tilelayers
+	const std::vector<Tmx::Tileset*>& TMX_TILESET_MAP = map->GetTilesets();	//Number of tileset
+	const std::vector<Tmx::TileLayer*>& TILE_LAYER = map->GetTileLayers();	//Number of tilelayers
 
 	FLIPPED flipped = NONE;
 
 	//push tilesets
-	for (size_t i = 0; i < tmxTileSetMap.size(); i++)
+	for (size_t i = 0; i < TMX_TILESET_MAP.size(); i++)
 	{
 		//Load the texture specifying the tileset
 		sf::Texture* tileset = new sf::Texture();
-		tileSetTexture.push_back(tileset);
-		const std::string folder_name = ".\\TmxFiles";
-		std::cout << folder_name << tmxTileSetMap[i]->GetImage()->GetSource() << std::endl;
-		if (!tileset->loadFromFile(folder_name + tmxTileSetMap[i]->GetImage()->GetSource()))
+		m_tileset_textures.push_back(tileset);
+		const std::string FOLDER_NAME = ".\\TmxFiles";
+		std::cout << FOLDER_NAME << TMX_TILESET_MAP[i]->GetImage()->GetSource() << std::endl;
+		if (!tileset->loadFromFile(FOLDER_NAME + TMX_TILESET_MAP[i]->GetImage()->GetSource()))
 		{
 			assert(!"Couldn't load file!");
 		}
 	}
 
 	// Get size for map and tiles
-	const sf::Vector2i mapSize(map->GetWidth(), map->GetHeight());			//MapSize
-	const sf::Vector2i tileSize(map->GetTileWidth(), map->GetTileHeight());	//TileSize
+	const sf::Vector2i MAP_SIZE(map->GetWidth(), map->GetHeight());			//MapSize
+	const sf::Vector2i TILE_SIZE(map->GetTileWidth(), map->GetTileHeight());	//TileSize
 
 	//for each layers..
 	for (auto layer : map->GetLayers()) 
 	{
 		//for each tileset..
-		for (int t = 0; t < tileSetTexture.size(); t++)
+		for (int t = 0; t < m_tileset_textures.size(); t++)
 		{
 			// Create a new vertexarray, acting as a list of quads
-			sf::VertexArray* vertexArray = new sf::VertexArray(sf::Quads, mapSize.y * mapSize.x * 4);
-			vertexLayers.push_back(vertexArray); //push the vertexArray into an VertexArray-Vector (vertexLayers)
+			sf::VertexArray* vertex_array = new sf::VertexArray(sf::Quads, MAP_SIZE.y * MAP_SIZE.x * 4);
+			m_vertex_layers.push_back(vertex_array); //push the vertexArray into an VertexArray-Vector (vertexLayers)
 			// For each tile in this layer...
-			for (size_t i = 0; i < mapSize.y; ++i)
+			for (size_t i = 0; i < MAP_SIZE.y; ++i)
 			{
-				for (size_t j = 0; j < mapSize.x; ++j)
+				for (size_t j = 0; j < MAP_SIZE.x; ++j)
 				{
 					// Get the tile, and check if it's part of a tileset
 					if (layer->GetLayerType() == Tmx::LayerType::TMX_LAYERTYPE_TILE) 
 					{
-						Tmx::TileLayer* tLayer = static_cast<Tmx::TileLayer*>(layer);
-						const Tmx::MapTile tile = tLayer->GetTile(j, i);
-						if (tile.tilesetId == -1 || tile.tilesetId != t)
+						Tmx::TileLayer* temp_layer = static_cast<Tmx::TileLayer*>(layer);
+						const Tmx::MapTile TILE = temp_layer->GetTile(j, i);
+						if (TILE.tilesetId == -1 || TILE.tilesetId != t)
 							continue;
 
-						const int gid = tile.gid;
+						const int GID = TILE.gid;
 
-						int real_id = gid - tmxTileSetMap[t]->GetFirstGid();
+						int real_id = GID - TMX_TILESET_MAP[t]->GetFirstGid();
 
-						sf::Vertex* quad = &(*vertexArray)[(i * mapSize.x + j) * 4];
+						sf::Vertex* quad = &(*vertex_array)[(i * MAP_SIZE.x + j) * 4];
 
 						// Calculate texture coordinates, based on the tilenumer
-						unsigned int tileNumber = tile.id;
-						int tu = tileNumber % (tileSetTexture[t]->getSize().x / tileSize.x);
-						int tv = tileNumber / (tileSetTexture[t]->getSize().x / tileSize.x);
-						sf::Vector2i textureCoordinates(tu, tv);
+						unsigned int tile_number = TILE.id;
+						int tu = tile_number % (m_tileset_textures[t]->getSize().x / TILE_SIZE.x);
+						int tv = tile_number / (m_tileset_textures[t]->getSize().x / TILE_SIZE.x);
+						sf::Vector2i texture_cooridnates(tu, tv);
 						/*
 						The form that we align the vertices in to build our quads
 						0 --- 1
@@ -222,7 +201,7 @@ void TmxHandler::LoadMap(Tmx::Map* map)
 						|     |
 						3 --- 2
 						*/
-						SetTile(quad, tile, i, j, tileSize, textureCoordinates);
+						SetTile(quad, TILE, i, j, TILE_SIZE, texture_cooridnates);
 					}
 				}
 			}
@@ -231,17 +210,17 @@ void TmxHandler::LoadMap(Tmx::Map* map)
 }
 
 void TmxHandler::SetTile(sf::Vertex* &quad, Tmx::MapTile tile, int i, int j,
-	const sf::Vector2i tileSize, sf::Vector2i textCoord)
+	const sf::Vector2i tile_size, sf::Vector2i texture_coord)
 {
 		FLIPPED flipped;
 		// Position the vertices, as specified above
-		quad[0].position = sf::Vector2f(j * tileSize.x, i * tileSize.y);
-		quad[1].position = sf::Vector2f((j + 1) * tileSize.x, i * tileSize.y);
-		quad[2].position = sf::Vector2f((j + 1) * tileSize.x, (i + 1) * tileSize.y);
-		quad[3].position = sf::Vector2f(j * tileSize.x, (i + 1) * tileSize.y);
+		quad[0].position = sf::Vector2f(j * tile_size.x, i * tile_size.y);
+		quad[1].position = sf::Vector2f((j + 1) * tile_size.x, i * tile_size.y);
+		quad[2].position = sf::Vector2f((j + 1) * tile_size.x, (i + 1) * tile_size.y);
+		quad[3].position = sf::Vector2f(j * tile_size.x, (i + 1) * tile_size.y);
 
 		// The default order to specify texture coordinates by.
-		std::array<size_t, 4> texOrder = { 0, 1, 2, 3 };
+		std::array<size_t, 4> texture_order = { 0, 1, 2, 3 };
 		// Different order if the tile is flipped horizontally
 		if (tile.flippedHorizontally && tile.flippedVertically)
 			flipped = DIAGONAL;
@@ -255,26 +234,26 @@ void TmxHandler::SetTile(sf::Vertex* &quad, Tmx::MapTile tile, int i, int j,
 		switch (flipped)
 		{
 		case DIAGONAL:
-			texOrder = { 2, 3, 0, 1 };
+			texture_order = { 2, 3, 0, 1 };
 			break;
 		case HORIZONTAL:
-			texOrder = { 1, 0, 3, 2 };
+			texture_order = { 1, 0, 3, 2 };
 			break;
 		case VERTICAL:
-			texOrder = { 3, 2, 1, 0 };
+			texture_order = { 3, 2, 1, 0 };
 			break;
 		case NONE:
-			texOrder = { 0, 1, 2, 3 };
+			texture_order = { 0, 1, 2, 3 };
 			break;
 		default:
 			break;
 		}
 
 		// Position the texture coordinates. Coordinates is specified in pixels, not 0-1
-		quad[texOrder[0]].texCoords = sf::Vector2f(textCoord.x * tileSize.x, textCoord.y * tileSize.y);
-		quad[texOrder[1]].texCoords = sf::Vector2f((textCoord.x + 1) * tileSize.x, textCoord.y * tileSize.y);
-		quad[texOrder[2]].texCoords = sf::Vector2f((textCoord.x + 1) * tileSize.x, (textCoord.y + 1) * tileSize.y);
-		quad[texOrder[3]].texCoords = sf::Vector2f(textCoord.x * tileSize.x, (textCoord.y + 1) * tileSize.y);
+		quad[texture_order[0]].texCoords = sf::Vector2f(texture_coord.x * tile_size.x, texture_coord.y * tile_size.y);
+		quad[texture_order[1]].texCoords = sf::Vector2f((texture_coord.x + 1) * tile_size.x, texture_coord.y * tile_size.y);
+		quad[texture_order[2]].texCoords = sf::Vector2f((texture_coord.x + 1) * tile_size.x, (texture_coord.y + 1) * tile_size.y);
+		quad[texture_order[3]].texCoords = sf::Vector2f(texture_coord.x * tile_size.x, (texture_coord.y + 1) * tile_size.y);
 
 		quad[0].color = sf::Color(255, 255, 255, 255);
 		quad[1].color = sf::Color(255, 255, 255, 255);
@@ -286,39 +265,39 @@ void TmxHandler::DrawMap(sf::RenderWindow& window)
 {
 	// Create a non-default renderstate, and bind our tilesets texture to it
 	sf::RenderStates state;
-	for (int i = 0; i < vertexLayers.size(); i++) {
-		state.texture = tileSetTexture[i % tileSetTexture.size()]; //Draw every tileSet for every vertexLayer
-		window.draw(*vertexLayers[i], state);
+	for (int i = 0; i < m_vertex_layers.size(); i++) {
+		state.texture = m_tileset_textures[i % m_tileset_textures.size()]; //Draw every tileSet for every vertexLayer
+		window.draw(*m_vertex_layers[i], state);
 	}
 }
 
 void TmxHandler::DrawObjects(sf::RenderWindow & window)
 {
-	for (int i = 0; i < drawable.size(); i++) {
-		window.draw(*drawable[i]->d);
+	for (int i = 0; i < m_drawable.size(); i++) {
+		window.draw(*m_drawable[i]->drawable);
 	}
 }
 
 void TmxHandler::ResetVector()
 {
-	for (int i = 0; i < drawable.size(); i++)
+	for (int i = 0; i < m_drawable.size(); i++)
 	{
-		delete drawable[i];
+		delete m_drawable[i];
 	}
 	
-	m_drawable.erase(m_drawable.begin(), m_drawable.end());
+	m_drawables.erase(m_drawables.begin(), m_drawables.end());
 	
-	drawable.clear();
 	m_drawable.clear();
-	mapIndex = 0;
+	m_drawables.clear();
+	m_map_index = 0;
 }
 
 std::vector<DrawableType*> TmxHandler::GetDrawable() const
 {
-	return drawable;
+	return m_drawable;
 }
 
-void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & m)
+void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & tmx_map)
 {
 	//sets the settings for each object depending on the objects type(shape)
 	switch (obj.GetPrimitiveType())
@@ -326,131 +305,126 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & m)
 	case Tmx::TMX_PT_ELLIPSE: //circle
 		{
 			//std::cout << "ellipse" << std::endl;
-			circleVector.push_back(new dse::CircleShape());
-			circleVector.back()->SetName(obj.GetProperties().GetStringProperty("script"));
-			circleVector.back()->SetType(obj.GetType());
-			circleVector.back()->setRadius(obj.GetEllipse()->GetRadiusX());
-			circleVector.back()->setPosition(obj.GetX(), obj.GetY());
-			circleVector.back()->setFillColor(sf::Color(255, 255, 0, 64));
-			drawable.push_back(new DrawableType(DrawableType::CIRCLE_SHAPE, circleVector[circleVector.size() - 1]));
-			m_drawable.insert(std::make_pair(mapIndex++, drawable.back()));
+			m_circle_vector.push_back(new dse::CircleShape());
+			m_circle_vector.back()->SetName(obj.GetProperties().GetStringProperty("script"));
+			m_circle_vector.back()->SetType(obj.GetType());
+			m_circle_vector.back()->setRadius(obj.GetEllipse()->GetRadiusX());
+			m_circle_vector.back()->setPosition(obj.GetX(), obj.GetY());
+			m_circle_vector.back()->setFillColor(sf::Color(255, 255, 0, 64));
+			m_drawable.push_back(new DrawableType(DrawableType::CIRCLE_SHAPE, m_circle_vector[m_circle_vector.size() - 1]));
+			m_drawables.insert(std::make_pair(m_map_index++, m_drawable.back()));
 			break;
 		}
 	case Tmx::TMX_PT_POLYGON: //polygon
 		{
 			//std::cout << "polygon" << std::endl;
-			convexVector.push_back(new dse::ConvexShape());
-			convexVector.back()->SetName(obj.GetName());
-			convexVector.back()->SetType(obj.GetType());
-			int numPoints = obj.GetPolygon()->GetNumPoints();
-			convexVector.back()->setPointCount(numPoints);
-			for (int i = 0; i < numPoints; i++)
+			m_convex_vector.push_back(new dse::ConvexShape());
+			m_convex_vector.back()->SetName(obj.GetName());
+			m_convex_vector.back()->SetType(obj.GetType());
+			int num_points = obj.GetPolygon()->GetNumPoints();
+			m_convex_vector.back()->setPointCount(num_points);
+			for (int i = 0; i < num_points; i++)
 			{
-				const sf::Vector2f pointPos = sf::Vector2f(obj.GetX() + obj.GetPolygon()->GetPoint(i).x, obj.GetY() + obj.GetPolygon()->GetPoint(i).y);
-				convexVector.back()->setPoint(i, pointPos);
+				const sf::Vector2f POINT_POS = sf::Vector2f(obj.GetX() + obj.GetPolygon()->GetPoint(i).x, obj.GetY() + obj.GetPolygon()->GetPoint(i).y);
+				m_convex_vector.back()->setPoint(i, POINT_POS);
 			}
-			convexVector.back()->setFillColor(sf::Color(0, 0, 255, 64));
-			drawable.push_back(new DrawableType(DrawableType::CONVEX_SHAPE, convexVector.back()));
-			m_drawable.insert(std::make_pair(mapIndex++, drawable.back()));
+			m_convex_vector.back()->setFillColor(sf::Color(0, 0, 255, 64));
+			m_drawable.push_back(new DrawableType(DrawableType::CONVEX_SHAPE, m_convex_vector.back()));
+			m_drawables.insert(std::make_pair(m_map_index++, m_drawable.back()));
 		}
 			break;
 	case Tmx::TMX_PT_POLYLINE: //polyline
 		{
 			//std::cout << "polyline" << std::endl;
 			sf::VertexArray* vertex = new sf::VertexArray(sf::LineStrip, obj.GetPolyline()->GetNumPoints());
-			int numPoints = obj.GetPolyline()->GetNumPoints();
-			for (int i = 0; i < numPoints; i++)
+			int num_points = obj.GetPolyline()->GetNumPoints();
+			for (int i = 0; i < num_points; i++)
 			{
-				const sf::Vector2f pointPos = sf::Vector2f(obj.GetX() + obj.GetPolyline()->GetPoint(i).x, obj.GetY() + obj.GetPolyline()->GetPoint(i).y);
-				(*vertex)[i].position = pointPos;
+				const sf::Vector2f POINT_POS = sf::Vector2f(obj.GetX() + obj.GetPolyline()->GetPoint(i).x, obj.GetY() + obj.GetPolyline()->GetPoint(i).y);
+				(*vertex)[i].position = POINT_POS;
 				(*vertex)[i].color = sf::Color(rand() % 255, rand() % 255, rand() % 255, 255);
 			}
-			drawable.push_back(new DrawableType(DrawableType::VERTEX_ARRAY, vertex));
-			m_drawable.insert(std::make_pair(mapIndex++, drawable.back()));
+			m_drawable.push_back(new DrawableType(DrawableType::VERTEX_ARRAY, vertex));
+			m_drawables.insert(std::make_pair(m_map_index++, m_drawable.back()));
 		}
 			break;
 	case Tmx::TMX_PT_NONE:
 	{
 		if (obj.GetGid() == 0) //rectangle
 		{
-			//std::cout << "rect" << std::endl;
-			rectangleVector.push_back(new dse::RectangleShape());
-			rectangleVector.back()->SetName(obj.GetName());
-			rectangleVector.back()->SetType(obj.GetType());
-			rectangleVector.back()->setSize(sf::Vector2f(obj.GetWidth(), obj.GetHeight()));
-			rectangleVector.back()->setPosition(obj.GetX(), obj.GetY());
-			//rectangleVector.back()->SetVisible(false);
-			
-			drawable.push_back(new DrawableType(DrawableType::RECTANGLE_SHAPE, rectangleVector.back()));
-			m_drawable.insert(std::make_pair(mapIndex++, drawable.back()));
+			m_rectangle_vector.push_back(new dse::RectangleShape());
+			m_rectangle_vector.back()->SetName(obj.GetName());
+			m_rectangle_vector.back()->SetType(obj.GetType());
+			m_rectangle_vector.back()->setSize(sf::Vector2f(obj.GetWidth(), obj.GetHeight()));
+			m_rectangle_vector.back()->setPosition(obj.GetX(), obj.GetY());
+
+			m_drawable.push_back(new DrawableType(DrawableType::RECTANGLE_SHAPE, m_rectangle_vector.back()));
+			m_drawables.insert(std::make_pair(m_map_index++, m_drawable.back()));
 		}
 		else //tileObject
 		{
-			const std::vector<Tmx::Tileset*> tmxTileSet = m.GetTilesets();
+			const std::vector<Tmx::Tileset*> tmxTileSet = tmx_map.GetTilesets();
 
-			int tempCurrentTileset;
-			const int height = m.GetHeight();
-			const int width = m.GetWidth();
-			const int tileHeight = obj.GetHeight();
-			const int tileWidth = obj.GetWidth();
+			int temp_current_tileset;
+			const int HEIGHT = tmx_map.GetHeight();
+			const int WIDTH = tmx_map.GetWidth();
+			const int TILE_HEIGHT = obj.GetHeight();
+			const int TILE_WIDTH = obj.GetWidth();
 
 			const unsigned FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
 			const unsigned FLIPPED_VERTICALLY_FLAG = 0x40000000;
 			const unsigned FLIPPED_DIAGONALLY_FLAG = 0x20000000;
 			//std::cout << "tile" << std::endl;
-			spriteVector.push_back(new dse::Sprite());
-			spriteVector.back()->SetName(obj.GetName());
+			m_sprite_vector.push_back(new dse::Sprite());
+			m_sprite_vector.back()->SetName(obj.GetName());
 
-			const int gid = obj.GetGid();
-			if (gid == 0)
+			const int GID = obj.GetGid();
+			if (GID == 0)
 				break;
 
 			for (int i = tmxTileSet.size() - 1; i >= 0; i--)
 			{
-				if (tmxTileSet[i]->GetFirstGid() > gid)
+				if (tmxTileSet[i]->GetFirstGid() > GID)
 				{
-					tempCurrentTileset = i;
+					temp_current_tileset = i;
 					continue;
 				}
-				tempCurrentTileset = i;
+				temp_current_tileset = i;
 				break;
 			}
 
-			int real_id = gid - tmxTileSet[tempCurrentTileset]->GetFirstGid();
+			int real_id = GID - tmxTileSet[temp_current_tileset]->GetFirstGid();
 
 			real_id &= ~(FLIPPED_HORIZONTALLY_FLAG |
 				FLIPPED_VERTICALLY_FLAG |
 				FLIPPED_DIAGONALLY_FLAG);
 
-			int tu2 = real_id % (tileSetTexture[tempCurrentTileset]->getSize().x / tileWidth);
-			int tv2 = real_id / (tileSetTexture[tempCurrentTileset]->getSize().x / tileWidth);
+			int tu2 = real_id % (m_tileset_textures[temp_current_tileset]->getSize().x / TILE_WIDTH);
+			int tv2 = real_id / (m_tileset_textures[temp_current_tileset]->getSize().x / TILE_WIDTH);
 
-			sf::IntRect textureSource; //= Objectets 4 rektangel värden
-			textureSource.left = tu2 * tileWidth;
-			textureSource.top = tv2 * tileHeight;
-			textureSource.width = tileWidth;
-			textureSource.height = tileHeight;
+			sf::IntRect texture_source; //= Objectets 4 rektangel värden
+			texture_source.left = tu2 * TILE_WIDTH;
+			texture_source.top = tv2 * TILE_HEIGHT;
+			texture_source.width = TILE_WIDTH;
+			texture_source.height = TILE_HEIGHT;
 
-			//TODO: Memory leak. tempImg and tempTex needs to be deleted. but if tempTex is deleted, the objects wont have textures.
-			//Potential solution: create a vector of sprites to be saved in header file?
-			sf::Image* tempImg = new sf::Image();
-			spriteTextures.push_back(new sf::Texture());
+			sf::Image* temp_image = new sf::Image();
+			m_sprite_textures.push_back(new sf::Texture());
 
-			const std::string folder_name = ".\\TmxFiles";
+			const std::string FOLDER_NAME = ".\\TmxFiles";
 
-			tempImg->loadFromFile(folder_name + tmxTileSet[tempCurrentTileset]->GetImage()->GetSource());
-			spriteTextures[spriteTextures.size() - 1]->loadFromImage(*tempImg, textureSource);
+			temp_image->loadFromFile(FOLDER_NAME + tmxTileSet[temp_current_tileset]->GetImage()->GetSource());
+			m_sprite_textures[m_sprite_textures.size() - 1]->loadFromImage(*temp_image, texture_source);
 
-			spriteVector.back()->setPosition(obj.GetX(), obj.GetY() - obj.GetHeight());
-			spriteVector.back()->setTexture(*spriteTextures.back());
-			delete tempImg;
+			m_sprite_vector.back()->setPosition(obj.GetX(), obj.GetY() - obj.GetHeight());
+			m_sprite_vector.back()->setTexture(*m_sprite_textures.back());
+			delete temp_image;
 
-			spriteVector.back()->SetName(obj.GetName());
-			spriteVector.back()->SetType(obj.GetType());
-			//spriteVector[spriteVector.size() - 1]->SetVisible(false);
+			m_sprite_vector.back()->SetName(obj.GetName());
+			m_sprite_vector.back()->SetType(obj.GetType());
 
-			drawable.push_back(new DrawableType(DrawableType::SPRITE, spriteVector.back()));
-			m_drawable.insert(std::make_pair(mapIndex++, drawable.back()));
+			m_drawable.push_back(new DrawableType(DrawableType::SPRITE, m_sprite_vector.back()));
+			m_drawables.insert(std::make_pair(m_map_index++, m_drawable.back()));
 		}
 			break;
 	}

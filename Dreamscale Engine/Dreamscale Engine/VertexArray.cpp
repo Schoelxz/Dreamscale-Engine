@@ -12,7 +12,7 @@ VertexArray::~VertexArray()
 
 std::string VertexArray::GetName() const
 {
-	return name;
+	return m_name;
 }
 
 std::string dse::VertexArray::GetType() const
@@ -22,20 +22,20 @@ std::string dse::VertexArray::GetType() const
 
 bool dse::VertexArray::GetVisible()
 {
-	return isVisible;
+	return m_is_visible;
 }
 
 void VertexArray::SetName(std::string n)
 {
-	name = n;
+	m_name = n;
 }
 
 void dse::VertexArray::SetType(std::string t)
 {
-	type = t;
+	m_type = t;
 }
 
 void dse::VertexArray::SetVisible(bool state)
 {
-	isVisible = state;
+	m_is_visible = state;
 }

@@ -13,11 +13,11 @@
 --asdf:SetSize(300, 300);
 
 
-gameEngine = GameEngine.Engine();
-tmxhandler = gameEngine:GetTmxHandler();
-position = GameEngine.Vector2f(10, 10);
+--gameEngine = GameEngine.Engine();
+--tmxhandler = gameEngine:GetTmxHandler();
+--position = GameEngine.Vector2f(10, 10);
 
-tmxhandler:SetPosition(tmxhandler:GetDrawables(1), position);
+--tmxhandler:SetPosition(tmxhandler:GetDrawables(1), position);
 
 
 

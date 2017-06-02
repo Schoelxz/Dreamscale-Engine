@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DREAMSCALEENGINE_SPRITE_H_
+#define DREAMSCALEENGINE_SPRITE_H_
 
 #include <SFML\Graphics.hpp>
 #include <string>
@@ -15,16 +16,17 @@ namespace dse
 		std::string GetType() const;
 		std::string GetScript() const;
 		bool GetVisible();
-		void SetName(std::string n);
-		void SetType(std::string t);
-		void setScript();
+		void SetName(std::string);
+		void SetType(std::string);
+		void SetScript();
 		void SetVisible(bool state);
 
 	private:
-		std::string name;
-		std::string type;
-		std::string script;
-		bool isAlive = true;
-		bool isVisible = true;
+		std::string m_name;
+		std::string m_type;
+		std::string m_script;
+		bool m_is_alive = true;
+		bool m_is_visible = true;
 	};
 }
+#endif

@@ -12,15 +12,22 @@
 --asdf:SetPosition(250, 500);
 --asdf:SetSize(300, 300);
 
-gameEngine = GameEngine.Engine();
-tmxhandler = gameEngine:GetTmxHandler();
+dse = GameEngine.Engine();
+
+--wow = GameEngine.SfmlObject("yo2");
+--rect = GameEngine.FindObject("yo2");
+
+--rect:SetPosition(100, 500);
+--rect:SetSize(50,400);
+
+tmxhandler = dse:GetTmxHandler();
 
 --circleshape = GameEngine.CircleShape();
 
 --circleshape.position = GameEngine.Vector2f(400, 300);
 --circleshape.radius = 130;
 tmxhandler:ParseAllMaps();
-gameEngine:StartUpdate();
+dse:StartUpdate();
 
 
 

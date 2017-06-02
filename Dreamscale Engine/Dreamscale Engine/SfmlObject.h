@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DREAMSCALEENGINE_SFMLOBJECT_H_
+#define DREAMSCALEENGINE_SFMLOBJECT_H_
 
 #include <iostream>
 #include <memory>
@@ -12,21 +13,20 @@ public:
 	SfmlObject();
 	~SfmlObject();
 
-	SfmlObject(const std::string& name);
+	SfmlObject(const std::string&);
 
-	//void LoadScript(lua_State* L, const std::string& scriptFileName, const std::string& tableName);
+	void SetSize(int, int);
+	void SetPosition(int, int);
+	const sf::Vector2f GetSize() const;
+	const sf::Vector2f GetPosition() const;
 
-	void SetSize(int x, int y);
-	void SetPosition(int x, int y);
-	sf::Vector2f GetSize();
-	sf::Vector2f GetPosition();
+	sf::RectangleShape rect_shape;
 
-	//std::shared_ptr<luabridge::LuaRef> interactFunction;
-	sf::RectangleShape rectShape;
+	void Draw(sf::RenderWindow*);
 
-	static SfmlObject* Find(const std::string instanceName);
-	//TODO: Keep working on finding and using class instances for LUA
-	std::string GetInstanceName();
+	static SfmlObject* Find(const std::string);
+
+	const std::string GetInstanceName() const;
 
 	static const std::vector<SfmlObject*>& GetAllObjects();
 
@@ -34,9 +34,9 @@ private:
 	sf::Vector2f m_pos;
 	sf::Vector2f m_size;
 
-	std::string m_instanceName;
+	std::string m_instance_name;
 
-	static std::vector<SfmlObject*> sfmlObjects;
-	static int s_test;
+	static std::vector<SfmlObject*> s_sfml_objects;
 };
 
+#endif

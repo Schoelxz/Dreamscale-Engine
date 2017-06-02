@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DREAMSCALEENGINE_CIRCLESHAPE_H_
+#define DREAMSCALEENGINE_CIRCLESHAPE_H_
 
 #include <SFML\Graphics.hpp>
 #include <string>
@@ -16,20 +17,21 @@ namespace dse
 		bool GetVisible() const;
 		sf::Vector2f GetPosition() const;
 		float GetRadius() const;
-		void SetName(std::string n);
-		void SetType(std::string t);
-		void SetVisible(bool state);
-		void SetPosition(sf::Vector2f pos);
-		void SetRadius(float radius);
+		void SetName(std::string);
+		void SetType(std::string);
+		void SetVisible(bool);
+		void SetPosition(sf::Vector2f);
+		void SetRadius(float);
 
 		static const std::vector<dse::CircleShape*> GetCircleshapeVector();
 
 	private:
-		std::string name;
-		std::string type;
-		bool isAlive = true;
-		bool isVisible = true;
+		std::string m_name;
+		std::string m_type;
+		bool m_is_alive = true;
+		bool m_is_visible = true;
 
-		static std::vector<dse::CircleShape*> circleshape_vector;
+		static std::vector<dse::CircleShape*> s_circleshape_vector;
 	};
 }
+#endif

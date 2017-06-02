@@ -1,12 +1,12 @@
 #include "CircleShape.h"
 
-std::vector<dse::CircleShape*> dse::CircleShape::circleshape_vector = std::vector<dse::CircleShape*>();
+std::vector<dse::CircleShape*> dse::CircleShape::s_circleshape_vector = std::vector<dse::CircleShape*>();
 
 using namespace dse;
 
 CircleShape::CircleShape()
 {
-	circleshape_vector.push_back(this);
+	s_circleshape_vector.push_back(this);
 }
 
 CircleShape::~CircleShape()
@@ -15,17 +15,17 @@ CircleShape::~CircleShape()
 
 std::string CircleShape::GetName() const
 {
-	return name;
+	return m_name;
 }
 
 std::string dse::CircleShape::GetType() const
 {
-	return type;
+	return m_type;
 }
 
 bool dse::CircleShape::GetVisible() const
 {
-	return isVisible;
+	return m_is_visible;
 }
 
 sf::Vector2f dse::CircleShape::GetPosition() const
@@ -40,17 +40,17 @@ float dse::CircleShape::GetRadius() const
 
 void CircleShape::SetName(std::string n)
 {
-	name = n;
+	m_name = n;
 }
 
 void dse::CircleShape::SetType(std::string t)
 {
-	type = t;
+	m_type = t;
 }
 
 void dse::CircleShape::SetVisible(bool state)
 {
-	isVisible = state;
+	m_is_visible = state;
 }
 
 void dse::CircleShape::SetPosition(sf::Vector2f pos)
@@ -65,5 +65,5 @@ void dse::CircleShape::SetRadius(float radius)
 
 const std::vector<dse::CircleShape*> dse::CircleShape::GetCircleshapeVector()
 {
-	return circleshape_vector;
+	return s_circleshape_vector;
 }

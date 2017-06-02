@@ -1,4 +1,6 @@
-#pragma once
+#ifndef DREAMSCALEENGINE_OBJECTHANDLER_H_
+#define DREAMSCALEENGINE_OBJECTHANDLER_H_
+
 #include <vector>
 #include <SFML\Graphics.hpp>
 
@@ -15,10 +17,11 @@ namespace dse
 		
 		void Update();
 		
-		void DrawObjects(sf::RenderWindow& win);
+		void DrawObjects(sf::RenderWindow&);
 
 	private:
-		std::vector<sf::Sprite*> gameObject;
-		//TmxHandler tmx;
+		std::vector<sf::Sprite*> m_game_objects;
 	};
 }
+
+#endif
