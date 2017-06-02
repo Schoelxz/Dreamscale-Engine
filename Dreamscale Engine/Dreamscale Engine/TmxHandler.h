@@ -92,7 +92,7 @@ namespace dse
 	public:
 		TmxHandler();
 
-		std::vector<std::string> GetFileNames(std::string);
+		std::vector<std::string> GetFileNamesInDir(std::string);
 		std::vector<std::string> GetTmxNames() { return m_all_file_names; };
 		void ParseAllMaps();
 		//Map

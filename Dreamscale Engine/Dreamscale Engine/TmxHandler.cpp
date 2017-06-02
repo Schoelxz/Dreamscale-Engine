@@ -7,7 +7,7 @@ TmxHandler::TmxHandler() :
 {
 	std::cout << "class:	TmxHandler:	Constructed!" << std::endl;
 	const std::string folder_name = ".\\TmxFiles\\";
-	m_all_file_names = GetFileNames(folder_name);
+	m_all_file_names = GetFileNamesInDir(folder_name);
 	std::cout << "Prints all file names in folder inside	" << folder_name << ":" << std::endl;
 	for (int i = 0; i < m_all_file_names.size(); i++)
 	{
@@ -105,7 +105,7 @@ void TmxHandler::ParseAllMaps()
 	}
 }
 
-std::vector<std::string> TmxHandler::GetFileNames(std::string folder)
+std::vector<std::string> TmxHandler::GetFileNamesInDir(std::string folder)
 {
 	std::vector<std::string> names;
 	std::string search_path = folder + "/*.tmx*";
