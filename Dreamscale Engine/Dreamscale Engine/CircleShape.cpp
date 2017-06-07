@@ -1,6 +1,6 @@
 #include "CircleShape.h"
 
-std::vector<dse::CircleShape*> dse::CircleShape::s_circleshape_vector = std::vector<dse::CircleShape*>();
+std::vector<dse::CircleShape*> dse::CircleShape::s_circleshape_vector = std::vector<dse::CircleShape*>(); //wierd joel stuff
 
 using namespace dse;
 

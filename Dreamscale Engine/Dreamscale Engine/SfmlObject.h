@@ -7,28 +7,39 @@
 #include <lua.hpp>
 #include <LuaBridge.h>
 
+//Joel's code
 class SfmlObject
 {
 public:
-	SfmlObject();
-	~SfmlObject();
-
-	SfmlObject(const std::string&);
-
-	void SetSize(int, int);
-	void SetPosition(int, int);
-	const sf::Vector2f GetSize() const;
-	const sf::Vector2f GetPosition() const;
-
 	sf::RectangleShape rect_shape;
 
-	void Draw(sf::RenderWindow*);
+	SfmlObject();
+	SfmlObject(const std::string& name);
+	~SfmlObject();
 
-	static SfmlObject* Find(const std::string);
+	//Function for finding this object in Lua.
+	static SfmlObject* Find(const std::string instance_name);
 
+	//Gets object's size.
+	const sf::Vector2f GetSize() const;
+
+	//Gets object's position.
+	const sf::Vector2f GetPosition() const;
+
+	//Gets object's name.
 	const std::string GetInstanceName() const;
 
+	//Gets a vector of all SfmlObject's.
 	static const std::vector<SfmlObject*>& GetAllObjects();
+
+	//Sets object's size.
+	void SetSize(int x, int y);
+
+	//Sets object's position.
+	void SetPosition(int x, int y);
+
+	//Draws all SfmlObject's.
+	void Draw(sf::RenderWindow* window);
 
 private:
 	sf::Vector2f m_pos;
@@ -38,5 +49,4 @@ private:
 
 	static std::vector<SfmlObject*> s_sfml_objects;
 };
-
 #endif

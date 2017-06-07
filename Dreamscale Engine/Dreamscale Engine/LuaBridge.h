@@ -10,15 +10,20 @@
 
 namespace dse
 {
+	//Joel's code
 	class LuaBridge
 	{
 	public:
+		lua_State* L = luaL_newstate();
+
 		LuaBridge();
 		~LuaBridge();
 
-		void BindLua(); //Or more accurately do lua binding
-		int StartLuaScript(const char*);
-		lua_State* L = luaL_newstate();
+		//Binds C++ and Lua.
+		void BindLua();
+
+		//Starts the given Lua script.
+		int StartLuaScript(const char* path);
 	};
 }
 #endif

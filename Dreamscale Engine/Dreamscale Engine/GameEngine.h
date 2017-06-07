@@ -14,20 +14,25 @@ using namespace luabridge;
 
 namespace dse
 {
+	//Joel's code
 	class GameEngine
 	{
 	public:
 		GameEngine();
 		~GameEngine();
 
+		//Dreamscale Engine's main Update loop.
 		void Update();
+
+		//Gets TmxHandler instance.
 		TmxHandler* GetTmxHandler() const;
 
 	private:
+		int m_position_temp = 0;
+
 		TmxHandler* m_tmx;
 		sf::RenderWindow m_window;
 		SfmlObject m_test_object;
-		int m_position_temp = 0;
 	};
 }
 #endif

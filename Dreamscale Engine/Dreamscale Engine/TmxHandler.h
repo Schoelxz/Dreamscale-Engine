@@ -41,6 +41,7 @@ enum FLIPPED
 
 namespace dse
 {
+	//Kevin's code
 	struct DrawableType
 	{
 		enum Type
@@ -87,40 +88,47 @@ namespace dse
 	class TmxHandler
 	{
 	public:
-		TmxHandler();
-
-		std::vector<std::string> GetFileNamesInDir(std::string);
-		std::vector<std::string> GetTmxNames() { return m_all_file_names; };
-		void ParseAllMaps();
-		//Map
-		void LoadMap(Tmx::Map*); //Only used inside GameEngine update/play?
-
-		//\brief Refreshes all objects.
-		//Loops through all objects and updates them
-		//if they're different from the last update funtction \n
-		//Example:
-		//Bandit1 died which changed representive Sprite
-		//class to not be visible. So the next time
-		//UpdateObjects loops through bandit's sprite
-		//it will make bandit invisible.
-		//		This function will only be called from GameEngine.
-		void RefreshObjects();
-
-		void DrawMap(sf::RenderWindow&);
-
-		//Objects
-		void LoadObjects(const Tmx::Map&);
-		void DrawObjects(sf::RenderWindow&);
-
-		void ResetVector();
-
-		std::vector<DrawableType*> GetDrawable() const; //For Lua Binding (but TmxHandler is getting big. Should be alot in seperate class/classes)
-
 		std::map<std::string, Tmx::Map*> map_vector;
 
+		TmxHandler();
+		~TmxHandler();
+
+		//Creates (but does not load) all Tmx::maps at start.
+		void ParseAllMaps(); //Joel's code
+
+		//Resets the object vector for the current map (used when a new map is loaded).
+		void ResetVector(); //Kevin's code
+
+		//Loads a Tmx::map
+		void LoadMap(Tmx::Map* map); //Joel's code
+
+		//Loads the current map's objects.
+		void LoadObjects(const Tmx::Map& map); //Kevin and Daniel's code
+
+		//Gets all the filenames in the given (parameter) directory.
+		std::vector<std::string> GetTmxFilenamesInFolder(std::string folder); //Joel's code
+		
+		//Gets m_all_file_names.
+		std::vector<std::string> GetTmxNames(); //Joel's code
+
+		//Gets all drawable objects (For Lua Binding).
+		std::vector<DrawableType*> GetDrawable() const; //Joel's code
+
+		//Loops through all objects and updates them if their values are 
+		//any different from the last time the functionwas called.
+		void RefreshObjects(); //Kevin's code
+
+		//Draws the current map.
+		void DrawMap(sf::RenderWindow& window); //Joel's code
+
+		//Draws the current maps' objects.
+		void DrawObjects(sf::RenderWindow& window); //Kevin and Daniel's code
+
 	private:
-		int m_current_tileset; //For Loading Map
+		int m_current_tileset; //For Loading Map.
 		int m_map_index;
+
+		Tmx::Map* m_tmx_map;
 
 		std::map<int, DrawableType*> m_drawables;
 		std::vector<sf::VertexArray*> m_vertex_layers;
@@ -133,15 +141,14 @@ namespace dse
 		std::vector<sf::Texture*> m_tileset_textures;
 		std::vector<sf::Texture*> m_sprite_textures;
 
-		Tmx::Map* m_tmx_map;
+		std::vector<std::string> m_all_tmx_filenames;
 
-		//used for storing values gained from gafnwf-function.
-		std::vector<std::string> m_all_file_names;
+		//Sets a tile's texture and flips it accordingly.
+		void SetTile(sf::Vertex* &quad, Tmx::MapTile tile, int i, int j,
+			const sf::Vector2i tile_size, sf::Vector2i texture_coord); //Joel's code
 
-		void SetTile(sf::Vertex*&, Tmx::MapTile, int, int,
-			const sf::Vector2i, sf::Vector2i); //Sets a tiles texture and flips it correct
-
-		void DeterminePolygonType(Tmx::Object&, const Tmx::Map&);
+		//Determines an objects shape (rectangle, circle, sprite, etc).
+		void DetermineDrawableType(Tmx::Object& obj, const Tmx::Map& tmx_map); //Kevin and Daniel's code
 	};
 }
 #endif

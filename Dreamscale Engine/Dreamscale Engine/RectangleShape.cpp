@@ -6,7 +6,6 @@ RectangleShape::RectangleShape()
 {
 }
 
-
 RectangleShape::~RectangleShape()
 {
 }

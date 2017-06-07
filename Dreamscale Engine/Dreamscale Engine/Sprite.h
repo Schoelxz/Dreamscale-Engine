@@ -6,19 +6,29 @@
 
 namespace dse
 {
+	//Kevin's code
 	class Sprite : public sf::Sprite
 	{
 	public:
 		Sprite();
 		~Sprite();
 
+		//Gets object's name
 		std::string GetName() const;
+
+		//Gets object's type
 		std::string GetType() const;
-		std::string GetScript() const;
+
+		//Gets object's visibility
 		bool GetVisible();
-		void SetName(std::string);
-		void SetType(std::string);
-		void SetScript();
+
+		//Sets object's name
+		void SetName(std::string n);
+
+		//Sets object's type
+		void SetType(std::string t);
+
+		//Sets object's visibility
 		void SetVisible(bool state);
 
 	private:

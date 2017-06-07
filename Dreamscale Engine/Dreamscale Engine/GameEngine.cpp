@@ -9,6 +9,11 @@ GameEngine::GameEngine() :
 	std::cout << "class:	GameEngine:	Constructed!" << std::endl;
 }
 
+GameEngine::~GameEngine()
+{
+	std::cout << "class:	GameEngine:	Destructed!" << std::endl;
+}
+
 void dse::GameEngine::Update()
 {
 	LuaBridge lua_bridge;
@@ -97,9 +102,4 @@ void dse::GameEngine::Update()
 TmxHandler* dse::GameEngine::GetTmxHandler() const
 {
 	return m_tmx;
-}
-
-GameEngine::~GameEngine()
-{
-	std::cout << "class:	GameEngine:	Destructed!" << std::endl;
 }

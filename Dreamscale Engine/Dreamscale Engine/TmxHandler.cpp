@@ -7,12 +7,126 @@ TmxHandler::TmxHandler() :
 {
 	std::cout << "class:	TmxHandler:	Constructed!" << std::endl;
 	const std::string folder_name = ".\\TmxFiles\\";
-	m_all_file_names = GetFileNamesInDir(folder_name);
+	m_all_tmx_filenames = GetTmxFilenamesInFolder(folder_name);
 	std::cout << "Prints all file names in folder inside	" << folder_name << ":" << std::endl;
-	for (int i = 0; i < m_all_file_names.size(); i++)
+	for (int i = 0; i < m_all_tmx_filenames.size(); i++)
 	{
-		m_all_file_names[i] = folder_name + m_all_file_names[i];
-		std::cout << m_all_file_names[i] << std::endl;
+		m_all_tmx_filenames[i] = folder_name + m_all_tmx_filenames[i];
+		std::cout << m_all_tmx_filenames[i] << std::endl;
+	}
+}
+
+dse::TmxHandler::~TmxHandler()
+{
+}
+
+void TmxHandler::ParseAllMaps()
+{
+	//Parse all Maps (.tmx files) and save each in a mapVector
+	for (size_t i = 0; i < m_all_tmx_filenames.size(); i++)
+	{
+		m_tmx_map = new Tmx::Map();
+		m_tmx_map->ParseFile(m_all_tmx_filenames[i]);
+		map_vector.insert(std::make_pair(m_all_tmx_filenames[i], m_tmx_map));
+	}
+}
+
+void TmxHandler::ResetVector()
+{
+	for (int i = 0; i < m_drawable.size(); i++)
+	{
+		delete m_drawable[i];
+	}
+
+	m_drawables.erase(m_drawables.begin(), m_drawables.end());
+
+	m_drawable.clear();
+	m_drawables.clear();
+	m_map_index = 0;
+}
+
+void TmxHandler::LoadMap(Tmx::Map* map)
+{
+	//TODO: sf::VertexArray läcker 2 gånger varje gång en ny map laddas in, pga. vi inte delete:ar 2 instanser.
+	for (int i = 0; i < m_vertex_layers.size(); i++)
+	{
+		delete m_vertex_layers[i];
+	}
+	for (int i = 0; i < m_tileset_textures.size(); i++)
+	{
+		delete m_tileset_textures[i];
+	}
+	m_vertex_layers.clear();
+	m_tileset_textures.clear();
+
+	const std::vector<Tmx::Tileset*>& TMX_TILESET_MAP = map->GetTilesets();	//Number of tileset
+	const std::vector<Tmx::TileLayer*>& TILE_LAYER = map->GetTileLayers();	//Number of tilelayers
+
+	FLIPPED flipped = NONE;
+
+	//push tilesets
+	for (size_t i = 0; i < TMX_TILESET_MAP.size(); i++)
+	{
+		//Load the texture specifying the tileset
+		sf::Texture* tileset = new sf::Texture();
+		m_tileset_textures.push_back(tileset);
+		const std::string FOLDER_NAME = ".\\TmxFiles";
+		std::cout << FOLDER_NAME << TMX_TILESET_MAP[i]->GetImage()->GetSource() << std::endl;
+		if (!tileset->loadFromFile(FOLDER_NAME + TMX_TILESET_MAP[i]->GetImage()->GetSource()))
+		{
+			assert(!"Couldn't load file!");
+		}
+	}
+
+	// Get size for map and tiles
+	const sf::Vector2i MAP_SIZE(map->GetWidth(), map->GetHeight());			//MapSize
+	const sf::Vector2i TILE_SIZE(map->GetTileWidth(), map->GetTileHeight());	//TileSize
+
+																				//for each layers..
+	for (auto layer : map->GetLayers())
+	{
+		//for each tileset..
+		for (int t = 0; t < m_tileset_textures.size(); t++)
+		{
+			// Create a new vertexarray, acting as a list of quads
+			sf::VertexArray* vertex_array = new sf::VertexArray(sf::Quads, MAP_SIZE.y * MAP_SIZE.x * 4);
+			m_vertex_layers.push_back(vertex_array); //push the vertexArray into an VertexArray-Vector (vertexLayers)
+													 // For each tile in this layer...
+			for (size_t i = 0; i < MAP_SIZE.y; ++i)
+			{
+				for (size_t j = 0; j < MAP_SIZE.x; ++j)
+				{
+					// Get the tile, and check if it's part of a tileset
+					if (layer->GetLayerType() == Tmx::LayerType::TMX_LAYERTYPE_TILE)
+					{
+						Tmx::TileLayer* temp_layer = static_cast<Tmx::TileLayer*>(layer);
+						const Tmx::MapTile TILE = temp_layer->GetTile(j, i);
+						if (TILE.tilesetId == -1 || TILE.tilesetId != t)
+							continue;
+
+						const int GID = TILE.gid;
+
+						int real_id = GID - TMX_TILESET_MAP[t]->GetFirstGid();
+
+						sf::Vertex* quad = &(*vertex_array)[(i * MAP_SIZE.x + j) * 4];
+
+						// Calculate texture coordinates, based on the tilenumer
+						unsigned int tile_number = TILE.id;
+						int tu = tile_number % (m_tileset_textures[t]->getSize().x / TILE_SIZE.x);
+						int tv = tile_number / (m_tileset_textures[t]->getSize().x / TILE_SIZE.x);
+						sf::Vector2i texture_cooridnates(tu, tv);
+						/*
+						The form that we align the vertices in to build our quads
+						0 --- 1
+						|     |
+						|     |
+						3 --- 2
+						*/
+						SetTile(quad, TILE, i, j, TILE_SIZE, texture_cooridnates);
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -41,9 +155,38 @@ void TmxHandler::LoadObjects(const Tmx::Map& map)
 		//for each object in the object layer
 		for (auto object : objects->GetObjects())
 		{
-			DeterminePolygonType(*object, map);
+			DetermineDrawableType(*object, map);
 		}
 	}
+}
+
+std::vector<std::string> TmxHandler::GetTmxFilenamesInFolder(std::string folder)
+{
+	std::vector<std::string> names;
+	std::string search_path = folder + "/*.tmx*";
+	WIN32_FIND_DATA fd;
+	HANDLE hFind = ::FindFirstFile(search_path.c_str(), &fd);
+	if (hFind != INVALID_HANDLE_VALUE) {
+		do {
+			// read all (real) files in current folder
+			// , delete '!' read other 2 default folder . and ..
+			if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+				names.push_back(fd.cFileName);
+			}
+		} while (::FindNextFile(hFind, &fd));
+		::FindClose(hFind);
+	}
+	return names;
+}
+
+std::vector<std::string> dse::TmxHandler::GetTmxNames()
+{
+	return m_all_tmx_filenames;
+}
+
+std::vector<DrawableType*> TmxHandler::GetDrawable() const
+{
+	return m_drawable;
 }
 
 void TmxHandler::RefreshObjects()
@@ -94,173 +237,6 @@ void TmxHandler::RefreshObjects()
 	}
 }
 
-void TmxHandler::ParseAllMaps()
-{
-	//Parse all Maps (.tmx files) and save each in a mapVector
-	for (size_t i = 0; i < m_all_file_names.size(); i++)
-	{
-		m_tmx_map = new Tmx::Map();
-		m_tmx_map->ParseFile(m_all_file_names[i]);
-		map_vector.insert(std::make_pair(m_all_file_names[i], m_tmx_map));
-	}
-}
-
-std::vector<std::string> TmxHandler::GetFileNamesInDir(std::string folder)
-{
-	std::vector<std::string> names;
-	std::string search_path = folder + "/*.tmx*";
-	WIN32_FIND_DATA fd;
-	HANDLE hFind = ::FindFirstFile(search_path.c_str(), &fd);
-	if (hFind != INVALID_HANDLE_VALUE) {
-		do {
-			// read all (real) files in current folder
-			// , delete '!' read other 2 default folder . and ..
-			if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-				names.push_back(fd.cFileName);
-			}
-		} while (::FindNextFile(hFind, &fd));
-		::FindClose(hFind);
-	}
-	return names;
-}
-
-void TmxHandler::LoadMap(Tmx::Map* map)
-{
-	//TODO: sf::VertexArray läcker 2 gånger varje gång en ny map laddas in, pga. vi inte delete:ar 2 instanser.
-	for (int i = 0; i < m_vertex_layers.size(); i++)
-	{
-		delete m_vertex_layers[i];
-	}
-	for (int i = 0; i < m_tileset_textures.size(); i++)
-	{
-		delete m_tileset_textures[i];
-	}
-	m_vertex_layers.clear();
-	m_tileset_textures.clear();
-
-	const std::vector<Tmx::Tileset*>& TMX_TILESET_MAP = map->GetTilesets();	//Number of tileset
-	const std::vector<Tmx::TileLayer*>& TILE_LAYER = map->GetTileLayers();	//Number of tilelayers
-
-	FLIPPED flipped = NONE;
-
-	//push tilesets
-	for (size_t i = 0; i < TMX_TILESET_MAP.size(); i++)
-	{
-		//Load the texture specifying the tileset
-		sf::Texture* tileset = new sf::Texture();
-		m_tileset_textures.push_back(tileset);
-		const std::string FOLDER_NAME = ".\\TmxFiles";
-		std::cout << FOLDER_NAME << TMX_TILESET_MAP[i]->GetImage()->GetSource() << std::endl;
-		if (!tileset->loadFromFile(FOLDER_NAME + TMX_TILESET_MAP[i]->GetImage()->GetSource()))
-		{
-			assert(!"Couldn't load file!");
-		}
-	}
-
-	// Get size for map and tiles
-	const sf::Vector2i MAP_SIZE(map->GetWidth(), map->GetHeight());			//MapSize
-	const sf::Vector2i TILE_SIZE(map->GetTileWidth(), map->GetTileHeight());	//TileSize
-
-	//for each layers..
-	for (auto layer : map->GetLayers()) 
-	{
-		//for each tileset..
-		for (int t = 0; t < m_tileset_textures.size(); t++)
-		{
-			// Create a new vertexarray, acting as a list of quads
-			sf::VertexArray* vertex_array = new sf::VertexArray(sf::Quads, MAP_SIZE.y * MAP_SIZE.x * 4);
-			m_vertex_layers.push_back(vertex_array); //push the vertexArray into an VertexArray-Vector (vertexLayers)
-			// For each tile in this layer...
-			for (size_t i = 0; i < MAP_SIZE.y; ++i)
-			{
-				for (size_t j = 0; j < MAP_SIZE.x; ++j)
-				{
-					// Get the tile, and check if it's part of a tileset
-					if (layer->GetLayerType() == Tmx::LayerType::TMX_LAYERTYPE_TILE) 
-					{
-						Tmx::TileLayer* temp_layer = static_cast<Tmx::TileLayer*>(layer);
-						const Tmx::MapTile TILE = temp_layer->GetTile(j, i);
-						if (TILE.tilesetId == -1 || TILE.tilesetId != t)
-							continue;
-
-						const int GID = TILE.gid;
-
-						int real_id = GID - TMX_TILESET_MAP[t]->GetFirstGid();
-
-						sf::Vertex* quad = &(*vertex_array)[(i * MAP_SIZE.x + j) * 4];
-
-						// Calculate texture coordinates, based on the tilenumer
-						unsigned int tile_number = TILE.id;
-						int tu = tile_number % (m_tileset_textures[t]->getSize().x / TILE_SIZE.x);
-						int tv = tile_number / (m_tileset_textures[t]->getSize().x / TILE_SIZE.x);
-						sf::Vector2i texture_cooridnates(tu, tv);
-						/*
-						The form that we align the vertices in to build our quads
-						0 --- 1
-						|     |
-						|     |
-						3 --- 2
-						*/
-						SetTile(quad, TILE, i, j, TILE_SIZE, texture_cooridnates);
-					}
-				}
-			}
-		}
-	}
-}
-
-void TmxHandler::SetTile(sf::Vertex* &quad, Tmx::MapTile tile, int i, int j,
-	const sf::Vector2i tile_size, sf::Vector2i texture_coord)
-{
-		FLIPPED flipped;
-		// Position the vertices, as specified above
-		quad[0].position = sf::Vector2f(j * tile_size.x, i * tile_size.y);
-		quad[1].position = sf::Vector2f((j + 1) * tile_size.x, i * tile_size.y);
-		quad[2].position = sf::Vector2f((j + 1) * tile_size.x, (i + 1) * tile_size.y);
-		quad[3].position = sf::Vector2f(j * tile_size.x, (i + 1) * tile_size.y);
-
-		// The default order to specify texture coordinates by.
-		std::array<size_t, 4> texture_order = { 0, 1, 2, 3 };
-		// Different order if the tile is flipped horizontally
-		if (tile.flippedHorizontally && tile.flippedVertically)
-			flipped = DIAGONAL;
-		else if (tile.flippedHorizontally)
-			flipped = HORIZONTAL;
-		else if (tile.flippedVertically)
-			flipped = VERTICAL;
-		else
-			flipped = NONE;
-
-		switch (flipped)
-		{
-		case DIAGONAL:
-			texture_order = { 2, 3, 0, 1 };
-			break;
-		case HORIZONTAL:
-			texture_order = { 1, 0, 3, 2 };
-			break;
-		case VERTICAL:
-			texture_order = { 3, 2, 1, 0 };
-			break;
-		case NONE:
-			texture_order = { 0, 1, 2, 3 };
-			break;
-		default:
-			break;
-		}
-
-		// Position the texture coordinates. Coordinates is specified in pixels, not 0-1
-		quad[texture_order[0]].texCoords = sf::Vector2f(texture_coord.x * tile_size.x, texture_coord.y * tile_size.y);
-		quad[texture_order[1]].texCoords = sf::Vector2f((texture_coord.x + 1) * tile_size.x, texture_coord.y * tile_size.y);
-		quad[texture_order[2]].texCoords = sf::Vector2f((texture_coord.x + 1) * tile_size.x, (texture_coord.y + 1) * tile_size.y);
-		quad[texture_order[3]].texCoords = sf::Vector2f(texture_coord.x * tile_size.x, (texture_coord.y + 1) * tile_size.y);
-
-		quad[0].color = sf::Color(255, 255, 255, 255);
-		quad[1].color = sf::Color(255, 255, 255, 255);
-		quad[2].color = sf::Color(255, 255, 255, 255);
-		quad[3].color = sf::Color(255, 255, 255, 255);
-}
-
 void TmxHandler::DrawMap(sf::RenderWindow& window)
 {
 	// Create a non-default renderstate, and bind our tilesets texture to it
@@ -271,38 +247,72 @@ void TmxHandler::DrawMap(sf::RenderWindow& window)
 	}
 }
 
-void TmxHandler::DrawObjects(sf::RenderWindow & window)
+void TmxHandler::DrawObjects(sf::RenderWindow& window)
 {
 	for (int i = 0; i < m_drawable.size(); i++) {
 		window.draw(*m_drawable[i]->drawable);
 	}
 }
 
-void TmxHandler::ResetVector()
+
+void TmxHandler::SetTile(sf::Vertex* &quad, Tmx::MapTile tile, int i, int j,
+	const sf::Vector2i tile_size, sf::Vector2i texture_coord)
 {
-	for (int i = 0; i < m_drawable.size(); i++)
+	FLIPPED flipped;
+	// Position the vertices, as specified above
+	quad[0].position = sf::Vector2f(j * tile_size.x, i * tile_size.y);
+	quad[1].position = sf::Vector2f((j + 1) * tile_size.x, i * tile_size.y);
+	quad[2].position = sf::Vector2f((j + 1) * tile_size.x, (i + 1) * tile_size.y);
+	quad[3].position = sf::Vector2f(j * tile_size.x, (i + 1) * tile_size.y);
+
+	// The default order to specify texture coordinates by.
+	std::array<size_t, 4> texture_order = { 0, 1, 2, 3 };
+	// Different order if the tile is flipped horizontally
+	if (tile.flippedHorizontally && tile.flippedVertically)
+		flipped = DIAGONAL;
+	else if (tile.flippedHorizontally)
+		flipped = HORIZONTAL;
+	else if (tile.flippedVertically)
+		flipped = VERTICAL;
+	else
+		flipped = NONE;
+
+	switch (flipped)
 	{
-		delete m_drawable[i];
+	case DIAGONAL:
+		texture_order = { 2, 3, 0, 1 };
+		break;
+	case HORIZONTAL:
+		texture_order = { 1, 0, 3, 2 };
+		break;
+	case VERTICAL:
+		texture_order = { 3, 2, 1, 0 };
+		break;
+	case NONE:
+		texture_order = { 0, 1, 2, 3 };
+		break;
+	default:
+		break;
 	}
-	
-	m_drawables.erase(m_drawables.begin(), m_drawables.end());
-	
-	m_drawable.clear();
-	m_drawables.clear();
-	m_map_index = 0;
+
+	// Position the texture coordinates. Coordinates is specified in pixels, not 0-1
+	quad[texture_order[0]].texCoords = sf::Vector2f(texture_coord.x * tile_size.x, texture_coord.y * tile_size.y);
+	quad[texture_order[1]].texCoords = sf::Vector2f((texture_coord.x + 1) * tile_size.x, texture_coord.y * tile_size.y);
+	quad[texture_order[2]].texCoords = sf::Vector2f((texture_coord.x + 1) * tile_size.x, (texture_coord.y + 1) * tile_size.y);
+	quad[texture_order[3]].texCoords = sf::Vector2f(texture_coord.x * tile_size.x, (texture_coord.y + 1) * tile_size.y);
+
+	quad[0].color = sf::Color(255, 255, 255, 255);
+	quad[1].color = sf::Color(255, 255, 255, 255);
+	quad[2].color = sf::Color(255, 255, 255, 255);
+	quad[3].color = sf::Color(255, 255, 255, 255);
 }
 
-std::vector<DrawableType*> TmxHandler::GetDrawable() const
-{
-	return m_drawable;
-}
-
-void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & tmx_map)
+void TmxHandler::DetermineDrawableType(Tmx::Object& obj, const Tmx::Map& tmx_map)
 {
 	//sets the settings for each object depending on the objects type(shape)
 	switch (obj.GetPrimitiveType())
 	{
-	case Tmx::TMX_PT_ELLIPSE: //circle
+	case Tmx::TMX_PT_ELLIPSE: //Circle
 		{
 			//std::cout << "ellipse" << std::endl;
 			m_circle_vector.push_back(new dse::CircleShape());
@@ -315,7 +325,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & tmx_ma
 			m_drawables.insert(std::make_pair(m_map_index++, m_drawable.back()));
 			break;
 		}
-	case Tmx::TMX_PT_POLYGON: //polygon
+	case Tmx::TMX_PT_POLYGON: //Polygon
 		{
 			//std::cout << "polygon" << std::endl;
 			m_convex_vector.push_back(new dse::ConvexShape());
@@ -333,7 +343,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & tmx_ma
 			m_drawables.insert(std::make_pair(m_map_index++, m_drawable.back()));
 		}
 			break;
-	case Tmx::TMX_PT_POLYLINE: //polyline
+	case Tmx::TMX_PT_POLYLINE: //Polyline
 		{
 			//std::cout << "polyline" << std::endl;
 			sf::VertexArray* vertex = new sf::VertexArray(sf::LineStrip, obj.GetPolyline()->GetNumPoints());
@@ -350,7 +360,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & tmx_ma
 			break;
 	case Tmx::TMX_PT_NONE:
 	{
-		if (obj.GetGid() == 0) //rectangle
+		if (obj.GetGid() == 0) //Rectangle
 		{
 			m_rectangle_vector.push_back(new dse::RectangleShape());
 			m_rectangle_vector.back()->SetName(obj.GetName());
@@ -361,7 +371,7 @@ void TmxHandler::DeterminePolygonType(Tmx::Object & obj, const Tmx::Map & tmx_ma
 			m_drawable.push_back(new DrawableType(DrawableType::RECTANGLE_SHAPE, m_rectangle_vector.back()));
 			m_drawables.insert(std::make_pair(m_map_index++, m_drawable.back()));
 		}
-		else //tileObject
+		else //TileObject
 		{
 			const std::vector<Tmx::Tileset*> tmxTileSet = tmx_map.GetTilesets();
 

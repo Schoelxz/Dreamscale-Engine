@@ -13,42 +13,20 @@ SfmlObject::SfmlObject(const std::string& name)
 	m_instance_name = name;
 }
 
-void SfmlObject::Draw(sf::RenderWindow* window)
-{
-	for (int i = 0; i < s_sfml_objects.size(); i++)
-	{
-		window->draw(s_sfml_objects[i]->rect_shape);
-	}
-}
-
-SfmlObject* SfmlObject::Find(const std::string instanceName)
-{
-	for (int i = 0; i < s_sfml_objects.size(); i++)
-	{
-		if (s_sfml_objects[i]->GetInstanceName() == instanceName)
-			return s_sfml_objects[i];
-	}
-
-	std::cout << "Could not find " << instanceName << std::endl;
-	return nullptr;
-}
-
 SfmlObject::~SfmlObject()
 {
 }
 
-void SfmlObject::SetSize(int x, int y)
+SfmlObject* SfmlObject::Find(const std::string instance_name)
 {
-	m_size.x = x;
-	m_size.y = y;
-	rect_shape.setSize(m_size);
-}
+	for (int i = 0; i < s_sfml_objects.size(); i++)
+	{
+		if (s_sfml_objects[i]->GetInstanceName() == instance_name)
+			return s_sfml_objects[i];
+	}
 
-void SfmlObject::SetPosition(int x, int y)
-{
-	m_pos.x = x;
-	m_pos.y = y;
-	rect_shape.setPosition(m_pos);
+	std::cout << "Could not find " << instance_name << std::endl;
+	return nullptr;
 }
 
 const sf::Vector2f SfmlObject::GetSize() const
@@ -71,5 +49,24 @@ const std::vector<SfmlObject*>& SfmlObject::GetAllObjects()
 	return s_sfml_objects;
 }
 
+void SfmlObject::SetSize(int x, int y)
+{
+	m_size.x = x;
+	m_size.y = y;
+	rect_shape.setSize(m_size);
+}
 
+void SfmlObject::SetPosition(int x, int y)
+{
+	m_pos.x = x;
+	m_pos.y = y;
+	rect_shape.setPosition(m_pos);
+}
 
+void SfmlObject::Draw(sf::RenderWindow* window)
+{
+	for (int i = 0; i < s_sfml_objects.size(); i++)
+	{
+		window->draw(s_sfml_objects[i]->rect_shape);
+	}
+}
