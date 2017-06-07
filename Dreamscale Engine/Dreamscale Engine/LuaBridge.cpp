@@ -39,9 +39,9 @@ void LuaBridge::BindLua()
 			.endClass()
 
 			.beginClass<sf::Vector2f>("Vector2f")
-			.addConstructor<void(*)(float, float)>()
-			.addData("x", &sf::Vector2f::x)
-			.addData("y", &sf::Vector2f::y)
+				.addConstructor<void(*)(float, float)>()
+				.addData("x", &sf::Vector2f::x)
+				.addData("y", &sf::Vector2f::y)
 			.endClass()
 
 			.beginClass<dse::CircleShape>("CircleShape")
@@ -51,10 +51,9 @@ void LuaBridge::BindLua()
 				.addProperty("name", &dse::CircleShape::GetName, &dse::CircleShape::SetName)
 				.addProperty("position", &dse::CircleShape::GetPosition, &dse::CircleShape::SetPosition)
 				.addProperty("radius", &dse::CircleShape::GetRadius, &dse::CircleShape::SetRadius)
-				
 			.endClass()
 
-	.endNamespace();
+		.endNamespace();
 }
 
 int LuaBridge::StartLuaScript(const char* path)

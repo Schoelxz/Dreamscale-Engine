@@ -16,8 +16,8 @@ GameEngine::~GameEngine()
 
 void dse::GameEngine::Update()
 {
-	LuaBridge lua_bridge;
-
+	dse::LuaBridge lua_bridge;
+	lua_bridge.BindLua();
 	m_tmx->ParseAllMaps();
 
 	sf::Clock clock;
@@ -67,7 +67,7 @@ void dse::GameEngine::Update()
 				}
 				if (event.key.code == sf::Keyboard::Space)
 				{
-					//LuaTester.StartLuaScript();
+					lua_bridge.StartLuaScript("test.lua");
 				}
 			}
 			if (event.type == sf::Event::MouseEntered)
